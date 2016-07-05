@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "dotenv": "2.0.0",
-    "hapi": "13.4.2"
+    "hapi": "13.4.2",
+    "hapi-auth-cookie": "6.1.1"
   }
 }
