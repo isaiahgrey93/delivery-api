@@ -9,8 +9,10 @@
     "start": "node server.js"
   },
   "dependencies": {
+    "bcrypt-as-promised": "^1.1.0",
     "dotenv": "2.0.0",
     "hapi": "13.4.2",
-    "hapi-auth-cookie": "6.1.1"
+    "hapi-auth-cookie": "6.1.1",
+    "thinky": "2.3.3"
   }
 }
