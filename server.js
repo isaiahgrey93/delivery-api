@@ -16,11 +16,6 @@ server.register([
   HapiAuthCookie,
   {
     register: Api,
-    options: {
-      db: {
-        url: process.env.DB_CONNECTION_STRING
-      }
-    }
   }
 ], (err) => {
   if (err) {
@@ -31,7 +26,6 @@ server.register([
     if (err) {
       console.error(`Server failed to start - ${err.message}`);
     }
-
     console.log(`Server started at ${server.info.uri}`);
   })
 })
