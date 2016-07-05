@@ -1,0 +1,15 @@
+{
+  "name": "joey-api",
+  "version": "1.0.0",
+  "description": "API Server for Joey",
+  "author": "Apperson Labs",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "dotenv": "2.0.0",
+    "hapi": "13.4.2"
+  }
+}
