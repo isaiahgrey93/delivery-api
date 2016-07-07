@@ -2,7 +2,9 @@
 
 ## Configuration
 
-The server is configured via the following environment variables, which should be placed in a .env file in the project root.
+The server is configured via the following environment variables, which should be placed in a `.env` file in the project root.
+
+ - `JWT_SECRET`
 
 ## RethinkDB Setup
 

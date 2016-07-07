@@ -1,7 +1,7 @@
 'use strict';
 
 const Hapi = require('hapi');
-const HapiAuthCookie = require('hapi-auth-cookie');
+const HapiAuthJwt = require('hapi-auth-jwt2');
 const Dotenv = require('dotenv');
 const Path = require('path');
 const Api = require('./lib');
@@ -14,11 +14,11 @@ server.connection({ port: 3000 });
 
 server.register([
   // plugins
-  HapiAuthCookie,
+  HapiAuthJwt,
   {
     register: Thinky,
     options: {
-      debug: true, 
+      debug: false, 
       modelsPath: __dirname + '/lib/models',
       thinky: {
         rethinkdb: {
