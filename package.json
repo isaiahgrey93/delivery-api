@@ -17,5 +17,9 @@
     "jsonwebtoken": "^7.0.1",
     "thinky": "2.3.3",
     "thinky-loader": "0.0.3"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "nodemon": "^1.9.2"
   }
 }
