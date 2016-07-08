@@ -2,6 +2,7 @@
 
 const Hapi = require('hapi');
 const HapiAuthJwt = require('hapi-auth-jwt2');
+const HapiPolicies = require('mrhorse');
 const Dotenv = require('dotenv');
 const Path = require('path');
 const Api = require('./lib');
@@ -15,6 +16,12 @@ server.connection({ port: 3000 });
 server.register([
   // plugins
   HapiAuthJwt,
+  {
+    register: HapiPolicies,
+    options: {
+      policyDirectory: __dirname + '/lib/policies'
+    }
+  },
   {
     register: Thinky,
     options: {
