@@ -16,11 +16,12 @@
     "hapi-auth-jwt2": "7.0.1",
     "jsonwebtoken": "7.0.1",
     "mrhorse": "2.1.0",
+    "stripe": "4.7.0",
     "thinky": "2.3.3",
     "thinky-loader": "0.0.3"
   },
   "devDependencies": {
     "gulp": "3.9.1",
-    "nodemon": "^1.9.2"
+    "nodemon": "1.9.2"
   }
 }
