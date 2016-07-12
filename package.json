@@ -14,6 +14,7 @@
     "dotenv": "2.0.0",
     "hapi": "13.4.2",
     "hapi-auth-jwt2": "7.0.1",
+    "joi": "^9.0.0",
     "jsonwebtoken": "7.0.1",
     "mrhorse": "2.1.0",
     "stripe": "4.7.0",
