@@ -6,7 +6,7 @@
   "main": "server.js",
   "scripts": {
     "test": "",
-    "start": "gulp start"
+    "start": "NODE_ENV=dev gulp start"
   },
   "dependencies": {
     "bcrypt-as-promised": "1.1.0",
