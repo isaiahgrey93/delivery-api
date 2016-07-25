@@ -3,6 +3,9 @@
 const Hapi = require('hapi');
 const HapiAuthJwt = require('hapi-auth-jwt2');
 const HapiPolicies = require('mrhorse');
+const HapiSwagger = require('hapi-swagger');
+const Inert = require('inert');
+const Vision = require('vision');
 const Dotenv = require('dotenv');
 const Path = require('path');
 const Api = require('./lib');
@@ -15,7 +18,10 @@ server.connection({ port: 3000 });
 
 server.register([
   // plugins
+  Inert,
+  Vision,
   HapiAuthJwt,
+  HapiSwagger,
   {
     register: HapiPolicies,
     options: {
