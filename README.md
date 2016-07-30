@@ -4,8 +4,10 @@
 
 The server is configured via the following environment variables, which should be placed in a `.env` file in the project root.
 
- - `JWT_SECRET`
- - `STRIPE_SECRET`
+- `BASE_URI` - API Base
+- `JWT_SECRET` - JSON Web Token Secret Key
+- `TWILIO_PHONE` - Twilio Phone Number (1-570-666-1670)
+- `STRIPE_SECRET` - Stripe Secret Key
 
 ## RethinkDB Setup
 
@@ -59,6 +61,8 @@ The server is configured via the following environment variables, which should b
   - `POST` -- `/api/recordings`
   - `PUT` -- `/api/recordings/{recording_id}`
   - `DELETE` -- `/api/recordings/{recording_id}`
+  - `POST` -- `/api/support-call/open`
+  - `POST` -- `/api/support-call/{drive_id}/close`
 
 ### Stripe Accounts
   - `GET` -- `/api/accounts`
