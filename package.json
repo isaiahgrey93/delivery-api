@@ -22,6 +22,7 @@
     "stripe": "4.7.0",
     "thinky": "2.3.3",
     "thinky-loader": "0.0.3",
+    "twilio": "^2.9.1",
     "vision": "^4.1.0"
   },
   "devDependencies": {
