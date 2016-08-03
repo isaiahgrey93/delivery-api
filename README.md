@@ -4,10 +4,16 @@
 
 The server is configured via the following environment variables, which should be placed in a `.env` file in the project root.
 
-- `BASE_URI` - API Base
+- `PORT` - (e.g. 3000)
+- `BASE_URI` - (e.g. http://9b79c2c2.ngrok.io)
+- `TWILIO_PHONE` - 1-570-666-1670
 - `JWT_SECRET` - JSON Web Token Secret Key
-- `TWILIO_PHONE` - Twilio Phone Number (1-570-666-1670)
-- `STRIPE_SECRET` - Stripe Secret Key
+- `STRIPE_SECRET` - Stripe Test Key
+- `COMPANY_EMAIL_ADDRESS` - Joey Company Email Credential
+- `COMPANY_EMAIL_PASSWORD` - Joey Company Email Credential
+- `DB_HOST` - (e.g. localhost)
+- `DB_PORT` - (e.g. 28015)
+- `DB_NAME` - (e.g. joey)
 
 ## RethinkDB Setup
 
@@ -28,7 +34,9 @@ The server is configured via the following environment variables, which should b
   - `PUT` -- `/api/users/{user_id}`
   - `DELETE` -- `/api/users/{user_id}`
   - `POST` -- `/api/users/login`
-
+  - `POST` -- `/api/users/{user_id}/password`
+  - `POST` -- `/api/users/{user_id}/password/{token_id}`
+  
 ### Vehicle
     
   - `GET` -- `/api/vehicles`
