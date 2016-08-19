@@ -9,6 +9,7 @@
     "start": "NODE_ENV=dev gulp start"
   },
   "dependencies": {
+    "@google/maps": "^0.1.0",
     "bcrypt-as-promised": "1.1.0",
     "boom": "3.2.2",
     "dotenv": "2.0.0",
