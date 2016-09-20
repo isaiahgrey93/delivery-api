@@ -17,43 +17,43 @@ Dotenv.config({ path: Path.resolve(__dirname, '.env') });
 server.connection({ port: 3000 });
 
 server.register([
-  // plugins
-  Inert,
-  Vision,
-  HapiAuthJwt,
-  HapiSwagger,
-  {
-    register: HapiPolicies,
-    options: {
-      policyDirectory: __dirname + '/lib/policies'
-    }
-  },
-  {
-    register: Thinky,
-    options: {
-      debug: false, 
-      modelsPath: __dirname + '/lib/models',
-      thinky: {
-        rethinkdb: {
-          host: 'localhost',
-          port: 28015,
-          db: "joey",
+    // plugins
+    Inert,
+    Vision,
+    HapiAuthJwt,
+    HapiSwagger,
+    {
+        register: HapiPolicies,
+        options: {
+            policyDirectory: __dirname + '/lib/policies'
         }
-      }
+    },
+    {
+        register: Thinky,
+        options: {
+            debug: false,
+            modelsPath: __dirname + '/lib/models',
+            thinky: {
+                rethinkdb: {
+                    host: 'localhost',
+                    port: 28015,
+                    db: "joey",
+                }
+            }
+        }
+    },
+    {
+        register: Api,
     }
-  },
-  {
-    register: Api,
-  }
 ], (err) => {
-  if (err) {
-    throw err;
-  }
-
-  server.start((err) => {
     if (err) {
-      console.error(`Server failed to start - ${err.message}`);
+        throw err;
     }
-    console.log(`Server started at ${server.info.uri}`);
-  })
+
+    server.start((err) => {
+        if (err) {
+            console.error(`Server failed to start - ${err.message}`);
+        }
+        console.log(`Server started at ${server.info.uri}`);
+    })
 })
