@@ -1,36 +1,36 @@
 {
-    "name": "joey-api",
-    "version": "1.0.0",
-    "description": "API Server for Joey",
-    "author": "Apperson Labs",
-    "main": "server.js",
-    "scripts": {
-        "test": "",
-        "start": "NODE_ENV=dev gulp start"
-    },
-    "dependencies": {
-        "@google/maps": "^0.1.0",
-        "bcrypt-as-promised": "1.1.0",
-        "boom": "3.2.2",
-        "dotenv": "2.0.0",
-        "hapi": "13.4.2",
-        "hapi-auth-jwt2": "7.0.1",
-        "hapi-swagger": "6.2.0",
-        "inert": "4.0.1",
-        "joi": "9.0.0",
-        "jsonwebtoken": "7.0.1",
-        "mrhorse": "2.1.0",
-        "nodemailer": "2.5.0",
-        "stripe": "4.7.0",
-        "swig-email-templates": "3.0.0",
-        "thinky": "2.3.3",
-        "thinky-loader": "0.0.3",
-        "twilio": "2.9.1",
-        "uuid": "2.0.2",
-        "vision": "4.1.0"
-    },
-    "devDependencies": {
-        "gulp": "3.9.1",
-        "nodemon": "1.9.2"
-    }
+  "name": "joey-api",
+  "version": "1.0.0",
+  "description": "API Server for Joey",
+  "author": "Apperson Labs",
+  "main": "server.js",
+  "scripts": {
+    "test": "",
+    "start": "NODE_ENV=dev gulp start"
+  },
+  "dependencies": {
+    "@google/maps": "^0.1.0",
+    "bcrypt-as-promised": "1.1.0",
+    "boom": "3.2.2",
+    "dotenv": "2.0.0",
+    "hapi": "13.4.2",
+    "hapi-auth-jwt2": "7.0.1",
+    "hapi-swagger": "6.2.0",
+    "inert": "4.0.1",
+    "joi": "9.0.0",
+    "jsonwebtoken": "7.0.1",
+    "mrhorse": "2.1.0",
+    "nodemailer": "2.5.0",
+    "stripe": "4.7.0",
+    "swig-email-templates": "3.0.0",
+    "thinky": "2.3.3",
+    "thinky-loader": "0.0.3",
+    "twilio": "2.9.1",
+    "uuid": "2.0.2",
+    "vision": "4.1.0"
+  },
+  "devDependencies": {
+    "gulp": "3.9.1",
+    "nodemon": "1.9.2"
+  }
 }
