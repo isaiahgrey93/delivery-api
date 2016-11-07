@@ -13,3 +13,11 @@ gulp.task('start', function () {
         env: ENV_VARS
     })
 })
+
+gulp.task('dev', function () {
+    nodemon({
+        script: 'nodejs-dashboard server.js',
+        ext: 'js',
+        env: ENV_VARS
+    })
+})
