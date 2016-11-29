@@ -17,6 +17,12 @@ Dotenv.config({ path: Path.resolve(__dirname, '.env') });
 
 server.connection({
     port: 3000,
+    routes: {
+        cors: true,
+        payload: {
+            "maxBytes": 50000000
+        }
+    },
 });
 
 server.register([
