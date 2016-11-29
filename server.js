@@ -12,6 +12,7 @@ const Path = require('path');
 const Api = require('./lib');
 const Thinky = require('./lib/plugins/thinky');
 const server = new Hapi.Server();
+const fs = require('fs');
 
 Dotenv.config({ path: Path.resolve(__dirname, '.env') });
 
@@ -32,23 +33,30 @@ server.register([
     HapiAuthJwt,
     HapiSwagger,
     {
-        register: HapiPolicies,
-        options: {
-            policyDirectory: __dirname + '/lib/policies'
-        }
-    },
-    {
         register: Thinky,
         options: {
-            debug: false,
+            debug: true,
             modelsPath: __dirname + '/lib/models',
             thinky: {
                 rethinkdb: {
-                    host: 'localhost',
-                    port: 28015,
                     db: "joey",
+                    buffer: 5,
+                    timeoutError: 10000,
+                    host: process.env.DB_HOST,
+                    port: process.env.DB_PORT,
+                    user: process.env.DB_USER,
+                    password: process.env.DB_PASSWORD,
+                    ssl: {
+                        ca: [fs.readFileSync( __dirname + '/rethink.cert').toString().trim()]
+                    },
                 }
             }
+        }
+    },
+    {
+        register: HapiPolicies,
+        options: {
+            policyDirectory: __dirname + '/lib/policies'
         }
     },
     {
