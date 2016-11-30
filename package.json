@@ -5,11 +5,30 @@
   "author": "Apperson Labs",
   "main": "server.js",
   "scripts": {
-    "start": "NODE_ENV=dev gulp start",
+    "start": "NODE_ENV=development gulp start",
     "now-start": "NODE_ENV=production node server.js"
   },
   "engines": {
     "node": "6.x"
+  },
+  "now": {
+  "env": {
+      "PORT": "3000",
+      "BASE_URI": "localhost",
+      "TWILIO_PHONE": "+1-570-666-1670",
+      "JWT_SECRET": "supersecretsecret",
+      "STRIPE_SECRET": "sk_test_DFOQ6jFedN531DsZO5DGau6W",
+      "COMPANY_EMAIL_ADDRESS": "user@gmail.com",
+      "COMPANY_EMAIL_PASSWORD": "123123",
+      "DB_HOST": "aws-us-east-1-portal.9.dblayer.com",
+      "DB_PORT": "15905",
+      "DB_USER": "admin",
+      "DB_PASSWORD": "XB0yD7PG3QwqgwwhyoXXavwwBSnz4FQegXEVqJQMXpM",
+      "DB_NAME": "joey",
+      "AWS_ACCESS_KEY_ID": "AKIAJG7WCN3WNXQTBIJQ",
+      "AWS_SECRET_ACCESS_KEY": "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",
+      "AWS_BUCKET": "joey-dev"
+    }
   },
   "dependencies": {
     "@google/maps": "^0.1.0",
@@ -28,12 +47,16 @@
     "nodemailer": "2.5.0",
     "stripe": "4.7.0",
     "swig-email-templates": "3.0.0",
-    "thinky": "2.3.3",
-    "thinky-loader": "0.0.3",
+    "thinky": "^2.3.8",
+    "thinky-loader": "^0.0.4",
     "twilio": "2.9.1",
     "uuid": "2.0.2",
-    "vision": "4.1.0"
+    "vision": "4.1.0",
+    "winston": "^2.3.0"
   },
   "devDependencies": {
+    "gulp": "^3.9.1",
+    "nodemon": "^1.11.0",
+    "winston-loggly-bulk": "^1.3.4"
   }
 }

@@ -13,6 +13,7 @@ const Api = require('./lib');
 const Thinky = require('./lib/plugins/thinky');
 const server = new Hapi.Server();
 const fs = require('fs');
+const Logger = require('./lib/plugins/loggly');
 
 Dotenv.config({ path: Path.resolve(__dirname, '.env') });
 
@@ -35,17 +36,17 @@ server.register([
     {
         register: Thinky,
         options: {
-            debug: true,
+            debug: false,
             modelsPath: __dirname + '/lib/models',
             thinky: {
                 rethinkdb: {
                     db: "joey",
                     buffer: 5,
-                    timeoutError: 10000,
-                    host: process.env.DB_HOST,
-                    port: process.env.DB_PORT,
-                    user: process.env.DB_USER,
-                    password: process.env.DB_PASSWORD,
+                    timeoutError: 20,
+                    host: process.env.NODE_ENV === 'production' ? process.env.DB_HOST : 'localhost',
+                    port: process.env.NODE_ENV === 'production' ? process.env.DB_PORT : '28015',
+                    user: process.env.NODE_ENV === 'production' ? process.env.DB_USER : 'admin',
+                    password: process.env.NODE_ENV === 'production' ? process.env.DB_PASSWORD : '',
                     ssl: {
                         ca: [fs.readFileSync( __dirname + '/rethink.cert').toString().trim()]
                     },
