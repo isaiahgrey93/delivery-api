@@ -3,7 +3,7 @@
 const Hapi = require('hapi');
 const HapiAuthJwt = require('hapi-auth-jwt2');
 const HapiPolicies = require('mrhorse');
-const HapiSwagger = require('hapi-swagger');
+const HapiLout = require('lout');
 const Inert = require('inert');
 const Vision = require('vision');
 const Dotenv = require('dotenv');
@@ -14,6 +14,30 @@ const Thinky = require('./lib/plugins/thinky');
 const server = new Hapi.Server();
 const fs = require('fs');
 const Logger = require('./lib/plugins/loggly');
+
+const dbOptions = () => {
+    if (process.env.NODE_ENV === 'production') {
+        return {
+            db: "joey",
+            buffer: 5,
+            port: process.env.DB_PORT,
+            user: process.env.DB_USER,
+            password: process.env.DB_PASSWORD,
+            ssl: {
+                ca: [fs.readFileSync( __dirname + '/rethink.cert').toString().trim()]
+            }
+        }
+    } else {
+        return {
+            db: "joey",
+            buffer: 5,
+            timeoutError: 20,
+            host: 'localhost',
+            port: '28015'
+        }
+    }
+    
+}
 
 Dotenv.config({ path: Path.resolve(__dirname, '.env') });
 
@@ -32,25 +56,14 @@ server.register([
     Inert,
     Vision,
     HapiAuthJwt,
-    HapiSwagger,
+    HapiLout,
     {
         register: Thinky,
         options: {
             debug: false,
             modelsPath: __dirname + '/lib/models',
             thinky: {
-                rethinkdb: {
-                    db: "joey",
-                    buffer: 5,
-                    timeoutError: 20,
-                    host: process.env.NODE_ENV === 'production' ? process.env.DB_HOST : 'localhost',
-                    port: process.env.NODE_ENV === 'production' ? process.env.DB_PORT : '28015',
-                    user: process.env.NODE_ENV === 'production' ? process.env.DB_USER : 'admin',
-                    password: process.env.NODE_ENV === 'production' ? process.env.DB_PASSWORD : '',
-                    ssl: {
-                        ca: [fs.readFileSync( __dirname + '/rethink.cert').toString().trim()]
-                    },
-                }
+                rethinkdb: dbOptions()
             }
         }
     },
