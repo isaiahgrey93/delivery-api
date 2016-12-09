@@ -6,6 +6,7 @@
   "main": "server.js",
   "scripts": {
     "start": "NODE_ENV=development gulp start",
+    "dev": "NODE_ENV=development gulp dev",
     "now-start": "NODE_ENV=production node server.js"
   },
   "engines": {
@@ -36,6 +37,7 @@
     "bcrypt-as-promised": "1.1.0",
     "boom": "3.2.2",
     "dotenv": "2.0.0",
+    "gulp": "^3.9.1",
     "hapi": "13.4.2",
     "hapi-auth-jwt2": "7.0.1",
     "inert": "4.0.1",
