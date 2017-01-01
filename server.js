@@ -1,5 +1,6 @@
 'use strict';
 
+require('now-logs')('joey-api');
 const Hapi = require('hapi');
 const HapiAuthJwt = require('hapi-auth-jwt2');
 const HapiPolicies = require('mrhorse');

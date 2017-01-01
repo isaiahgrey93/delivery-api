@@ -45,8 +45,10 @@
     "joi": "9.0.0",
     "jsonwebtoken": "7.0.1",
     "lodash": "^4.16.4",
+    "lout": "^9.2.0",
     "mrhorse": "2.1.0",
     "nodemailer": "2.5.0",
+    "now-logs": "^0.0.6",
     "stripe": "4.7.0",
     "swig-email-templates": "3.0.0",
     "thinky": "^2.3.8",
@@ -55,7 +57,6 @@
     "uuid": "2.0.2",
     "vision": "4.1.0",
     "winston": "^2.3.0",
-    "lout": "^9.2.0",
     "winston-loggly-bulk": "^1.3.4"
   },
   "devDependencies": {
