@@ -18,6 +18,8 @@
       "PORT": "3000",
       "BASE_URI": "localhost",
       "TWILIO_PHONE": "+1-570-666-1670",
+      "TWILIO_SID": "ACfe822fd46d55f279afa000ca896cbc6b",
+      "TWILIO_TOKEN": "52dd88c107a93b1acf5e4cc73616fa39",
       "JWT_SECRET": "supersecretsecret",
       "STRIPE_SECRET": "sk_test_DFOQ6jFedN531DsZO5DGau6W",
       "COMPANY_EMAIL_ADDRESS": "user@gmail.com",
