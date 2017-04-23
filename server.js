@@ -10,11 +10,11 @@ const Vision = require("vision");
 const Dotenv = require("dotenv");
 const Fs = require("fs");
 const Path = require("path");
-const Api = require("./lib");
-const Thinky = require("./lib/plugins/thinky");
+const Api = require("./old-lib");
+const Thinky = require("./old-lib/plugins/thinky");
 const server = new Hapi.Server();
 const fs = require("fs");
-const Logger = require("./lib/plugins/loggly");
+const Logger = require("./old-lib/plugins/loggly");
 
 const dbOptions = () => {
     if (process.env.NODE_ENV === "production") {
@@ -68,7 +68,7 @@ server.register(
             register: Thinky,
             options: {
                 debug: false,
-                modelsPath: __dirname + "/lib/models",
+                modelsPath: __dirname + "/old-lib/models",
                 thinky: {
                     rethinkdb: dbOptions()
                 }
@@ -77,7 +77,7 @@ server.register(
         {
             register: HapiPolicies,
             options: {
-                policyDirectory: __dirname + "/lib/policies"
+                policyDirectory: __dirname + "/old-lib/policies"
             }
         },
         {
