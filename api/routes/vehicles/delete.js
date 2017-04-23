@@ -2,7 +2,7 @@ const Joi = require("joi");
 
 module.exports = {
     path: "/api/vehicles/{vehicle_id}",
-    method: ["PUT", "PATCH"],
+    method: ["DELETE"],
     config: {
         auth: {
             scope: ["driver", "admin"]

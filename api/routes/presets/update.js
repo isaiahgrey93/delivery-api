@@ -1,5 +1,5 @@
 const Joi = require("joi");
-const Prehandlers = require("../prehandlers");
+const Prehandlers = require("../../../old-lib/prehandlers");
 
 module.exports = {
     path: "/api/presets/{preset_id}",

@@ -1,6 +1,6 @@
 const Joi = require("joi");
 const Boom = require("boom");
-const Prehandlers = require("../prehandlers");
+const Prehandlers = require("../../../old-lib/prehandlers");
 
 module.exports = {
     path: "/api/users/{user_id}",
