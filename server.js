@@ -1,23 +1,23 @@
-'use strict';
+"use strict";
 
-require('now-logs')('joey-api');
-const Hapi = require('hapi');
-const HapiAuthJwt = require('hapi-auth-jwt2');
-const HapiPolicies = require('mrhorse');
-const HapiLout = require('lout');
-const Inert = require('inert');
-const Vision = require('vision');
-const Dotenv = require('dotenv');
-const Fs = require('fs');
-const Path = require('path');
-const Api = require('./lib');
-const Thinky = require('./lib/plugins/thinky');
+require("now-logs")("joey-api");
+const Hapi = require("hapi");
+const HapiAuthJwt = require("hapi-auth-jwt2");
+const HapiPolicies = require("mrhorse");
+const HapiLout = require("lout");
+const Inert = require("inert");
+const Vision = require("vision");
+const Dotenv = require("dotenv");
+const Fs = require("fs");
+const Path = require("path");
+const Api = require("./lib");
+const Thinky = require("./lib/plugins/thinky");
 const server = new Hapi.Server();
-const fs = require('fs');
-const Logger = require('./lib/plugins/loggly');
+const fs = require("fs");
+const Logger = require("./lib/plugins/loggly");
 
 const dbOptions = () => {
-    if (process.env.NODE_ENV === 'production') {
+    if (process.env.NODE_ENV === "production") {
         return {
             db: "joey",
             buffer: 5,
@@ -26,67 +26,74 @@ const dbOptions = () => {
             user: process.env.DB_USER,
             password: process.env.DB_PASSWORD,
             ssl: {
-                ca: [fs.readFileSync( __dirname + '/rethink.cert').toString().trim()]
+                ca: [
+                    fs
+                        .readFileSync(__dirname + "/rethink.cert")
+                        .toString()
+                        .trim()
+                ]
             }
-        }
+        };
     } else {
         return {
             db: "joey",
             buffer: 5,
             timeoutError: 20,
-            host: 'localhost',
-            port: '28015'
-        }
+            host: "localhost",
+            port: "28015"
+        };
     }
-    
-}
+};
 
-Dotenv.config({ path: Path.resolve(__dirname, '.env') });
+Dotenv.config({ path: Path.resolve(__dirname, ".env") });
 
 server.connection({
     port: 3000,
     routes: {
         cors: true,
         payload: {
-            "maxBytes": 50000000
+            maxBytes: 50000000
         }
-    },
+    }
 });
 
-server.register([
-    // plugins
-    Inert,
-    Vision,
-    HapiAuthJwt,
-    HapiLout,
-    {
-        register: Thinky,
-        options: {
-            debug: false,
-            modelsPath: __dirname + '/lib/models',
-            thinky: {
-                rethinkdb: dbOptions()
+server.register(
+    [
+        // plugins
+        Inert,
+        Vision,
+        HapiAuthJwt,
+        HapiLout,
+        {
+            register: Thinky,
+            options: {
+                debug: false,
+                modelsPath: __dirname + "/lib/models",
+                thinky: {
+                    rethinkdb: dbOptions()
+                }
             }
+        },
+        {
+            register: HapiPolicies,
+            options: {
+                policyDirectory: __dirname + "/lib/policies"
+            }
+        },
+        {
+            register: Api
         }
-    },
-    {
-        register: HapiPolicies,
-        options: {
-            policyDirectory: __dirname + '/lib/policies'
-        }
-    },
-    {
-        register: Api,
-    }
-], (err) => {
-    if (err) {
-        throw err;
-    }
-
-    server.start((err) => {
+    ],
+    err => {
         if (err) {
-            console.error(`Server failed to start - ${err.message}`);
+            throw err;
         }
-        console.log(`Server started at ${server.info.uri}`);
-    })
-})
+
+        server.start(err => {
+            if (err) {
+                console.error(`Server failed to start - ${err.message}`);
+            }
+            console.log(`Server started at ${server.info.uri}`);
+        });
+    }
+);

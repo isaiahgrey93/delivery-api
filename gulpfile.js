@@ -1,23 +1,23 @@
-'use strict';
+"use strict";
 
-const Dotenv = require('dotenv');
-const Path = require('path');
-const gulp = require('gulp');
-const nodemon = require('nodemon');
-const ENV_VARS = Dotenv.config({ path: Path.resolve(__dirname, '.env') });
+const Dotenv = require("dotenv");
+const Path = require("path");
+const gulp = require("gulp");
+const nodemon = require("nodemon");
+const ENV_VARS = Dotenv.config({ path: Path.resolve(__dirname, ".env") });
 
-gulp.task('start', function () {
+gulp.task("start", function() {
     nodemon({
-        script: 'server.js',
-        ext: 'js',
+        script: "server.js",
+        ext: "js",
         env: ENV_VARS
-    })
-})
+    });
+});
 
-gulp.task('dev', function () {
+gulp.task("dev", function() {
     nodemon({
-        script: 'server.js',
-        ext: 'js',
+        script: "server.js",
+        ext: "js",
         env: ENV_VARS
-    })
-})
+    });
+});
