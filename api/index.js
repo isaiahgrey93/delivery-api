@@ -7,6 +7,8 @@ const Node_utils = require("util");
 const Routes = require("./routes");
 const Domain = require("domain");
 
+const libs = require("./compose-use-cases");
+
 module.exports.register = (server, options, next) => {
     server.auth.strategy("jwt", "jwt", {
         key: process.env.JWT_SECRET,
@@ -22,6 +24,7 @@ module.exports.register = (server, options, next) => {
     server.auth.default({ strategy: "jwt" });
 
     server.bind({
+        libs,
         db: {
             orm: DbClient.thinky,
             models: DbClient.thinky.models
