@@ -21,6 +21,8 @@ const {
     SupportExtension
 } = require("../common-entities");
 
+console.log(new User());
+
 const thinky = rethinkdb({
     db: process.env.RETHINKDB_DB_NAME,
     host: process.env.RETHINKDB_DB_HOST,
@@ -36,7 +38,10 @@ const recordingStore = new Recordings.rethinkDb(thinky);
 const supportExtensionStore = new SupportExtensions.rethinkDb(thinky);
 
 const libs = {
-    users: new Object({}),
+    users: new lib.users({
+        Entity: User,
+        store: userStore
+    }),
     drives: new Object({}),
     presets: new Object({}),
     vehicles: new Object({}),
@@ -48,11 +53,11 @@ const libs = {
 // Trick into thinking init libs exists for now
 
 Object.keys(libs).forEach(name => {
-    libs[name].initLibs = () => console.log(`${name} lib ready!`);
+    libs[name].initLibs = () => null;
 });
 
 Object.keys(libs).forEach(name => {
     libs[name].initLibs(libs);
 });
 
-module.exports = libs;
+module.exports = () => libs;

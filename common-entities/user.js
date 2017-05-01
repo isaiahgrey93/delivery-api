@@ -1,6 +1,6 @@
 const sanitize = require("./helpers/sanitize");
 
-function User(user) {
+function User(user = {}) {
     const {
         id,
         createdAt,
@@ -65,3 +65,5 @@ function User(user) {
 
     return sanitize(this);
 }
+
+module.exports = User;

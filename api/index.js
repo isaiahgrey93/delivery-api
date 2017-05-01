@@ -7,7 +7,7 @@ const Node_utils = require("util");
 const Routes = require("./routes");
 const Domain = require("domain");
 
-const libs = require("./compose-use-cases");
+const libs = require("./compose-use-cases")();
 
 module.exports.register = (server, options, next) => {
     server.auth.strategy("jwt", "jwt", {

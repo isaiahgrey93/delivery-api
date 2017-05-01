@@ -60,6 +60,12 @@ class RethinkDbUserStoreAdapter {
     _modelToEntity(resource) {
         return new this._Entity(resource);
     }
+
+    create(user) {
+        let newUser = new this._model(user);
+
+        return newUser.save();
+    }
 }
 
 module.exports = RethinkDbUserStoreAdapter;

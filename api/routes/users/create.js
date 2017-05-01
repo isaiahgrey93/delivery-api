@@ -67,6 +67,14 @@ module.exports = {
             }
         ],
         handler: function(request, reply) {
+            try {
+                let res = this.libs.users.create(request.payload);
+                return reply(res);
+            } catch (e) {
+                return reply(e);
+            }
+
+            return;
             let user = new this.db.models.User(request.payload);
 
             this.utils.model.validate(user);
