@@ -66,31 +66,16 @@ module.exports = {
                 method: Prehandlers.upload("drivers_license.photo")
             }
         ],
-        handler: function(request, reply) {
+        handler: async function(request, reply) {
             try {
-                let res = this.libs.users.create(request.payload);
-                return reply(res);
+                let user = await this.libs.users.create(request.payload);
+                let token = this.utils.user.grantJSONWebToken(user);
+
+                user.token = token;
+                return reply(user).header("Authorization", token);
             } catch (e) {
                 return reply(e);
             }
-
-            return;
-            let user = new this.db.models.User(request.payload);
-
-            this.utils.model.validate(user);
-
-            this.core
-                .model("User")
-                .create(user)
-                .then(user => {
-                    let account = this.utils.user.sanitize(user);
-                    let token = this.utils.user.grantJSONWebToken(account);
-
-                    account.token = token;
-
-                    reply(account).header("Authorization", token);
-                })
-                .catch(err => reply(err));
         }
     }
 };

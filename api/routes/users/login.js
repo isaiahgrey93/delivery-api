@@ -16,42 +16,52 @@ module.exports = {
             }
         },
         tags: ["api"],
-        handler: function(request, reply) {
+        handler: async function(request, reply) {
             let credentials = request.payload;
             let relations = request.query.populate;
 
-            this.core.user
-                .findByEmail(credentials.email)
-                .then(
-                    user =>
-                        (!user
-                            ? Boom.badRequest(
-                                  `Email <${credentials.email}> and password combination is incorrect.`
-                              )
-                            : user.comparePassword(credentials.password))
-                )
-                .then(res => {
-                    if (res.isBoom) return res;
-                    else {
-                        return this.core.model("User").findById(res.id, {
-                            populate: this.utils.model.populate(relations),
-                            without: {
-                                password: true
-                            }
-                        });
-                    }
-                })
-                .then(user => {
-                    if (user.isBoom) return reply(user);
+            try {
+                let user = await this.libs.users.authenticate(credentials);
+                let token = this.utils.user.grantJSONWebToken(user);
 
-                    let account = this.utils.user.sanitize(user);
-                    let token = this.utils.user.grantJSONWebToken(account);
+                user.token = token;
+                return reply(user);
+            } catch (e) {
+                return reply(e);
+            }
 
-                    account.token = token;
+            // this.core.user
+            //     .findByEmail(credentials.email)
+            //     .then(
+            //         user =>
+            //             (!user
+            //                 ? Boom.badRequest(
+            //                       `Email <${credentials.email}> and password combination is incorrect.`
+            //                   )
+            //                 : user.comparePassword(credentials.password))
+            //     )
+            //     .then(res => {
+            //         if (res.isBoom) return res;
+            //         else {
+            //             return this.core.model("User").findById(res.id, {
+            //                 populate: this.utils.model.populate(relations),
+            //                 without: {
+            //                     password: true
+            //                 }
+            //             });
+            //         }
+            //     })
+            //     .then(user => {
+            //         if (user.isBoom) return reply(user);
 
-                    reply(account).header("Authorization", token);
-                })
-                .catch(err => reply(err));
+            //         let account = this.utils.user.sanitize(user);
+            //         let token = this.utils.user.grantJSONWebToken(account);
+
+            //         account.token = token;
+
+            //         reply(account).header("Authorization", token);
+            //     })
+            //     .catch(err => reply(err));
         }
     }
 };

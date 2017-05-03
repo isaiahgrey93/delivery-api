@@ -56,35 +56,18 @@ module.exports = {
                 populate: Joi.string()
             }
         },
-        pre: [
-            {
-                assign: "profile_photo",
-                method: Prehandlers.upload("profile_photo")
-            },
-            {
-                assign: "drivers_license.photo",
-                method: Prehandlers.upload("drivers_license.photo")
-            }
-        ],
-        handler: function(request, reply) {
+
+        handler: async function(request, reply) {
             let user = request.payload;
             let relations = request.query.populate;
             user.id = request.params.user_id;
 
-            this.core
-                .model("User")
-                .update(user)
-                .then(res =>
-                    this.core.model("User").findById(res.id, {
-                        populate: this.utils.model.populate(relations),
-                        without: {
-                            password: true
-                        }
-                    })
-                )
-                .then(user => this.utils.user.sanitize(user))
-                .then(user => reply(user))
-                .catch(err => reply(err));
+            try {
+                user = await this.libs.users.update(user);
+                return reply(user);
+            } catch (e) {
+                return reply(e);
+            }
         }
     }
 };

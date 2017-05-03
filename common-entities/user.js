@@ -5,6 +5,7 @@ function User(user = {}) {
         id,
         createdAt,
         updatedAt,
+        scope,
         email,
         password,
         nickname,
@@ -22,6 +23,7 @@ function User(user = {}) {
     this.id = id;
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
+    this.scope = scope;
     this.email = email;
     this.password = password;
     this.nickname = nickname;
