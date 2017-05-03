@@ -29,39 +29,6 @@ module.exports = {
             } catch (e) {
                 return reply(e);
             }
-
-            // this.core.user
-            //     .findByEmail(credentials.email)
-            //     .then(
-            //         user =>
-            //             (!user
-            //                 ? Boom.badRequest(
-            //                       `Email <${credentials.email}> and password combination is incorrect.`
-            //                   )
-            //                 : user.comparePassword(credentials.password))
-            //     )
-            //     .then(res => {
-            //         if (res.isBoom) return res;
-            //         else {
-            //             return this.core.model("User").findById(res.id, {
-            //                 populate: this.utils.model.populate(relations),
-            //                 without: {
-            //                     password: true
-            //                 }
-            //             });
-            //         }
-            //     })
-            //     .then(user => {
-            //         if (user.isBoom) return reply(user);
-
-            //         let account = this.utils.user.sanitize(user);
-            //         let token = this.utils.user.grantJSONWebToken(account);
-
-            //         account.token = token;
-
-            //         reply(account).header("Authorization", token);
-            //     })
-            //     .catch(err => reply(err));
         }
     }
 };

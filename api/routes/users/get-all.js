@@ -4,28 +4,23 @@ module.exports = {
     path: "/api/users",
     method: "GET",
     config: {
-        plugins: {
-            policies: ["isAdminOrOwner"]
-        },
+        auth: false,
         validate: {
             query: {
                 populate: Joi.string()
             }
         },
         tags: ["api"],
-        handler: function(request, reply) {
+        handler: async function(request, reply) {
             let relations = request.query.populate;
 
-            this.core
-                .model("User")
-                .getAll({
-                    populate: this.utils.model.populate(relations),
-                    without: {
-                        password: true
-                    }
-                })
-                .then(users => reply(this.utils.user.sanitize(users)))
-                .catch(err => reply(err));
+            try {
+                let users = await this.libs.users.getAll();
+
+                return reply(users);
+            } catch (e) {
+                return e;
+            }
         }
     }
 };

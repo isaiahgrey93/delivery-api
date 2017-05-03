@@ -12,19 +12,17 @@ module.exports = {
             }
         },
         tags: ["api"],
-        handler: function(request, reply) {
+        handler: async function(request, reply) {
             let relations = request.query.populate;
-            let geometry = request.query.geometry || [];
-            let distance = request.query.distance || 50;
             let query = request.payload;
 
-            this.core.user
-                .query(query, {
-                    populate: this.utils.model.populate(relations),
-                    geometry: this.utils.drive.getGeometry(geometry, distance)
-                })
-                .then(users => reply(users))
-                .catch(err => reply(err));
+            try {
+                let users = await this.libs.users.filterBy(query);
+
+                return reply(users);
+            } catch (e) {
+                return reply(e);
+            }
         }
     }
 };

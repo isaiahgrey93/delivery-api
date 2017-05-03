@@ -17,28 +17,20 @@ module.exports = {
             }
         },
         tags: ["api"],
-        handler: function(request, reply) {
+        handler: async function(request, reply) {
             let email = request.params.email;
-            let new_password = request.payload.password;
+            let newPassword = request.payload.password;
 
-            this.core.user
-                .findByEmail(email)
-                .then(user => {
-                    if (!user) throw Boom.badRequest();
-                    else return user;
-                })
-                .then(data => {
-                    let user = new this.db.models.User(
-                        Object.assign(data, {
-                            password: new_password
-                        })
-                    );
+            try {
+                let user = await this.libs.users.resetPassword(
+                    email,
+                    newPassword
+                );
 
-                    return user.generatePassword();
-                })
-                .then(user => this.core.model("User").update(user))
-                .then(user => reply(this.utils.user.sanitize(user)))
-                .catch(err => reply(err));
+                return reply(user);
+            } catch (e) {
+                return reply(e);
+            }
         }
     }
 };

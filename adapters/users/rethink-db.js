@@ -5,8 +5,9 @@ const Bcrypt = require("bcrypt-as-promised");
 
 class RethinkDbUserStoreAdapter {
     constructor(thinky) {
-        const { type, r } = thinky;
+        const { type, r, Query } = thinky;
 
+        this._Query = Query;
         this._Entity = User;
         this._Model = thinky.createModel(
             "User",
@@ -85,15 +86,6 @@ class RethinkDbUserStoreAdapter {
 
             return this;
         });
-
-        // this._Model.pre("save", async function(next) {
-
-        //     await this.generatePassword();
-
-        //     } catch (e) {
-        //         return next(e);
-        //     }
-        // });
     }
 
     _modelToEntity(resource) {
@@ -135,6 +127,22 @@ class RethinkDbUserStoreAdapter {
         }
     }
 
+    async resetPassword(email, password) {
+        try {
+            let user = await this.findByEmail(email);
+
+            user = new this._Model(Object.assign({}, user, { password }));
+
+            user = await user.generatePassword();
+            user = await this._Model.save(user, { conflict: "update" });
+            user = user.toJSON();
+
+            return this._modelToEntity(user);
+        } catch (e) {
+            return new Error("No user with email address.");
+        }
+    }
+
     async findByEmail(email) {
         try {
             let [user] = await this._Model.filter({ email: email }).limit(1);
@@ -155,10 +163,55 @@ class RethinkDbUserStoreAdapter {
         try {
             user = await this._Model.get(data.id);
             user = await user.merge(data);
-            user = await user.save();
+            user = await this._Model.save(user, { conflict: "update" });
             user = user.toJSON();
 
             return this._modelToEntity(user);
+        } catch (e) {
+            return e;
+        }
+    }
+
+    async getById(id) {
+        try {
+            let user = await this._Model.get(id);
+            user = user.toJSON();
+
+            return this._modelToEntity(user);
+        } catch (e) {
+            return new Error("No user with id.");
+        }
+    }
+
+    async delete(id) {
+        try {
+            let user = await this._Model.get(id);
+            user = user.delete();
+            user = user.toJSON();
+
+            return this._modelToEntity(user);
+        } catch (e) {
+            return new Error("No user with id.");
+        }
+    }
+
+    async getAll() {
+        try {
+            let users = await new this._Query(this._Model).run();
+            users = users.map(u => u.toJSON());
+
+            return users.map(u => this._modelToEntity(u));
+        } catch (e) {
+            return e;
+        }
+    }
+
+    async filterBy(query) {
+        try {
+            let users = await new this._Query(this._Model).filter(query);
+            users = users.map(u => u.toJSON());
+
+            return users.map(u => this._modelToEntity(u));
         } catch (e) {
             return e;
         }

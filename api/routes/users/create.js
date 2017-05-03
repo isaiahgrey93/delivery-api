@@ -10,9 +10,6 @@ module.exports = {
         auth: {
             mode: "optional"
         },
-        plugins: {
-            policies: ["restrictAdminCreation"]
-        },
         validate: {
             payload: {
                 email: Joi.string().email().required(),

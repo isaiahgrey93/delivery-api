@@ -13,20 +13,17 @@ module.exports = {
             }
         },
         tags: ["api"],
-        handler: function(request, reply) {
+        handler: async function(request, reply) {
             let id = request.params.user_id;
             let relations = request.query.populate;
 
-            this.core
-                .model("User")
-                .findById(id, {
-                    populate: this.utils.model.populate(relations),
-                    without: {
-                        password: true
-                    }
-                })
-                .then(user => reply(this.utils.user.sanitize(user)))
-                .catch(err => reply(err));
+            try {
+                let user = await this.libs.users.getById(id);
+
+                return reply(user);
+            } catch (e) {
+                return reply(e);
+            }
         }
     }
 };

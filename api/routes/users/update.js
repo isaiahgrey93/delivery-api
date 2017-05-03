@@ -7,9 +7,6 @@ module.exports = {
     method: ["PUT", "PATCH"],
     config: {
         tags: ["api"],
-        plugins: {
-            policies: ["isAdminOrOwner", "restrictAdminFields"]
-        },
         validate: {
             payload: {
                 email: Joi.string().email(),
