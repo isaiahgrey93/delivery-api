@@ -1,6 +1,7 @@
 const Joi = require("joi");
 const Boom = require("boom");
 const Prehandlers = require("../../../old-lib/prehandlers");
+const { toServerEntity } = require("./helpers");
 
 module.exports = {
     path: "/api/users",
@@ -70,35 +71,35 @@ module.exports = {
         handler: async function(request, reply) {
             let data = request.payload;
 
-            let { drivers_license = {} } = data;
+            // let params = {
+            //     email: data.email,
+            //     scope: data.scope,
+            //     password: data.password,
+            //     nickname: data.nickname,
+            //     lastname: data.lastname,
+            //     firstname: data.firstname,
+            //     middleInitial: data.middle_initial,
+            //     dob: data.dob,
+            //     ssn: data.social_security_number,
+            //     phone: data.phone,
+            //     avatar: data.profile_photo,
+            //     driver: {
+            //         notes: data.notes,
+            //         status: data.status,
+            //         paymentAccountId: data.connect_id,
+            //         license: {
+            //             state: drivers_license.state,
+            //             photo: drivers_license.photo,
+            //             number: drivers_license.number,
+            //             expiryYear: drivers_license.expiry_year,
+            //             expiryMonth: drivers_license.expiry_month
+            //         }
+            //     },
+            //     address: data.address
+            // };
 
-            let params = {
-                email: data.email,
-                scope: data.scope,
-                password: data.password,
-                nickname: data.nickname,
-                lastname: data.lastname,
-                firstname: data.firstname,
-                middleInitial: data.middle_initial,
-                dob: data.dob,
-                ssn: data.social_security_number,
-                phone: data.phone,
-                avatar: data.profile_photo,
-                driver: {
-                    notes: data.notes,
-                    status: data.status,
-                    paymentAccountId: data.connect_id,
-                    license: {
-                        state: drivers_license.state,
-                        photo: drivers_license.photo,
-                        number: drivers_license.number,
-                        expiryYear: drivers_license.expiry_year,
-                        expiryMonth: drivers_license.expiry_month
-                    }
-                },
-                address: data.address
-            };
-
+            let params = toServerEntity(data);
+            console.log(params);
             try {
                 let user = await this.libs.users.create(params);
                 let token = this.utils.user.grantJSONWebToken(user);
