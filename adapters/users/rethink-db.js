@@ -93,7 +93,6 @@ class RethinkDbUserStoreAdapter {
     }
 
     async create(data) {
-        console.log(data);
         let user = new this._Model(data);
 
         try {

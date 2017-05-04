@@ -1,7 +1,7 @@
 const Joi = require("joi");
 const Boom = require("boom");
 const Prehandlers = require("../../../old-lib/prehandlers");
-const { toServerEntity } = require("./helpers");
+const { toServerEntity, toClientEntity } = require("./helpers");
 
 module.exports = {
     path: "/api/users",
@@ -54,8 +54,7 @@ module.exports = {
                     "verified",
                     "rejected"
                 ),
-                social_security_number: Joi.string(),
-                isOnline: Joi.boolean()
+                social_security_number: Joi.string()
             }
         },
         pre: [
@@ -71,40 +70,18 @@ module.exports = {
         handler: async function(request, reply) {
             let data = request.payload;
 
-            // let params = {
-            //     email: data.email,
-            //     scope: data.scope,
-            //     password: data.password,
-            //     nickname: data.nickname,
-            //     lastname: data.lastname,
-            //     firstname: data.firstname,
-            //     middleInitial: data.middle_initial,
-            //     dob: data.dob,
-            //     ssn: data.social_security_number,
-            //     phone: data.phone,
-            //     avatar: data.profile_photo,
-            //     driver: {
-            //         notes: data.notes,
-            //         status: data.status,
-            //         paymentAccountId: data.connect_id,
-            //         license: {
-            //             state: drivers_license.state,
-            //             photo: drivers_license.photo,
-            //             number: drivers_license.number,
-            //             expiryYear: drivers_license.expiry_year,
-            //             expiryMonth: drivers_license.expiry_month
-            //         }
-            //     },
-            //     address: data.address
-            // };
-
             let params = toServerEntity(data);
-            console.log(params);
+
             try {
                 let user = await this.libs.users.create(params);
+
+                if (user instanceof Error) throw user;
+
                 let token = this.utils.user.grantJSONWebToken(user);
 
+                user = toClientEntity(user);
                 user.token = token;
+
                 return reply(user).header("Authorization", token);
             } catch (e) {
                 return reply(e);
