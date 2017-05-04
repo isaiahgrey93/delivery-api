@@ -13,7 +13,7 @@ class RethinkDbUserStoreAdapter {
             "User",
             {
                 id: type.string().required().default(() => r.uuid()),
-                createdAt: type.date().default(() => r.now()),
+                createdAt: type.date().default(r.now()),
                 updatedAt: type.date().default(() => r.now()),
                 scope: type
                     .array()
@@ -93,6 +93,7 @@ class RethinkDbUserStoreAdapter {
     }
 
     async create(data) {
+        console.log(data);
         let user = new this._Model(data);
 
         try {

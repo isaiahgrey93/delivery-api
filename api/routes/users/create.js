@@ -29,7 +29,12 @@ module.exports = {
                 profile_photo: Joi.any(),
                 phone: Joi.string(),
                 dob: Joi.string(),
-                rating: Joi.number(),
+                notes: Joi.array().items(
+                    Joi.object().keys({
+                        createdAt: Joi.date(),
+                        body: Joi.string()
+                    })
+                ),
                 drivers_license: Joi.object().keys({
                     expiry_month: Joi.string(),
                     expiry_year: Joi.string(),
@@ -49,8 +54,7 @@ module.exports = {
                     "rejected"
                 ),
                 social_security_number: Joi.string(),
-                isOnline: Joi.boolean(),
-                geo: Joi.object()
+                isOnline: Joi.boolean()
             }
         },
         pre: [
@@ -64,8 +68,39 @@ module.exports = {
             }
         ],
         handler: async function(request, reply) {
+            let data = request.payload;
+
+            let { drivers_license = {} } = data;
+
+            let params = {
+                email: data.email,
+                scope: data.scope,
+                password: data.password,
+                nickname: data.nickname,
+                lastname: data.lastname,
+                firstname: data.firstname,
+                middleInitial: data.middle_initial,
+                dob: data.dob,
+                ssn: data.social_security_number,
+                phone: data.phone,
+                avatar: data.profile_photo,
+                driver: {
+                    notes: data.notes,
+                    status: data.status,
+                    paymentAccountId: data.connect_id,
+                    license: {
+                        state: drivers_license.state,
+                        photo: drivers_license.photo,
+                        number: drivers_license.number,
+                        expiryYear: drivers_license.expiry_year,
+                        expiryMonth: drivers_license.expiry_month
+                    }
+                },
+                address: data.address
+            };
+
             try {
-                let user = await this.libs.users.create(request.payload);
+                let user = await this.libs.users.create(params);
                 let token = this.utils.user.grantJSONWebToken(user);
 
                 user.token = token;
