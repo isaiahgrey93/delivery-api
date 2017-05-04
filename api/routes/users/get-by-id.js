@@ -1,4 +1,5 @@
 const Joi = require("joi");
+const { toClientEntity } = require("./helpers");
 
 module.exports = {
     path: "/api/users/{user_id}",
@@ -19,6 +20,7 @@ module.exports = {
 
             try {
                 let user = await this.libs.users.getById(id);
+                user = toClientEntity(user);
 
                 return reply(user);
             } catch (e) {

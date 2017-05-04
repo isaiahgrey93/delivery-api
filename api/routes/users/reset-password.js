@@ -1,5 +1,6 @@
 const Joi = require("joi");
 const Boom = require("boom");
+const { toClientEntity } = require("./helpers");
 
 module.exports = {
     path: "/api/users/{email}/password",
@@ -27,6 +28,7 @@ module.exports = {
                     newPassword
                 );
 
+                user = toClientEntity(user);
                 return reply(user);
             } catch (e) {
                 return reply(e);

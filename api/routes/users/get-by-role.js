@@ -1,4 +1,5 @@
 const Joi = require("joi");
+const { toClientEntity } = require("./helpers");
 
 module.exports = {
     path: "/api/users/{user_role}s/role",
@@ -16,6 +17,7 @@ module.exports = {
 
             try {
                 let users = await this.libs.users.getByRole(role);
+                users = users.map(u => toClientEntity(u));
 
                 return reply(users);
             } catch (e) {

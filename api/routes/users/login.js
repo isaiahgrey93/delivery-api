@@ -1,5 +1,6 @@
 const Joi = require("joi");
 const Boom = require("boom");
+const { toClientEntity } = require("./helpers");
 
 module.exports = {
     path: "/api/users/login",
@@ -22,9 +23,9 @@ module.exports = {
 
             try {
                 let user = await this.libs.users.authenticate(credentials);
-                let token = this.utils.user.grantJSONWebToken(user);
+                user = toClientEntity(user);
 
-                user.token = token;
+                user.token = this.utils.user.grantJSONWebToken(user);
                 return reply(user);
             } catch (e) {
                 return reply(e);

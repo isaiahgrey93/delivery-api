@@ -1,4 +1,5 @@
 const Joi = require("joi");
+const { toClientEntity } = require("./helpers");
 
 module.exports = {
     path: "/api/users",
@@ -16,6 +17,7 @@ module.exports = {
 
             try {
                 let users = await this.libs.users.getAll();
+                users = users.map(u => toClientEntity(u));
 
                 return reply(users);
             } catch (e) {
