@@ -2,8 +2,10 @@ const { Drive } = require("../../common-entities");
 
 class RethinkDbDriveStoreAdapter {
     constructor(thinky) {
-        const { type, r } = thinky;
+        const { type, r, Query } = thinky;
 
+        this._Query = Query;
+        this._Entity = Drive;
         this._model = thinky.createModel(
             "Drive",
             {
@@ -93,11 +95,74 @@ class RethinkDbDriveStoreAdapter {
             }
         );
 
-        this._Entity = Drive;
+        this._Model.define("toJSON", function() {
+            return omit(this, []);
+        });
     }
 
     _modelToEntity(resource) {
         return new this._Entity(resource);
+    }
+
+    async create(data) {
+        let drive = new this._Entity(data);
+        try {
+            drive = await drive.save();
+            drive = drive.toJSON();
+
+            return this._modelToEntity(drive);
+        } catch (e) {
+            return e;
+        }
+    }
+
+    async update() {
+        let drive = new this._Model(data);
+
+        try {
+            drive = await this._Model.get(data.id);
+            drive = await drive.merge(data);
+            drive = await this._Model.save(drive, { conflict: "update" });
+            drive = drive.toJSON();
+
+            return this._modelToEntity(drive);
+        } catch (e) {
+            return e;
+        }
+    }
+
+    async delete() {
+        try {
+            let drive = await this._Model.get(id);
+            drive = drive.delete();
+            drive = drive.toJSON();
+
+            return this._modelToEntity(drive);
+        } catch (e) {
+            return new Error("No drive with id.");
+        }
+    }
+
+    async getById() {
+        try {
+            let drive = await this._Model.get(id);
+            drive = drive.toJSON();
+
+            return this._modelToEntity(drive);
+        } catch (e) {
+            return new Error("No drive with id.");
+        }
+    }
+
+    async getAll() {
+        try {
+            let drives = await new this._Query(this._Model).run();
+            drives = drives.map(d => d.toJSON());
+
+            return drives.map(d => this._modelToEntity(d));
+        } catch (e) {
+            return e;
+        }
     }
 }
 

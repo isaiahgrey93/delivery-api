@@ -68,8 +68,6 @@ class RethinkDbUserStoreAdapter {
             }
         );
 
-        const UserModel = this._Model;
-
         this._Model.define("toJSON", function() {
             return omit(this, ["password"]);
         });
