@@ -7,7 +7,7 @@ class RethinkDbVehicleStoreAdapter {
 
         this._Query = Query;
         this._Entity = Vehicle;
-        this._model = thinky.createModel(
+        this._Model = thinky.createModel(
             "Vehicle",
             {
                 id: type.string().default(() => r.uuid()),

@@ -7,7 +7,7 @@ class RethinkDbCategoryStoreAdapter {
 
         this._Query = Query;
         this._Entity = Category;
-        this._model = thinky.createModel(
+        this._Model = thinky.createModel(
             "Category",
             {
                 id: type.string().required().default(() => r.uuid()),

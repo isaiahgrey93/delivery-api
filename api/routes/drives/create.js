@@ -58,7 +58,8 @@ module.exports = {
                         geo: Joi.object().strip()
                     })
                 }),
-                items: Joi.array().items(
+                drive_type: Joi.string(),
+                commercial_cargo_items: Joi.array().items(
                     Joi.object().keys({
                         name: Joi.string(),
                         quantity: Joi.number(),
@@ -71,6 +72,11 @@ module.exports = {
                         images: Joi.array().items(Joi.string())
                     })
                 ),
+                consumer_cargo: Joi.object().keys({
+                    value: Joi.string(),
+                    weight: Joi.string(),
+                    description: Joi.string()
+                }),
                 support: Joi.object().keys({
                     driver_ext: Joi.string(),
                     requester_ext: Joi.string(),

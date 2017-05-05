@@ -7,7 +7,7 @@ class RethinkDbSupportExtensionStoreAdapter {
 
         this._Query = Query;
         this._Entity = SupportExtension;
-        this._model = thinky.createModel(
+        this._Model = thinky.createModel(
             "SupportExtension",
             {
                 id: type.string().required().default(() => r.uuid()),

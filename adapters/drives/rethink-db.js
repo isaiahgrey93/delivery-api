@@ -6,7 +6,7 @@ class RethinkDbDriveStoreAdapter {
 
         this._Query = Query;
         this._Entity = Drive;
-        this._model = thinky.createModel(
+        this._Model = thinky.createModel(
             "Drive",
             {
                 id: type.string().required().default(() => r.uuid()),
@@ -37,17 +37,18 @@ class RethinkDbDriveStoreAdapter {
                     .default(() => "unpaid"),
                 startTime: type.date(),
                 endTime: type.date(),
+                driveType: type.string().enum(["consumer", "commercial"]),
                 driveProgressConfirmation: type.object().schema({
                     pickupArrival: type.string(),
                     pickupLoaded: type.string(),
                     dropoff: type.string()
                 }),
-                commercialCargo: {
+                consumerCargo: {
                     value: type.number(),
                     weight: type.number(),
                     description: type.number()
                 },
-                consumerCargoItems: [
+                commercialCargoItems: [
                     type.object().schema({
                         name: type.string(),
                         quantity: type.number(),

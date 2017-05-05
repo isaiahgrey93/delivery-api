@@ -11,7 +11,9 @@ function Drive(drive) {
         endTime,
         price,
         status,
-        items,
+        driveType,
+        commercialCargoItems,
+        consumerCargo,
         route,
         support,
         payment,
@@ -28,6 +30,7 @@ function Drive(drive) {
     this.endTime = endTime;
     this.price = price;
     this.status = status;
+    this.driveType = driveType;
 
     if (customer) {
         let { phone, email } = customer;
@@ -96,9 +99,20 @@ function Drive(drive) {
         this.driveProgressConfirmation.dropoff = dropoff;
     }
 
-    if (items) {
-        this.items = [];
-        items.map((item, index) => (this.items[index] = item));
+    if (consumerCargo) {
+        let { value, weight, description } = consumerCargo;
+
+        this.consumerCargo = {};
+        this.consumerCargo.value = value;
+        this.consumerCargo.weight = weight;
+        this.consumerCargo.destination;
+    }
+
+    if (commercialCargoItems) {
+        this.consumerCargo = [];
+        commercialCargoItems.map(
+            (item, index) => (this.commercialCargoItems[index] = item)
+        );
     }
 
     return sanitize(this);

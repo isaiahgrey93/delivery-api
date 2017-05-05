@@ -6,7 +6,7 @@ class RethinkDbRecordingStoreAdapter {
         const { type, r, Query } = thinky;
 
         this._Entity = Recording;
-        this._model = thinky.createModel(
+        this._Model = thinky.createModel(
             "Recording",
             {
                 id: type.string().required().default(() => r.uuid()),

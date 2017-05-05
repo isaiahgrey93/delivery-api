@@ -7,7 +7,7 @@ class RethinkDbPresetStoreAdapter {
 
         this._Query = Query;
         this._Entity = Preset;
-        this._model = thinky.createModel(
+        this._Model = thinky.createModel(
             "Preset",
             {
                 id: type.string().required().default(() => r.uuid()),
