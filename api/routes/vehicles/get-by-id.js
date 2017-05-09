@@ -1,4 +1,5 @@
 const Joi = require("joi");
+const { toServerEntity, toClientEntity } = require("./helpers");
 
 module.exports = {
     path: "/api/vehicles/{vehicle_id}",
@@ -12,14 +13,17 @@ module.exports = {
                 vehicle_id: Joi.string().required()
             }
         },
-        handler: function(request, reply) {
+        handler: async function(request, reply) {
             let id = request.params.vehicle_id;
 
-            this.core
-                .model("Vehicle")
-                .findById(id)
-                .then(vehicle => reply(vehicle))
-                .catch(err => reply(err));
+            try {
+                let vehicle = await this.libs.vehicles.getById(id);
+
+                vehicle = toClientEntity(vehicle);
+                reply(vehicle);
+            } catch (e) {
+                reply(e);
+            }
         }
     }
 };

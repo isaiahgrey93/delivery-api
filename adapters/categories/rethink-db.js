@@ -35,7 +35,8 @@ class RethinkDbCategoryStoreAdapter {
     }
 
     async create(data) {
-        let category = new this._Entity(data);
+        let category = new this._Model(data);
+
         try {
             category = await category.save();
             category = category.toJSON();
@@ -46,7 +47,7 @@ class RethinkDbCategoryStoreAdapter {
         }
     }
 
-    async update() {
+    async update(data) {
         let category = new this._Model(data);
 
         try {
@@ -61,7 +62,7 @@ class RethinkDbCategoryStoreAdapter {
         }
     }
 
-    async delete() {
+    async delete(id) {
         try {
             let category = await this._Model.get(id);
             category = category.delete();
@@ -73,7 +74,7 @@ class RethinkDbCategoryStoreAdapter {
         }
     }
 
-    async getById() {
+    async getById(id) {
         try {
             let category = await this._Model.get(id);
             category = category.toJSON();

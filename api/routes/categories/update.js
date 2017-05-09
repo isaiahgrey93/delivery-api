@@ -1,14 +1,12 @@
 const Joi = require("joi");
 const Prehandlers = require("../../../old-lib/prehandlers");
+const { toServerEntity, toClientEntity } = require("./helpers");
 
 module.exports = {
     path: "/api/categories/{category_id}",
     method: ["PUT", "PATCH"],
     config: {
         tags: ["api"],
-        auth: {
-            scope: ["requester", "admin"]
-        },
         validate: {
             payload: {
                 name: Joi.string(),
@@ -26,17 +24,19 @@ module.exports = {
                 method: Prehandlers.upload("image")
             }
         ],
-        handler: function(request, reply) {
-            let category = new this.db.models.Category(request.payload);
-            category.id = request.params.category_id;
+        handler: async function(request, reply) {
+            let data = request.payload;
+            data.id = request.params.category_id;
 
-            this.utils.model.validate(category);
+            let params = toServerEntity(data);
 
-            this.core
-                .model("Category")
-                .update(category)
-                .then(category => reply(category))
-                .catch(err => reply(err));
+            try {
+                let category = await this.libs.categories.update(params);
+
+                reply(category);
+            } catch (e) {
+                reply(e);
+            }
         }
     }
 };

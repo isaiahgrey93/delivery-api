@@ -42,7 +42,7 @@ class RethinkDbVehicleStoreAdapter {
     }
 
     async create(data) {
-        let vehicle = new this._Entity(data);
+        let vehicle = new this._Model(data);
         try {
             vehicle = await vehicle.save();
             vehicle = vehicle.toJSON();
@@ -53,7 +53,7 @@ class RethinkDbVehicleStoreAdapter {
         }
     }
 
-    async update() {
+    async update(data) {
         let vehicle = new this._Model(data);
 
         try {
@@ -68,7 +68,7 @@ class RethinkDbVehicleStoreAdapter {
         }
     }
 
-    async delete() {
+    async delete(id) {
         try {
             let vehicle = await this._Model.get(id);
             vehicle = vehicle.delete();
@@ -80,7 +80,7 @@ class RethinkDbVehicleStoreAdapter {
         }
     }
 
-    async getById() {
+    async getById(id) {
         try {
             let vehicle = await this._Model.get(id);
             vehicle = vehicle.toJSON();

@@ -1,4 +1,5 @@
 const Joi = require("joi");
+const { toServerEntity, toClientEntity } = require("./helpers");
 
 module.exports = {
     path: "/api/recordings",
@@ -12,16 +13,20 @@ module.exports = {
             }
         },
         tags: ["api"],
-        handler: function(request, reply) {
-            let recording = new this.db.models.Recording(request.payload);
+        handler: async function(request, reply) {
+            let data = request.payload;
 
-            this.utils.model.validate(recording);
+            let params = toServerEntity(data);
 
-            this.core
-                .model("Recording")
-                .create(recording)
-                .then(recording => reply(recording))
-                .catch(err => reply(err));
+            try {
+                let recording = await this.libs.recordings.create(params);
+
+                recording = toClientEntity(recording);
+
+                reply(recording);
+            } catch (e) {
+                reply(e);
+            }
         }
     }
 };

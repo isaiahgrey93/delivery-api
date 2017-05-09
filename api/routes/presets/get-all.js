@@ -1,16 +1,20 @@
 const Joi = require("joi");
+const { toServerEntity, toClientEntity } = require("./helpers");
 
 module.exports = {
     path: "/api/presets",
     method: "GET",
     config: {
         tags: ["api"],
-        handler: function(request, reply) {
-            this.core
-                .model("Preset")
-                .getAll()
-                .then(preset => reply(preset))
-                .catch(err => reply(err));
+        handler: async function(request, reply) {
+            try {
+                let presets = await this.libs.presets.getAll();
+                presets = presets.map(p => toClientEntity(p));
+
+                reply(presets);
+            } catch (e) {
+                reply(e);
+            }
         }
     }
 };

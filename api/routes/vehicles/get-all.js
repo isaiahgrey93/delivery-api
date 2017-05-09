@@ -1,4 +1,5 @@
 const Joi = require("joi");
+const { toServerEntity, toClientEntity } = require("./helpers");
 
 module.exports = {
     path: "/api/vehicles",
@@ -8,12 +9,15 @@ module.exports = {
             policies: ["isAdminOrOwner"]
         },
         tags: ["api"],
-        handler: function(request, reply) {
-            this.core
-                .model("Vehicle")
-                .getAll()
-                .then(vehicle => reply(vehicle))
-                .catch(err => reply(err));
+        handler: async function(request, reply) {
+            try {
+                let vehicles = await this.libs.vehicles.getAll();
+
+                vehicles = vehicles.map(v => toClientEntity(v));
+                reply(vehicles);
+            } catch (e) {
+                reply(e);
+            }
         }
     }
 };

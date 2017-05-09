@@ -1,25 +1,29 @@
 const Joi = require("joi");
+const { toServerEntity, toClientEntity } = require("./helpers");
 
 module.exports = {
     path: "/api/categories",
     method: "GET",
     config: {
         tags: ["api"],
+        auth: false,
         validate: {
             query: {
                 populate: Joi.string().optional()
             }
         },
-        handler: function(request, reply) {
+        handler: async function(request, reply) {
             let relations = request.query.populate;
 
-            this.core
-                .model("Category")
-                .getAll({
-                    populate: this.utils.model.populate(relations)
-                })
-                .then(category => reply(category))
-                .catch(err => reply(err));
+            try {
+                let categories = await this.libs.categories.getAll();
+
+                categories = categories.map(c => toClientEntity(c));
+
+                reply(categories);
+            } catch (e) {
+                reply(e);
+            }
         }
     }
 };

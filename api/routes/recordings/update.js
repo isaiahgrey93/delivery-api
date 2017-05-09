@@ -1,12 +1,10 @@
 const Joi = require("joi");
+const { toServerEntity, toClientEntity } = require("./helpers");
 
 module.exports = {
     path: "/api/recordings/{recording_id}",
     method: ["PUT", "PATCH"],
     config: {
-        auth: {
-            scope: ["admin"]
-        },
         plugins: {
             policies: ["isAdminOrOwner"]
         },
@@ -21,17 +19,21 @@ module.exports = {
             }
         },
         tags: ["api"],
-        handler: function(request, reply) {
-            let recording = new this.db.models.Recording(request.payload);
-            recording.id = request.params.recording_id;
+        handler: async function(request, reply) {
+            let data = request.payload;
+            data.id = request.params.recording_id;
 
-            this.utils.model.validate(recording);
+            let params = toServerEntity(data);
 
-            this.core
-                .model("Recording")
-                .update(recording)
-                .then(recording => reply(recording))
-                .catch(err => reply(err));
+            try {
+                let recording = await this.libs.recordings.update(params);
+
+                recording = toClientEntity(recording);
+
+                reply(recording);
+            } catch (e) {
+                reply(e);
+            }
         }
     }
 };

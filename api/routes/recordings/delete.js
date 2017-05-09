@@ -1,12 +1,10 @@
 const Joi = require("joi");
+const { toServerEntity, toClientEntity } = require("./helpers");
 
 module.exports = {
     path: "/api/recordings/{recording_id}",
     method: "DELETE",
     config: {
-        auth: {
-            scope: ["admin"]
-        },
         plugins: {
             policies: ["isAdminOrOwner"]
         },
@@ -16,14 +14,18 @@ module.exports = {
             }
         },
         tags: ["api"],
-        handler: function(request, reply) {
+        handler: async function(request, reply) {
             let id = request.params.recording_id;
 
-            this.core
-                .model("Recording")
-                .remove(id)
-                .then(res => reply(res))
-                .catch(err => reply(err));
+            try {
+                let recording = await this.libs.recordings.delete(id);
+
+                recording = toClientEntity(recording);
+
+                reply(recording);
+            } catch (e) {
+                reply(e);
+            }
         }
     }
 };

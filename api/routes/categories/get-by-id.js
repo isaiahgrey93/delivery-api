@@ -1,4 +1,5 @@
 const Joi = require("joi");
+const { toServerEntity, toClientEntity } = require("./helpers");
 
 module.exports = {
     path: "/api/categories/{category_id}",
@@ -10,17 +11,19 @@ module.exports = {
             }
         },
         tags: ["api"],
-        handler: function(request, reply) {
+        handler: async function(request, reply) {
             let id = request.params.category_id;
             let relations = request.query.populate;
 
-            this.core
-                .model("Category")
-                .findById(id, {
-                    populate: this.utils.model.populate(relations)
-                })
-                .then(category => reply(category))
-                .catch(err => reply(err));
+            try {
+                let category = await this.libs.categories.getById(id);
+
+                category = toClientEntity(category);
+
+                reply(category);
+            } catch (e) {
+                reply(e);
+            }
         }
     }
 };

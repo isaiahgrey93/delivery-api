@@ -1,13 +1,11 @@
 const Joi = require("joi");
 const Prehandlers = require("../../../old-lib/prehandlers");
+const { toServerEntity, toClientEntity } = require("./helpers");
 
 module.exports = {
     path: "/api/presets",
     method: "POST",
     config: {
-        auth: {
-            scope: ["requester", "admin"]
-        },
         validate: {
             payload: {
                 name: Joi.string(),
@@ -26,16 +24,20 @@ module.exports = {
                 method: Prehandlers.upload("image")
             }
         ],
-        handler: function(request, reply) {
-            let preset = new this.db.models.Preset(request.payload);
+        handler: async function(request, reply) {
+            let data = request.payload;
 
-            this.utils.model.validate(preset);
+            let params = toServerEntity(data);
 
-            this.core
-                .model("Preset")
-                .create(preset)
-                .then(preset => reply(preset))
-                .catch(err => reply(err));
+            try {
+                let preset = await this.libs.presets.create(params);
+
+                preset = toClientEntity(preset);
+
+                reply(preset);
+            } catch (e) {
+                reply(e);
+            }
         }
     }
 };

@@ -117,3 +117,5 @@ function Drive(drive) {
 
     return sanitize(this);
 }
+
+module.exports = Drive;

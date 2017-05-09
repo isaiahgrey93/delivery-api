@@ -11,3 +11,5 @@ function Recording(recording) {
 
     return sanitize(this);
 }
+
+module.exports = Recording;

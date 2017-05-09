@@ -36,3 +36,5 @@ function Vehicle(vehicle) {
 
     return sanitize(this);
 }
+
+module.exports = Vehicle;

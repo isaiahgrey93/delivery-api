@@ -1,4 +1,5 @@
 const Joi = require("joi");
+const { toServerEntity, toClientEntity } = require("./helpers");
 
 module.exports = {
     path: "/api/vehicles/{vehicle_id}",
@@ -16,14 +17,17 @@ module.exports = {
             }
         },
         tags: ["api"],
-        handler: function(request, reply) {
+        handler: async function(request, reply) {
             let id = request.params.vehicle_id;
 
-            this.core
-                .model("Vehicle")
-                .remove(id)
-                .then(res => reply(res))
-                .catch(err => reply(err));
+            try {
+                let vehicle = await this.libs.vehicles.delete(id);
+
+                vehicle = toClientEntity(vehicle);
+                reply(vehicle);
+            } catch (e) {
+                reply(e);
+            }
         }
     }
 };

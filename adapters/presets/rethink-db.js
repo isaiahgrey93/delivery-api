@@ -38,7 +38,7 @@ class RethinkDbPresetStoreAdapter {
     }
 
     async create(data) {
-        let preset = new this._Entity(data);
+        let preset = new this._Model(data);
         try {
             preset = await preset.save();
             preset = preset.toJSON();
@@ -49,7 +49,7 @@ class RethinkDbPresetStoreAdapter {
         }
     }
 
-    async update() {
+    async update(data) {
         let preset = new this._Model(data);
 
         try {
@@ -64,7 +64,7 @@ class RethinkDbPresetStoreAdapter {
         }
     }
 
-    async delete() {
+    async delete(id) {
         try {
             let preset = await this._Model.get(id);
             preset = preset.delete();
@@ -76,7 +76,7 @@ class RethinkDbPresetStoreAdapter {
         }
     }
 
-    async getById() {
+    async getById(id) {
         try {
             let preset = await this._Model.get(id);
             preset = preset.toJSON();

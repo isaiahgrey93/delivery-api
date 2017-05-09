@@ -1,5 +1,6 @@
 const Joi = require("joi");
 const Prehandlers = require("../../../old-lib/prehandlers");
+const { toServerEntity, toClientEntity } = require("./helpers");
 
 module.exports = {
     path: "/api/vehicles/{vehicle_id}",
@@ -54,17 +55,19 @@ module.exports = {
                 method: Prehandlers.upload("images[3]")
             }
         ],
-        handler: function(request, reply) {
-            let vehicle = new this.db.models.Vehicle(request.payload);
+        handler: async function(request, reply) {
+            let vehicle = request.payload;
             vehicle.id = request.params.vehicle_id;
 
-            this.utils.model.validate(vehicle);
+            let params = toServerEntity(data);
+            try {
+                let vehicle = await this.libs.vehicles.update(params);
 
-            this.core
-                .model("Vehicle")
-                .update(vehicle)
-                .then(vehicle => reply(vehicle))
-                .catch(err => reply(err));
+                vehicle = toClientEntity(vehicle);
+                reply(vehicle);
+            } catch (e) {
+                reply(e);
+            }
         }
     }
 };

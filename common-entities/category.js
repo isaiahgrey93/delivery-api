@@ -12,3 +12,5 @@ function Category(category) {
 
     return sanitize(this);
 }
+
+module.exports = Category;

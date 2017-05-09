@@ -9,3 +9,5 @@ function SupportExtension(supportExtension) {
 
     return sanitize(this);
 }
+
+module.exports = SupportExtension;

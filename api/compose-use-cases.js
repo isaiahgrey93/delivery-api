@@ -21,8 +21,6 @@ const {
     SupportExtension
 } = require("../common-entities");
 
-console.log(new User());
-
 const thinky = rethinkdb({
     db: process.env.RETHINKDB_DB_NAME,
     host: process.env.RETHINKDB_DB_HOST,
@@ -43,9 +41,18 @@ const libs = {
         store: userStore
     }),
     drives: new Object({}),
-    presets: new Object({}),
-    vehicles: new Object({}),
-    categories: new Object({}),
+    presets: new lib.presets({
+        Entity: Preset,
+        store: presetStore
+    }),
+    categories: new lib.categories({
+        Entity: Category,
+        store: categoryStore
+    }),
+    vehicles: new lib({
+        Entity: Vehicle,
+        store: vehicleStore
+    }),
     recordings: new Object({}),
     supportExtensions: new Object({})
 };

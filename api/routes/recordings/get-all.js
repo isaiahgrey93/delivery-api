@@ -1,19 +1,21 @@
 const Joi = require("joi");
+const { toServerEntity, toClientEntity } = require("./helpers");
 
 module.exports = {
     path: "/api/recordings",
     method: "GET",
     config: {
-        auth: {
-            scope: ["admin"]
-        },
         tags: ["api"],
-        handler: function(request, reply) {
-            this.core
-                .model("Recording")
-                .getAll()
-                .then(recording => reply(recording))
-                .catch(err => reply(err));
+        handler: async function(request, reply) {
+            try {
+                let recordings = await this.libs.recordings.getAll();
+
+                recordings = recordings.map(r => toClientEntity(r));
+
+                reply(recordings);
+            } catch (e) {
+                reply(e);
+            }
         }
     }
 };

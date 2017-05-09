@@ -25,3 +25,5 @@ function Preset(preset) {
 
     return sanitize(this);
 }
+
+module.exports = Preset;

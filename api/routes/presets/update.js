@@ -1,14 +1,12 @@
 const Joi = require("joi");
 const Prehandlers = require("../../../old-lib/prehandlers");
+const { toServerEntity, toClientEntity } = require("./helpers");
 
 module.exports = {
     path: "/api/presets/{preset_id}",
     method: ["PUT", "PATCH"],
     config: {
         tags: ["api"],
-        auth: {
-            scope: ["requester", "admin"]
-        },
         validate: {
             payload: {
                 name: Joi.string(),
@@ -17,7 +15,7 @@ module.exports = {
                 length: Joi.string(),
                 weight: Joi.string(),
                 image: Joi.any(),
-                category_id: Joi.string().required()
+                category_id: Joi.string()
             },
             params: {
                 preset_id: Joi.string().required()
@@ -29,17 +27,21 @@ module.exports = {
                 method: Prehandlers.upload("image")
             }
         ],
-        handler: function(request, reply) {
-            let preset = new this.db.models.Preset(request.payload);
-            preset.id = request.params.preset_id;
+        handler: async function(request, reply) {
+            let data = request.payload;
+            data.id = request.params.preset_id;
 
-            this.utils.model.validate(preset);
+            let params = toServerEntity(data);
 
-            this.core
-                .model("Preset")
-                .update(preset)
-                .then(preset => reply(preset))
-                .catch(err => reply(err));
+            try {
+                let preset = await this.libs.presets.update(params);
+
+                preset = toClientEntity(preset);
+
+                reply(preset);
+            } catch (e) {
+                reply(e);
+            }
         }
     }
 };
