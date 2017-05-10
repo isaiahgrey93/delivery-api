@@ -6,16 +6,22 @@ module.exports = {
     method: "POST",
     config: {
         tags: ["api"],
-        handler: function(request, reply) {
+        handler: async function(request, reply) {
             let file = request.payload.file;
-            let id = request.params.path;
+            let path = request.params.path;
 
             if (typeof file === "string") return reply({ key: file });
 
-            this.core.upload
-                .create(id || uuid.v1(), file)
-                .then(res => reply(res))
-                .catch(err => reply(err));
+            try {
+                let upload = await this.libs.uploads.create(
+                    path || uuid.v1(),
+                    file
+                );
+
+                reply(upload);
+            } catch (e) {
+                reply(e);
+            }
         }
     }
 };

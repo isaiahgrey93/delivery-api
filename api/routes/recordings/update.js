@@ -5,9 +5,6 @@ module.exports = {
     path: "/api/recordings/{recording_id}",
     method: ["PUT", "PATCH"],
     config: {
-        plugins: {
-            policies: ["isAdminOrOwner"]
-        },
         validate: {
             payload: {
                 url: Joi.string().required(),

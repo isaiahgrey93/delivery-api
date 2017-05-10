@@ -5,12 +5,6 @@ module.exports = {
     path: "/api/vehicles/{vehicle_id}",
     method: ["DELETE"],
     config: {
-        auth: {
-            scope: ["driver", "admin"]
-        },
-        plugins: {
-            policies: ["isAdminOrOwner"]
-        },
         validate: {
             params: {
                 vehicle_id: Joi.string().required()

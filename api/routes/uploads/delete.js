@@ -5,13 +5,16 @@ module.exports = {
     method: "DELETE",
     config: {
         tags: ["api"],
-        handler: function(request, reply) {
+        handler: async function(request, reply) {
             let path = request.params.path;
 
-            this.core.upload
-                .remove(path)
-                .then(res => reply(res))
-                .catch(err => reply(err));
+            try {
+                let upload = this.libs.uploads.delete(path);
+
+                reply(upload);
+            } catch (e) {
+                reply(e);
+            }
         }
     }
 };

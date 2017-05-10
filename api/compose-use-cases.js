@@ -1,10 +1,13 @@
 const rethinkdb = require("thinky");
+const aws = require("aws-sdk");
+
 const lib = require("../lib");
 
 const {
     Users,
     Drives,
     Presets,
+    Uploads,
     Vehicles,
     Categories,
     Recordings,
@@ -27,6 +30,18 @@ const thinky = rethinkdb({
     port: process.env.RETHINKDB_PORT
 });
 
+let awsS3 = new aws.S3({
+    credentials: {
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+    },
+    params: {
+        Bucket: process.env.AWS_BUCKET,
+        ACL: "bucket-owner-full-control"
+    }
+});
+
+const uploadGateway = new Uploads.s3(awsS3);
 const userStore = new Users.rethinkDb(thinky);
 const driveStore = new Drives.rethinkDb(thinky);
 const presetStore = new Presets.rethinkDb(thinky);
@@ -49,12 +64,21 @@ const libs = {
         Entity: Category,
         store: categoryStore
     }),
-    vehicles: new lib({
+    vehicles: new lib.vehicles({
         Entity: Vehicle,
         store: vehicleStore
     }),
-    recordings: new Object({}),
-    supportExtensions: new Object({})
+    uploads: new lib.uploads({
+        gateway: uploadGateway
+    }),
+    recordings: new lib.recordings({
+        Entity: Recording,
+        store: recordingStore
+    }),
+    supportExtensions: new lib.supportExtensions({
+        Entity: SupportExtension,
+        store: supportExtensionStore
+    })
 };
 
 // Trick into thinking init libs exists for now

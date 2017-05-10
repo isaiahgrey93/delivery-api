@@ -6,9 +6,6 @@ module.exports = {
     path: "/api/vehicles/{vehicle_id}",
     method: ["PUT", "PATCH"],
     config: {
-        plugins: {
-            policies: ["isAdminOrOwner"]
-        },
         validate: {
             payload: {
                 nickname: Joi.string(),

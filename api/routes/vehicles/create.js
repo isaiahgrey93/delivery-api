@@ -6,9 +6,6 @@ module.exports = {
     path: "/api/vehicles",
     method: "POST",
     config: {
-        auth: {
-            scope: ["driver", "admin"]
-        },
         validate: {
             payload: {
                 nickname: Joi.string(),

@@ -5,9 +5,6 @@ module.exports = {
     path: "/api/vehicles/{vehicle_id}",
     method: "GET",
     config: {
-        plugins: {
-            policies: ["isAdminOrOwner"]
-        },
         validate: {
             params: {
                 vehicle_id: Joi.string().required()

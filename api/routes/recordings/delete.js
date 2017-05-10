@@ -5,9 +5,6 @@ module.exports = {
     path: "/api/recordings/{recording_id}",
     method: "DELETE",
     config: {
-        plugins: {
-            policies: ["isAdminOrOwner"]
-        },
         validate: {
             params: {
                 recording_id: Joi.string().required()

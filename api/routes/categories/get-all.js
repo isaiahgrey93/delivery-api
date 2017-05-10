@@ -6,7 +6,6 @@ module.exports = {
     method: "GET",
     config: {
         tags: ["api"],
-        auth: false,
         validate: {
             query: {
                 populate: Joi.string().optional()

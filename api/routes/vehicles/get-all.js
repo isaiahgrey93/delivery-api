@@ -5,9 +5,6 @@ module.exports = {
     path: "/api/vehicles",
     method: "GET",
     config: {
-        plugins: {
-            policies: ["isAdminOrOwner"]
-        },
         tags: ["api"],
         handler: async function(request, reply) {
             try {

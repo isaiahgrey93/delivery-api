@@ -5,9 +5,9 @@ module.exports = {
     method: "GET",
     config: {
         tags: ["api"],
-        handler: function(request, reply) {
+        handler: async function(request, reply) {
             const path = request.params.path;
-            const file = this.core.upload.fetch(path);
+            const file = await this.libs.uploads.getByPath(path);
 
             if (!request.headers.authorization) {
                 reply.redirect(file);
