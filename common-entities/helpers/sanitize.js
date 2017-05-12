@@ -8,7 +8,7 @@ function sanitize(data) {
       return sanitize(data[key]);
     }
 
-    if (val === undefined || val === null || val === {}) {
+    if (val === undefined || val === null || val === {} || val === []) {
       delete data[key];
     }
   });

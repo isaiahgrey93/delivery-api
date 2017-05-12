@@ -7,7 +7,6 @@ module.exports = data => {
     return sanitize({
         id: data.id,
         email: data.email,
-        password: data.password,
         scope: data.scope,
         connect_id: driver.paymentAccountId,
         firstname: data.firstname,
@@ -18,6 +17,8 @@ module.exports = data => {
         phone: data.phone,
         dob: data.dob,
         notes: driver.notes,
+        categories: data.categories,
+        vehicle: data.vehicle,
         drivers_license: {
             expiry_month: license.expiryMonth,
             expiry_year: license.expiryYear,

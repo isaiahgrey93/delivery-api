@@ -16,10 +16,13 @@ module.exports = {
         tags: ["api"],
         handler: async function(request, reply) {
             let id = request.params.user_id;
-            let relations = request.query.populate;
+            let relations = request.query.populate.split(",");
 
             try {
-                let user = await this.libs.users.getById(id);
+                let user = await this.libs.users.getById(id, {
+                    populate: relations
+                });
+
                 user = toClientEntity(user);
 
                 return reply(user);

@@ -1,8 +1,10 @@
+const RecordingStorePort = require("./store-port");
 const { Recording } = require("../../common-entities");
 const { omit } = require("lodash");
 
-class RethinkDbRecordingStoreAdapter {
+class RethinkDbRecordingStoreAdapter extends RecordingStorePort {
     constructor(thinky) {
+        super();
         const { type, r, Query } = thinky;
 
         this._Entity = Recording;

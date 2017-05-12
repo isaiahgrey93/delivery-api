@@ -6,5 +6,6 @@ module.exports = {
     Vehicles: require("./vehicles"),
     Categories: require("./categories"),
     Recordings: require("./recordings"),
+    PasswordHash: require("./password-hash"),
     SupportExtensions: require("./support-extensions")
 };

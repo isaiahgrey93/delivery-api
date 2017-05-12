@@ -1,4 +1,5 @@
 const rethinkdb = require("thinky");
+const bcrypt = require("bcrypt-as-promised");
 const aws = require("aws-sdk");
 
 const lib = require("../lib");
@@ -11,6 +12,7 @@ const {
     Vehicles,
     Categories,
     Recordings,
+    PasswordHash,
     SupportExtensions
 } = require("../adapters");
 
@@ -41,6 +43,8 @@ let awsS3 = new aws.S3({
     }
 });
 
+let passwordHashLib = new PasswordHash.bcrypt(bcrypt);
+
 const uploadGateway = new Uploads.s3(awsS3);
 const userStore = new Users.rethinkDb(thinky);
 const driveStore = new Drives.rethinkDb(thinky);
@@ -53,9 +57,13 @@ const supportExtensionStore = new SupportExtensions.rethinkDb(thinky);
 const libs = {
     users: new lib.users({
         Entity: User,
-        store: userStore
+        store: userStore,
+        passwordHash: passwordHashLib
     }),
-    drives: new Object({}),
+    drives: new lib.drives({
+        Entity: Drive,
+        store: driveStore
+    }),
     presets: new lib.presets({
         Entity: Preset,
         store: presetStore
@@ -81,14 +89,6 @@ const libs = {
     })
 };
 
-// Trick into thinking init libs exists for now
-
-Object.keys(libs).forEach(name => {
-    libs[name].initLibs = () => null;
-});
-
-Object.keys(libs).forEach(name => {
-    libs[name].initLibs(libs);
-});
+Object.keys(libs).forEach(name => libs[name].initLibs(libs));
 
 module.exports = () => libs;

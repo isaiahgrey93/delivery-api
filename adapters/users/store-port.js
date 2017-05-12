@@ -1,12 +1,4 @@
-class UserPort {
-    authenticate() {
-        throw new Error("authenticate is not implemented");
-    }
-
-    resetPassword() {
-        throw new Error("resetPassword is not implemented");
-    }
-
+class UserStorePort {
     create() {
         throw new Error("create is not implemented");
     }
@@ -23,6 +15,10 @@ class UserPort {
         throw new Error("getById is not implemented");
     }
 
+    findByEmail() {
+        throw new Error("findByEmail is not implemented");
+    }
+
     getAll() {
         throw new Error("getAll is not implemented");
     }
@@ -36,4 +32,4 @@ class UserPort {
     }
 }
 
-module.exports = UserPort;
+module.exports = UserStorePort;

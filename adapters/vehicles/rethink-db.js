@@ -1,8 +1,10 @@
+const VehicleStorePort = require("./store-port");
 const { Vehicle } = require("../../common-entities");
 const { omit } = require("lodash");
 
-class RethinkDbVehicleStoreAdapter {
+class RethinkDbVehicleStoreAdapter extends VehicleStorePort {
     constructor(thinky) {
+        super();
         const { type, r, Query } = thinky;
 
         this._Query = Query;
@@ -95,6 +97,16 @@ class RethinkDbVehicleStoreAdapter {
         try {
             let vehicles = await new this._Query(this._Model).run();
             vehicles = vehicles.map(v => v.toJSON());
+
+            return vehicles.map(v => this._modelToEntity(v));
+        } catch (e) {
+            return e;
+        }
+    }
+
+    async filterBy(query) {
+        try {
+            let vehicles = await new this._Query(this._Model).filter(query);
 
             return vehicles.map(v => this._modelToEntity(v));
         } catch (e) {

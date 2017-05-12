@@ -1,8 +1,10 @@
+const PresetStorePort = require("./store-port");
 const { Preset } = require("../../common-entities");
 const { omit } = require("lodash");
 
-class RethinkDbPresetStoreAdapter {
+class RethinkDbPresetStoreAdapter extends PresetStorePort {
     constructor(thinky) {
+        super();
         const { type, r, Query } = thinky;
 
         this._Query = Query;

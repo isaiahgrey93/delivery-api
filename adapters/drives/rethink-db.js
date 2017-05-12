@@ -1,7 +1,9 @@
 const { Drive } = require("../../common-entities");
+const DriveStorePort = require("./store-port");
 
-class RethinkDbDriveStoreAdapter {
+class RethinkDbDriveStoreAdapter extends DriveStorePort {
     constructor(thinky) {
+        super();
         const { type, r, Query } = thinky;
 
         this._Query = Query;

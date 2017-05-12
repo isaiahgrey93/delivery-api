@@ -1,8 +1,10 @@
+const SupportExtensionStorePort = require("./store-port");
 const { SupportExtension } = require("../../common-entities");
 const { omit } = require("lodash");
 
-class RethinkDbSupportExtensionStoreAdapter {
+class RethinkDbSupportExtensionStoreAdapter extends SupportExtensionStorePort {
     constructor(thinky) {
+        super();
         const { type, r, Query } = thinky;
 
         this._Query = Query;

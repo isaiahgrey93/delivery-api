@@ -1,8 +1,10 @@
 const { Category } = require("../../common-entities");
+const CategoryStorePort = require("./store-port");
 const { omit } = require("lodash");
 
-class RethinkDbCategoryStoreAdapter {
+class RethinkDbCategoryStoreAdapter extends CategoryStorePort {
     constructor(thinky) {
+        super();
         const { type, r, Query } = thinky;
 
         this._Query = Query;
@@ -91,6 +93,16 @@ class RethinkDbCategoryStoreAdapter {
             categorys = categorys.map(c => c.toJSON());
 
             return categorys.map(c => this._modelToEntity(c));
+        } catch (e) {
+            return e;
+        }
+    }
+
+    async filterBy(query) {
+        try {
+            let categories = await new this._Query(this._Model).filter(query);
+
+            return categories.map(c => this._modelToEntity(c));
         } catch (e) {
             return e;
         }

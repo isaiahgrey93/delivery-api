@@ -1,5 +1,8 @@
-class S3UploadGatewayAdapter {
+const UploadGatewayPort = require("./gateway-port");
+
+class S3UploadGatewayAdapter extends UploadGatewayPort {
     constructor(s3) {
+        super();
         this._S3 = s3;
     }
 

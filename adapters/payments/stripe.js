@@ -1,4 +1,5 @@
-const Utils = require("../../old-lib/utils");
+const PaymentGatewayPort = require("./gateway-port");
+const Utils = require("../../utils");
 const { merge } = require("lodash");
 
 const defaults = {
@@ -22,8 +23,9 @@ const defaults = {
     }
 };
 
-class StripePaymentGatewayAdapter {
+class StripePaymentGatewayAdapter extends PaymentGatewayPort {
     constructor(stripe) {
+        super();
         this._Stripe = stripe;
     }
 
