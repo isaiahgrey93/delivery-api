@@ -19,16 +19,21 @@ module.exports = {
         tags: ["api"],
         handler: async function(request, reply) {
             let credentials = request.payload;
-            let relations = request.query.populate;
+
+            let { populate = "" } = request.query;
+            let relations = populate.split(",");
 
             try {
-                let user = await this.libs.users.authenticate(credentials);
-                user = toClientEntity(user);
+                let user = await this.libs.users.authenticate(credentials, {
+                    populate: relations
+                });
 
+                user = toClientEntity(user);
                 user.token = this.utils.user.grantJSONWebToken(user);
-                return reply(user);
+
+                reply(user);
             } catch (e) {
-                return reply(e);
+                reply(e);
             }
         }
     }

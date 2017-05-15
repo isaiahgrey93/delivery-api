@@ -24,13 +24,16 @@ module.exports = {
         handler: async function(request, reply) {
             let data = request.payload;
             let auth = request.auth.credentials;
+
             data.user_id = data.user_id ? data.user_id : auth.id;
 
             let params = toServerEntity(data);
+
             try {
                 let category = await this.libs.categories.create(params);
 
                 category = toClientEntity(category);
+
                 reply(category);
             } catch (e) {
                 reply(e);

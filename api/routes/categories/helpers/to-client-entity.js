@@ -7,6 +7,7 @@ module.exports = data => {
         updated_at: data.updatedAt,
         description: data.description,
         user_id: data.userId,
+        presets: data.presets,
         name: data.name,
         image: data.image
     });

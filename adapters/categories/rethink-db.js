@@ -27,9 +27,7 @@ class RethinkDbCategoryStoreAdapter extends CategoryStorePort {
             }
         );
 
-        this._Model.define("toJSON", function() {
-            return omit(this, []);
-        });
+        this._Model.ensureIndex("userId");
     }
 
     _modelToEntity(resource) {
@@ -41,7 +39,6 @@ class RethinkDbCategoryStoreAdapter extends CategoryStorePort {
 
         try {
             category = await category.save();
-            category = category.toJSON();
 
             return this._modelToEntity(category);
         } catch (e) {
@@ -56,7 +53,6 @@ class RethinkDbCategoryStoreAdapter extends CategoryStorePort {
             category = await this._Model.get(data.id);
             category = await category.merge(data);
             category = await this._Model.save(category, { conflict: "update" });
-            category = category.toJSON();
 
             return this._modelToEntity(category);
         } catch (e) {
@@ -68,7 +64,6 @@ class RethinkDbCategoryStoreAdapter extends CategoryStorePort {
         try {
             let category = await this._Model.get(id);
             category = category.delete();
-            category = category.toJSON();
 
             return this._modelToEntity(category);
         } catch (e) {
@@ -79,7 +74,6 @@ class RethinkDbCategoryStoreAdapter extends CategoryStorePort {
     async getById(id) {
         try {
             let category = await this._Model.get(id);
-            category = category.toJSON();
 
             return this._modelToEntity(category);
         } catch (e) {
@@ -90,7 +84,6 @@ class RethinkDbCategoryStoreAdapter extends CategoryStorePort {
     async getAll() {
         try {
             let categorys = await new this._Query(this._Model).run();
-            categorys = categorys.map(c => c.toJSON());
 
             return categorys.map(c => this._modelToEntity(c));
         } catch (e) {

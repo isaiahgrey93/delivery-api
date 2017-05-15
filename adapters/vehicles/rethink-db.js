@@ -34,9 +34,7 @@ class RethinkDbVehicleStoreAdapter extends VehicleStorePort {
             }
         );
 
-        this._Model.define("toJSON", function() {
-            return omit(this, []);
-        });
+        this._Model.ensureIndex("userId");
     }
 
     _modelToEntity(resource) {
@@ -47,7 +45,6 @@ class RethinkDbVehicleStoreAdapter extends VehicleStorePort {
         let vehicle = new this._Model(data);
         try {
             vehicle = await vehicle.save();
-            vehicle = vehicle.toJSON();
 
             return this._modelToEntity(vehicle);
         } catch (e) {
@@ -62,7 +59,6 @@ class RethinkDbVehicleStoreAdapter extends VehicleStorePort {
             vehicle = await this._Model.get(data.id);
             vehicle = await vehicle.merge(data);
             vehicle = await this._Model.save(vehicle, { conflict: "update" });
-            vehicle = vehicle.toJSON();
 
             return this._modelToEntity(vehicle);
         } catch (e) {
@@ -74,7 +70,6 @@ class RethinkDbVehicleStoreAdapter extends VehicleStorePort {
         try {
             let vehicle = await this._Model.get(id);
             vehicle = vehicle.delete();
-            vehicle = vehicle.toJSON();
 
             return this._modelToEntity(vehicle);
         } catch (e) {
@@ -85,7 +80,6 @@ class RethinkDbVehicleStoreAdapter extends VehicleStorePort {
     async getById(id) {
         try {
             let vehicle = await this._Model.get(id);
-            vehicle = vehicle.toJSON();
 
             return this._modelToEntity(vehicle);
         } catch (e) {
@@ -96,7 +90,6 @@ class RethinkDbVehicleStoreAdapter extends VehicleStorePort {
     async getAll() {
         try {
             let vehicles = await new this._Query(this._Model).run();
-            vehicles = vehicles.map(v => v.toJSON());
 
             return vehicles.map(v => this._modelToEntity(v));
         } catch (e) {

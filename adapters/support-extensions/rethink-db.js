@@ -22,10 +22,6 @@ class RethinkDbSupportExtensionStoreAdapter extends SupportExtensionStorePort {
                 }
             }
         );
-
-        this._Model.define("toJSON", function() {
-            return omit(this, []);
-        });
     }
 
     _modelToEntity(resource) {
@@ -36,7 +32,6 @@ class RethinkDbSupportExtensionStoreAdapter extends SupportExtensionStorePort {
         let supportExtension = new this._Entity(data);
         try {
             supportExtension = await supportExtension.save();
-            supportExtension = supportExtension.toJSON();
 
             return this._modelToEntity(supportExtension);
         } catch (e) {
@@ -53,7 +48,6 @@ class RethinkDbSupportExtensionStoreAdapter extends SupportExtensionStorePort {
             supportExtension = await this._Model.save(supportExtension, {
                 conflict: "update"
             });
-            supportExtension = supportExtension.toJSON();
 
             return this._modelToEntity(supportExtension);
         } catch (e) {
@@ -65,7 +59,6 @@ class RethinkDbSupportExtensionStoreAdapter extends SupportExtensionStorePort {
         try {
             let supportExtension = await this._Model.get(id);
             supportExtension = supportExtension.delete();
-            supportExtension = supportExtension.toJSON();
 
             return this._modelToEntity(supportExtension);
         } catch (e) {
@@ -76,7 +69,6 @@ class RethinkDbSupportExtensionStoreAdapter extends SupportExtensionStorePort {
     async getById() {
         try {
             let supportExtension = await this._Model.get(id);
-            supportExtension = supportExtension.toJSON();
 
             return this._modelToEntity(supportExtension);
         } catch (e) {
@@ -87,7 +79,6 @@ class RethinkDbSupportExtensionStoreAdapter extends SupportExtensionStorePort {
     async getAll() {
         try {
             let supportExtensions = await new this._Query(this._Model).run();
-            supportExtensions = supportExtensions.map(s => s.toJSON());
 
             return supportExtensions.map(s => this._modelToEntity(s));
         } catch (e) {

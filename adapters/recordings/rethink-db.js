@@ -25,9 +25,7 @@ class RethinkDbRecordingStoreAdapter extends RecordingStorePort {
             }
         );
 
-        this._Model.define("toJSON", function() {
-            return omit(this, []);
-        });
+        this._Model.ensureIndex("driveId");
     }
 
     _modelToEntity(resource) {
@@ -38,7 +36,6 @@ class RethinkDbRecordingStoreAdapter extends RecordingStorePort {
         let recording = new this._Entity(data);
         try {
             recording = await recording.save();
-            recording = recording.toJSON();
 
             return this._modelToEntity(recording);
         } catch (e) {
@@ -55,7 +52,6 @@ class RethinkDbRecordingStoreAdapter extends RecordingStorePort {
             recording = await this._Model.save(recording, {
                 conflict: "update"
             });
-            recording = recording.toJSON();
 
             return this._modelToEntity(recording);
         } catch (e) {
@@ -67,7 +63,6 @@ class RethinkDbRecordingStoreAdapter extends RecordingStorePort {
         try {
             let recording = await this._Model.get(id);
             recording = recording.delete();
-            recording = recording.toJSON();
 
             return this._modelToEntity(recording);
         } catch (e) {
@@ -78,7 +73,6 @@ class RethinkDbRecordingStoreAdapter extends RecordingStorePort {
     async getById() {
         try {
             let recording = await this._Model.get(id);
-            recording = recording.toJSON();
 
             return this._modelToEntity(recording);
         } catch (e) {
@@ -89,7 +83,16 @@ class RethinkDbRecordingStoreAdapter extends RecordingStorePort {
     async getAll() {
         try {
             let recordings = await new this._Query(this._Model).run();
-            recordings = recordings.map(r => r.toJSON());
+
+            return recordings.map(r => this._modelToEntity(r));
+        } catch (e) {
+            return e;
+        }
+    }
+
+    async filterBy(query) {
+        try {
+            let recordings = await new this._Query(this._Model).filter(query);
 
             return recordings.map(r => this._modelToEntity(r));
         } catch (e) {

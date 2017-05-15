@@ -16,6 +16,9 @@ module.exports = {
             },
             params: {
                 category_id: Joi.string().required()
+            },
+            query: {
+                populate: Joi.string().optional()
             }
         },
         pre: [
@@ -28,10 +31,15 @@ module.exports = {
             let data = request.payload;
             data.id = request.params.category_id;
 
+            let { populate = "" } = request.query;
+            let relations = populate.split(",");
+
             let params = toServerEntity(data);
 
             try {
-                let category = await this.libs.categories.update(params);
+                let category = await this.libs.categories.update(params, {
+                    populate: relations
+                });
 
                 reply(category);
             } catch (e) {

@@ -13,15 +13,19 @@ module.exports = {
         },
         tags: ["api"],
         handler: async function(request, reply) {
-            let relations = request.query.populate;
+            let { populate = "" } = request.query;
+            let relations = populate.split(",");
 
             try {
-                let users = await this.libs.users.getAll();
+                let users = await this.libs.users.getAll({
+                    populate: relations
+                });
+
                 users = users.map(u => toClientEntity(u));
 
-                return reply(users);
+                reply(users);
             } catch (e) {
-                return e;
+                reply(e);
             }
         }
     }

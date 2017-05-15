@@ -54,27 +54,27 @@ function Drive(drive) {
     if (route) {
         let { origin, destination, distance } = route;
 
-        this.routes = {};
+        this.route = {};
         this.distance = distance;
 
         if (origin) {
-            this.routes.origin = {};
-            this.route.origin.name = name;
-            this.route.origin.street = street;
-            this.route.origin.city = city;
-            this.route.origin.state = state;
-            this.route.origin.zip = zip;
-            this.route.origin.geo = geo;
+            this.route.origin = {};
+            this.route.origin.name = origin.name;
+            this.route.origin.street = origin.street;
+            this.route.origin.city = origin.city;
+            this.route.origin.state = origin.state;
+            this.route.origin.zip = origin.zip;
+            this.route.origin.geo = origin.geo;
         }
 
         if (destination) {
-            this.routes.destination = {};
-            this.route.destination.name = name;
-            this.route.destination.street = street;
-            this.route.destination.city = city;
-            this.route.destination.state = state;
-            this.route.destination.zip = zip;
-            this.route.destination.geo = geo;
+            this.route.destination = {};
+            this.route.destination.name = destination.name;
+            this.route.destination.street = destination.street;
+            this.route.destination.city = destination.city;
+            this.route.destination.state = destination.state;
+            this.route.destination.zip = destination.zip;
+            this.route.destination.geo = destination.geo;
         }
     }
 
@@ -105,11 +105,12 @@ function Drive(drive) {
         this.consumerCargo = {};
         this.consumerCargo.value = value;
         this.consumerCargo.weight = weight;
-        this.consumerCargo.destination;
+        this.consumerCargo.description = description;
     }
 
     if (commercialCargoItems) {
-        this.consumerCargo = [];
+        this.commercialCargoItems = [];
+
         commercialCargoItems.map(
             (item, index) => (this.commercialCargoItems[index] = item)
         );

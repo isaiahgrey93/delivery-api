@@ -1,26 +1,32 @@
 const Joi = require("joi");
-const Boom = require("boom");
+const { toClientEntity } = require("./helpers");
 
 module.exports = {
     path: "/api/drives",
     method: "GET",
     config: {
+        auth: false,
         validate: {
             query: {
                 populate: Joi.string()
             }
         },
         tags: ["api"],
-        handler: function(request, reply) {
-            let relations = request.query.populate;
+        handler: async function(request, reply) {
+            let { populate = "" } = request.query;
+            let relations = populate.split(",");
 
-            this.core
-                .model("Drive")
-                .getAll({
-                    populate: this.utils.model.populate(relations)
-                })
-                .then(drive => reply(drive))
-                .catch(err => reply(err));
+            try {
+                let drives = await this.libs.drives.getAll({
+                    populate: relations
+                });
+
+                drives = drives.map(d => toClientEntity(d));
+
+                reply(drives);
+            } catch (e) {
+                reply(e);
+            }
         }
     }
 };

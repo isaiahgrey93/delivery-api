@@ -6,8 +6,8 @@ module.exports = data => {
         support = {},
         payment = {},
         customer = {},
-        commercialCargo = {},
-        consumerCargoItems = [],
+        consumerCargo = {},
+        commercialCargoItems = [],
         driveProgressConfirmation = {}
     } = data;
 
@@ -19,6 +19,8 @@ module.exports = data => {
         updated_at: data.updatedAt,
         requester_id: data.requesterId,
         driver_id: data.driverId,
+        requester: data.requester,
+        driver: data.driver,
         customer: {
             phone: customer.phone,
             email: customer.email
@@ -42,7 +44,7 @@ module.exports = data => {
             weight: consumerCargo.weight,
             description: consumerCargo.description
         },
-        commercial_cargo_items: data.commercialCargoItems.map(item => ({
+        commercial_cargo_items: commercialCargoItems.map(item => ({
             name: item.name,
             quantity: item.quantity,
             height: item.height,
@@ -61,7 +63,7 @@ module.exports = data => {
                 city: origin.city,
                 state: origin.state,
                 zip: origin.zip,
-                geo: origin.object
+                geo: origin.geo
             },
             destination: {
                 name: destination.name,
@@ -69,7 +71,7 @@ module.exports = data => {
                 city: destination.city,
                 state: destination.state,
                 zip: destination.zip,
-                geo: type.object
+                geo: destination.geo
             }
         },
         support: {

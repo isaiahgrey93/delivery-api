@@ -56,10 +56,12 @@ module.exports = {
                 : request.auth.credentials.id;
 
             let params = toServerEntity(data);
+
             try {
                 let vehicle = await this.libs.vehicles.create(params);
 
                 vehicle = toClientEntity(vehicle);
+
                 reply(vehicle);
             } catch (e) {
                 reply(e);

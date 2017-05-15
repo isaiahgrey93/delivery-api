@@ -57,18 +57,23 @@ module.exports = {
 
         handler: async function(request, reply) {
             let data = request.payload;
-            let relations = request.query.populate;
             data.id = request.params.user_id;
+
+            let { populate = "" } = request.query;
+            let relations = populate.split(",");
 
             let params = toServerEntity(data);
 
             try {
-                user = await this.libs.users.update(params);
+                user = await this.libs.users.update(params, {
+                    populate: relations
+                });
+
                 user = toClientEntity(user);
 
-                return reply(user);
+                reply(user);
             } catch (e) {
-                return reply(e);
+                reply(e);
             }
         }
     }

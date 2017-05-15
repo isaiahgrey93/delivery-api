@@ -1,13 +1,10 @@
 const Joi = require("joi");
-const Boom = require("boom");
+const { toClientEntity, toServerEntity } = require("./helpers");
 
 module.exports = {
     path: "/api/drives",
     method: "POST",
     config: {
-        auth: {
-            scope: ["requester", "admin"]
-        },
         validate: {
             payload: {
                 id: Joi.string().strip(),
@@ -89,30 +86,28 @@ module.exports = {
             }
         },
         tags: ["api"],
-        handler: function(request, reply) {
-            let drive = request.payload;
-            let relations = request.query.populate;
-            drive.requester_id =
-                drive.requester_id || request.auth.credentials.id;
+        handler: async function(request, reply) {
+            let data = request.payload;
+            let auth = request.auth.credentials;
 
-            this.core.drive
-                .getGeoPoints(drive)
-                .then(drive => {
-                    drive = new this.db.models.Drive(drive);
+            data.requester_id = data.requester_id || auth.id;
 
-                    this.utils.model.validate(drive);
+            let { populate = "" } = request.query;
+            let relations = populate.split(",");
 
-                    this.core
-                        .model("Drive")
-                        .create(drive)
-                        .then(drive => {
-                            return this.core.model("Drive").findById(drive.id, {
-                                populate: this.utils.model.populate(relations)
-                            });
-                        })
-                        .then(drive => reply(drive));
-                })
-                .catch(err => reply(err));
+            let params = toServerEntity(data);
+
+            try {
+                let drive = await this.libs.drives.create(params, {
+                    populate: relations
+                });
+
+                drive = toClientEntity(drive);
+
+                reply(drive);
+            } catch (e) {
+                reply(e);
+            }
         }
     }
 };

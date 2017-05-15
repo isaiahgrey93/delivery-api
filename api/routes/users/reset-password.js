@@ -29,9 +29,10 @@ module.exports = {
                 );
 
                 user = toClientEntity(user);
-                return reply(user);
+
+                reply(user);
             } catch (e) {
-                return reply(e);
+                reply(e);
             }
         }
     }

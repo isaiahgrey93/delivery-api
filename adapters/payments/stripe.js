@@ -62,7 +62,7 @@ class StripePaymentGatewayAdapter extends PaymentGatewayPort {
             }
         });
 
-        return await Stripe.charges.create(charge);
+        return await this._Stripe.charges.create(charge);
     }
 
     async createTransfer(drive) {
@@ -74,11 +74,11 @@ class StripePaymentGatewayAdapter extends PaymentGatewayPort {
             description: `Driver <${drive.driver.id}> payment share for drive <${drive.id}>`
         });
 
-        return await Stripe.transfers.create(driver);
+        return await this._Stripe.transfers.create(driver);
     }
 
     async createRefund(drive) {
-        return await Stripe.refunds.create({
+        return await this._Stripe.refunds.create({
             charge: drive.payment.charge_id
         });
     }

@@ -1,5 +1,9 @@
 const Joi = require("joi");
-const Boom = require("boom");
+const { toClientEntity, toServerEntity } = require("./helpers");
+
+// TODO(isaiah) add geo queries to filter endpoint
+// // // geometry: Joi.array(),
+// // // distance: Joi.number().positive()
 
 module.exports = {
     path: "/api/drives/filter",
@@ -7,30 +11,28 @@ module.exports = {
     config: {
         validate: {
             query: {
-                populate: Joi.string(),
-                geometry: Joi.array(),
-                distance: Joi.number().positive()
+                populate: Joi.string()
             }
         },
         tags: ["api"],
-        handler: function(request, reply) {
-            let relations = request.query.populate;
-            let geometry = request.query.geometry || [];
-            let distance = request.query.distance;
-            let user = request.auth.credentials;
-            let query = request.payload;
+        handler: async function(request, reply) {
+            let data = request.payload;
+            let query = toServerEntity(data);
 
-            this.core.drive
-                .query(query, {
-                    populate: this.utils.model.populate(relations),
-                    geometry: this.utils.drive.getGeometry(
-                        geometry,
-                        distance,
-                        user
-                    )
-                })
-                .then(drive => reply(drive))
-                .catch(err => reply(err));
+            let { populate = "" } = request.query;
+            let relations = populate.split(",");
+
+            try {
+                let drives = await this.libs.drives.filterBy(query, {
+                    populate: relations
+                });
+
+                drives = drives.map(d => toClientEntity(d));
+
+                reply(drives);
+            } catch (e) {
+                reply(e);
+            }
         }
     }
 };

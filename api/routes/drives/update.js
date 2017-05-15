@@ -1,5 +1,5 @@
 const Joi = require("joi");
-const Boom = require("boom");
+const { toClientEntity, toServerEntity } = require("./helpers");
 
 module.exports = {
     path: "/api/drives/{drive_id}",
@@ -89,33 +89,26 @@ module.exports = {
             }
         },
         tags: ["api"],
-        handler: function(request, reply) {
-            let payload = request.payload;
-            let relations = request.query.populate;
-            payload.id = request.params.drive_id;
+        handler: async function(request, reply) {
+            let data = request.payload;
+            data.id = request.params.drive_id;
 
-            this.core
-                .model("Drive")
-                .findById(payload.id, {})
-                .then(drive =>
-                    this.core.drive.getGeoPoints(Object.assign(drive, payload))
-                )
-                .then(drive => {
-                    drive = new this.db.models.Drive(drive);
+            let { populate = "" } = request.query;
+            let relations = populate.split(",");
 
-                    this.utils.model.validate(drive);
+            let params = toServerEntity(data);
 
-                    this.core
-                        .model("Drive")
-                        .update(drive)
-                        .then(drive => {
-                            return this.core.model("Drive").findById(drive.id, {
-                                populate: this.utils.model.populate(relations)
-                            });
-                        })
-                        .then(drive => reply(drive));
-                })
-                .catch(err => reply(err));
+            try {
+                let drive = await this.libs.drives.update(params, {
+                    populate: relations
+                });
+
+                drive = toClientEntity(drive);
+
+                reply(drive);
+            } catch (e) {
+                reply(e);
+            }
         }
     }
 };

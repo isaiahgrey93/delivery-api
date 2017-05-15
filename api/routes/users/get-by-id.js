@@ -16,7 +16,9 @@ module.exports = {
         tags: ["api"],
         handler: async function(request, reply) {
             let id = request.params.user_id;
-            let relations = request.query.populate.split(",");
+
+            let { populate = "" } = request.query;
+            let relations = populate.split(",");
 
             try {
                 let user = await this.libs.users.getById(id, {
@@ -25,9 +27,9 @@ module.exports = {
 
                 user = toClientEntity(user);
 
-                return reply(user);
+                reply(user);
             } catch (e) {
-                return reply(e);
+                reply(e);
             }
         }
     }

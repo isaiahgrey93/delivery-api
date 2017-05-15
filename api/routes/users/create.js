@@ -82,9 +82,9 @@ module.exports = {
                 user = toClientEntity(user);
                 user.token = token;
 
-                return reply(user).header("Authorization", token);
+                reply(user).header("Authorization", token);
             } catch (e) {
-                return reply(e);
+                reply(e);
             }
         }
     }

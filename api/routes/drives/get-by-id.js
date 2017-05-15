@@ -1,5 +1,5 @@
 const Joi = require("joi");
-const Boom = require("boom");
+const { toClientEntity } = require("./helpers");
 
 module.exports = {
     path: "/api/drives/{drive_id}",
@@ -14,17 +14,23 @@ module.exports = {
             }
         },
         tags: ["api"],
-        handler: function(request, reply) {
+        handler: async function(request, reply) {
             let id = request.params.drive_id;
-            let relations = request.query.populate;
 
-            this.core
-                .model("Drive")
-                .findById(id, {
-                    populate: this.utils.model.populate(relations)
-                })
-                .then(drive => reply(drive))
-                .catch(err => reply(err));
+            let { populate = "" } = request.query;
+            let relations = populate.split(",");
+
+            try {
+                let drive = await this.libs.drives.getById(id, {
+                    populate: relations
+                });
+
+                drive = toClientEntity(drive);
+
+                reply(drive);
+            } catch (e) {
+                reply(e);
+            }
         }
     }
 };

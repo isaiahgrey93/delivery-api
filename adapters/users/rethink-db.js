@@ -68,19 +68,6 @@ class RethinkDbUserStoreAdapter extends UserStorePort {
                 }
             }
         );
-
-        this._Model.define("generatePassword", async function() {
-            let salt = await Bcrypt.genSalt(10);
-            let hash = await Bcrypt.hash(this.password, salt);
-
-            return Object.assign(this, { password: hash });
-        });
-
-        this._Model.define("comparePassword", async function(password) {
-            await Bcrypt.compare(password, this.password);
-
-            return this;
-        });
     }
 
     _modelToEntity(resource) {

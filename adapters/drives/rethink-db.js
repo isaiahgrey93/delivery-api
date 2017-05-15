@@ -6,6 +6,7 @@ class RethinkDbDriveStoreAdapter extends DriveStorePort {
         super();
         const { type, r, Query } = thinky;
 
+        this._ReQL = r;
         this._Query = Query;
         this._Entity = Drive;
         this._Model = thinky.createModel(
@@ -98,9 +99,24 @@ class RethinkDbDriveStoreAdapter extends DriveStorePort {
             }
         );
 
-        this._Model.define("toJSON", function() {
-            return omit(this, []);
-        });
+        this._Model.ensureIndex("driverId");
+        this._Model.ensureIndex("requesterId");
+
+        this._Model.ensureIndex(
+            "origin",
+            this._ReQL.row("route")("origin")("geo"),
+            {
+                geo: true
+            }
+        );
+
+        this._Model.ensureIndex(
+            "destination",
+            this._ReQL.row("route")("destination")("geo"),
+            {
+                geo: true
+            }
+        );
     }
 
     _modelToEntity(resource) {
@@ -108,10 +124,9 @@ class RethinkDbDriveStoreAdapter extends DriveStorePort {
     }
 
     async create(data) {
-        let drive = new this._Entity(data);
+        let drive = new this._Model(data);
         try {
             drive = await drive.save();
-            drive = drive.toJSON();
 
             return this._modelToEntity(drive);
         } catch (e) {
@@ -119,14 +134,13 @@ class RethinkDbDriveStoreAdapter extends DriveStorePort {
         }
     }
 
-    async update() {
+    async update(data) {
         let drive = new this._Model(data);
 
         try {
             drive = await this._Model.get(data.id);
             drive = await drive.merge(data);
             drive = await this._Model.save(drive, { conflict: "update" });
-            drive = drive.toJSON();
 
             return this._modelToEntity(drive);
         } catch (e) {
@@ -138,7 +152,6 @@ class RethinkDbDriveStoreAdapter extends DriveStorePort {
         try {
             let drive = await this._Model.get(id);
             drive = drive.delete();
-            drive = drive.toJSON();
 
             return this._modelToEntity(drive);
         } catch (e) {
@@ -146,10 +159,9 @@ class RethinkDbDriveStoreAdapter extends DriveStorePort {
         }
     }
 
-    async getById() {
+    async getById(id) {
         try {
             let drive = await this._Model.get(id);
-            drive = drive.toJSON();
 
             return this._modelToEntity(drive);
         } catch (e) {
@@ -160,7 +172,16 @@ class RethinkDbDriveStoreAdapter extends DriveStorePort {
     async getAll() {
         try {
             let drives = await new this._Query(this._Model).run();
-            drives = drives.map(d => d.toJSON());
+
+            return drives.map(d => this._modelToEntity(d));
+        } catch (e) {
+            return e;
+        }
+    }
+
+    async filterBy(query) {
+        try {
+            let drives = await new this._Query(this._Model).filter(query);
 
             return drives.map(d => this._modelToEntity(d));
         } catch (e) {

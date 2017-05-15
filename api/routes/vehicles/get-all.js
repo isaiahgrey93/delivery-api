@@ -11,6 +11,7 @@ module.exports = {
                 let vehicles = await this.libs.vehicles.getAll();
 
                 vehicles = vehicles.map(v => toClientEntity(v));
+
                 reply(vehicles);
             } catch (e) {
                 reply(e);

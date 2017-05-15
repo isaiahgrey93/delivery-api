@@ -18,6 +18,7 @@ module.exports = {
                 let category = await this.libs.categories.delete(id);
 
                 category = toClientEntity(category);
+
                 reply(category);
             } catch (e) {
                 reply(e);

@@ -12,10 +12,13 @@ module.exports = {
             }
         },
         handler: async function(request, reply) {
-            let relations = request.query.populate;
+            let { populate = "" } = request.query;
+            let relations = populate.split(",");
 
             try {
-                let categories = await this.libs.categories.getAll();
+                let categories = await this.libs.categories.getAll({
+                    populate: relations
+                });
 
                 categories = categories.map(c => toClientEntity(c));
 

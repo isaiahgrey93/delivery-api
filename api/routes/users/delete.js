@@ -15,9 +15,10 @@ module.exports = {
 
             try {
                 let user = await this.libs.users.delete(id);
-                return reply(user);
+
+                reply(user);
             } catch (e) {
-                return reply(e);
+                reply(e);
             }
         }
     }

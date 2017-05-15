@@ -30,9 +30,7 @@ class RethinkDbPresetStoreAdapter extends PresetStorePort {
             }
         );
 
-        this._Model.define("toJSON", function() {
-            return omit(this, []);
-        });
+        this._Model.ensureIndex("categoryId");
     }
 
     _modelToEntity(resource) {
@@ -43,7 +41,6 @@ class RethinkDbPresetStoreAdapter extends PresetStorePort {
         let preset = new this._Model(data);
         try {
             preset = await preset.save();
-            preset = preset.toJSON();
 
             return this._modelToEntity(preset);
         } catch (e) {
@@ -58,7 +55,6 @@ class RethinkDbPresetStoreAdapter extends PresetStorePort {
             preset = await this._Model.get(data.id);
             preset = await preset.merge(data);
             preset = await this._Model.save(preset, { conflict: "update" });
-            preset = preset.toJSON();
 
             return this._modelToEntity(preset);
         } catch (e) {
@@ -70,7 +66,6 @@ class RethinkDbPresetStoreAdapter extends PresetStorePort {
         try {
             let preset = await this._Model.get(id);
             preset = preset.delete();
-            preset = preset.toJSON();
 
             return this._modelToEntity(preset);
         } catch (e) {
@@ -81,7 +76,6 @@ class RethinkDbPresetStoreAdapter extends PresetStorePort {
     async getById(id) {
         try {
             let preset = await this._Model.get(id);
-            preset = preset.toJSON();
 
             return this._modelToEntity(preset);
         } catch (e) {
@@ -92,7 +86,16 @@ class RethinkDbPresetStoreAdapter extends PresetStorePort {
     async getAll() {
         try {
             let presets = await new this._Query(this._Model).run();
-            presets = presets.map(p => p.toJSON());
+
+            return presets.map(p => this._modelToEntity(p));
+        } catch (e) {
+            return e;
+        }
+    }
+
+    async filterBy(query) {
+        try {
+            let presets = await new this._Query(this._Model).filter(query);
 
             return presets.map(p => this._modelToEntity(p));
         } catch (e) {

@@ -17,6 +17,7 @@ module.exports = {
                 let vehicle = await this.libs.vehicles.getById(id);
 
                 vehicle = toClientEntity(vehicle);
+
                 reply(vehicle);
             } catch (e) {
                 reply(e);
