@@ -14,15 +14,17 @@ module.exports = {
         handler: async function(request, reply) {
             let id = request.params.recording_id;
 
-            try {
-                let recording = await this.libs.recordings.delete(id);
+            let recording = await resolve(this.libs.recordings.delete(id));
 
-                recording = toClientEntity(recording);
-
-                reply(recording);
-            } catch (e) {
-                reply(e);
+            if (recording.error) {
+                return reply(recording.error);
             }
+
+            recording = recording.result;
+
+            recording = toClientEntity(recording);
+
+            reply(recording);
         }
     }
 };

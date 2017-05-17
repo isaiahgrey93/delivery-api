@@ -57,15 +57,17 @@ module.exports = {
 
             let params = toServerEntity(data);
 
-            try {
-                let vehicle = await this.libs.vehicles.create(params);
+            let vehicle = await resolve(this.libs.vehicles.create(params));
 
-                vehicle = toClientEntity(vehicle);
-
-                reply(vehicle);
-            } catch (e) {
-                reply(e);
+            if (vehicle.error) {
+                return reply(vehicle.error);
             }
+
+            vehicle = vehicle.result;
+
+            vehicle = toClientEntity(vehicle);
+
+            reply(vehicle);
         }
     }
 };

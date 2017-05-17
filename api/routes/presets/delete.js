@@ -14,15 +14,17 @@ module.exports = {
         handler: async function(request, reply) {
             let id = request.params.preset_id;
 
-            try {
-                let preset = await this.libs.presets.delete(id);
+            let preset = await this.libs.presets.delete(id);
 
-                preset = toClientEntity(preset);
-
-                reply(preset);
-            } catch (e) {
-                reply(e);
+            if (preset.error) {
+                return reply(preset.error);
             }
+
+            preset = preset.result;
+
+            preset = toClientEntity(preset);
+
+            reply(preset);
         }
     }
 };

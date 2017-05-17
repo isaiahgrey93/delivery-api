@@ -36,15 +36,21 @@ module.exports = {
 
             let params = toServerEntity(data);
 
-            try {
-                let category = await this.libs.categories.update(params, {
+            let category = await resolve(
+                this.libs.categories.update(params, {
                     populate: relations
-                });
+                })
+            );
 
-                reply(category);
-            } catch (e) {
-                reply(e);
+            if (category.error) {
+                return reply(category.error);
             }
+
+            category = category.result;
+
+            category = toClientEntity(category);
+
+            reply(category);
         }
     }
 };

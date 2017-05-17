@@ -62,45 +62,41 @@ class RethinkDbVehicleStoreAdapter extends VehicleStorePort {
     async update(data) {
         let vehicle = new this._Model(data);
 
-        try {
-            vehicle = await resolve(this._Model.get(data.id));
+        vehicle = await resolve(this._Model.get(data.id));
 
-            if (vehicle.error) {
-                return {
-                    error: new Error("No vehicle with id.")
-                };
-            }
-
-            vehicle = vehicle.result;
-
-            vehicle = await resolve(vehicle.merge(data));
-
-            if (vehicle.error) {
-                return {
-                    error: vehicle.error
-                };
-            }
-
-            vehicle = vehicle.result;
-
-            vehicle = await resolve(
-                this._Model.save(vehicle, { conflict: "update" })
-            );
-
-            if (vehicle.error) {
-                return {
-                    error: vehicle.error
-                };
-            }
-
-            vehicle = vehicle.result;
-
+        if (vehicle.error) {
             return {
-                result: this._modelToEntity(vehicle)
+                error: new Error("No vehicle with id.")
             };
-        } catch (e) {
-            return e;
         }
+
+        vehicle = vehicle.result;
+
+        vehicle = await resolve(vehicle.merge(data));
+
+        if (vehicle.error) {
+            return {
+                error: vehicle.error
+            };
+        }
+
+        vehicle = vehicle.result;
+
+        vehicle = await resolve(
+            this._Model.save(vehicle, { conflict: "update" })
+        );
+
+        if (vehicle.error) {
+            return {
+                error: vehicle.error
+            };
+        }
+
+        vehicle = vehicle.result;
+
+        return {
+            result: this._modelToEntity(vehicle)
+        };
     }
 
     async delete(id) {

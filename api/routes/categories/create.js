@@ -29,15 +29,17 @@ module.exports = {
 
             let params = toServerEntity(data);
 
-            try {
-                let category = await this.libs.categories.create(params);
+            let category = await resolve(this.libs.categories.create(params));
 
-                category = toClientEntity(category);
-
-                reply(category);
-            } catch (e) {
-                reply(e);
+            if (category.error) {
+                return reply(category.error);
             }
+
+            category = category.result;
+
+            category = toClientEntity(category);
+
+            reply(category);
         }
     }
 };

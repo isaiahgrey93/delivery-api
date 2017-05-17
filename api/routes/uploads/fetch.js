@@ -7,9 +7,11 @@ module.exports = {
         tags: ["api"],
         handler: async function(request, reply) {
             const path = request.params.path;
-            const file = await this.libs.uploads.getByPath(path);
+            const auth = request.headers.authorization;
 
-            if (!request.headers.authorization) {
+            const file = this.libs.uploads.getByPath(path);
+
+            if (!auth) {
                 reply.redirect(file);
             } else {
                 reply(file);

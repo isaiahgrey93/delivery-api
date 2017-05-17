@@ -22,15 +22,17 @@ module.exports = {
 
             let params = toServerEntity(data);
 
-            try {
-                let recording = await this.libs.recordings.update(params);
+            let recording = await resolve(this.libs.recordings.update(params));
 
-                recording = toClientEntity(recording);
-
-                reply(recording);
-            } catch (e) {
-                reply(e);
+            if (recording.error) {
+                return reply(recording.error);
             }
+
+            recording = recording.result;
+
+            recording = toClientEntity(recording);
+
+            reply(recording);
         }
     }
 };

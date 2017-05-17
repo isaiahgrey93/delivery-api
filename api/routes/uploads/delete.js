@@ -8,13 +8,15 @@ module.exports = {
         handler: async function(request, reply) {
             let path = request.params.path;
 
-            try {
-                let upload = this.libs.uploads.delete(path);
+            let upload = await resolve(this.libs.uploads.delete(path));
 
-                reply(upload);
-            } catch (e) {
-                reply(e);
+            if (upload.error) {
+                return reply(upload.error);
             }
+
+            upload = upload.result;
+
+            reply(upload);
         }
     }
 };

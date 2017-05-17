@@ -7,15 +7,17 @@ module.exports = {
     config: {
         tags: ["api"],
         handler: async function(request, reply) {
-            try {
-                let recordings = await this.libs.recordings.getAll();
+            let recordings = await resolve(this.libs.recordings.getAll());
 
-                recordings = recordings.map(r => toClientEntity(r));
-
-                reply(recordings);
-            } catch (e) {
-                reply(e);
+            if (recordings.error) {
+                return reply(recordings.error);
             }
+
+            recordings = recordings.result;
+
+            recordings = recordings.map(r => toClientEntity(r));
+
+            reply(recordings);
         }
     }
 };

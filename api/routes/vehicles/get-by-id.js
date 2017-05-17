@@ -13,15 +13,17 @@ module.exports = {
         handler: async function(request, reply) {
             let id = request.params.vehicle_id;
 
-            try {
-                let vehicle = await this.libs.vehicles.getById(id);
+            let vehicle = await resolve(this.libs.vehicles.getById(id));
 
-                vehicle = toClientEntity(vehicle);
-
-                reply(vehicle);
-            } catch (e) {
-                reply(e);
+            if (vehicle.error) {
+                return reply(vehicle.error);
             }
+
+            vehicle = vehicle.result;
+
+            vehicle = toClientEntity(vehicle);
+
+            reply(vehicle);
         }
     }
 };

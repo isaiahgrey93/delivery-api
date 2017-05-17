@@ -13,15 +13,17 @@ class S3UploadGatewayAdapter extends UploadGatewayPort {
             ContentType: "image/png"
         };
 
-        return new Promise((resolve, reject) => {
-            this._S3.upload(
-                params,
-                (err, res) =>
-                    (err === null
-                        ? resolve({ result: res })
-                        : reject({ error: err }))
-            );
-        });
+        return resolve(
+            new Promise((resolve, reject) => {
+                this._S3.upload(
+                    params,
+                    (err, res) =>
+                        (err === null
+                            ? resolve({ result: res })
+                            : reject({ error: err }))
+                );
+            })
+        );
     }
 
     delete(path) {
@@ -29,15 +31,17 @@ class S3UploadGatewayAdapter extends UploadGatewayPort {
             Key: path
         };
 
-        return new Promise((resolve, reject) => {
-            this._S3.deleteObject(
-                params,
-                (err, res) =>
-                    (err === null
-                        ? resolve({ result: res })
-                        : reject({ error: err }))
-            );
-        });
+        return resolve(
+            new Promise((resolve, reject) => {
+                this._S3.deleteObject(
+                    params,
+                    (err, res) =>
+                        (err === null
+                            ? resolve({ result: res })
+                            : reject({ error: err }))
+                );
+            })
+        );
     }
 
     getByPath(path) {
@@ -45,9 +49,7 @@ class S3UploadGatewayAdapter extends UploadGatewayPort {
             Key: path
         };
 
-        return {
-            result: this._S3.getObject(params).presign()
-        };
+        return this._S3.getObject(params).presign();
     }
 }
 

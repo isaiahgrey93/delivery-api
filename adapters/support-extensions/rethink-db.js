@@ -29,17 +29,6 @@ class RethinkDbSupportExtensionStoreAdapter extends SupportExtensionStorePort {
     }
 
     async create(data) {
-        let supportExtension = new this._Entity(data);
-        try {
-            supportExtension = await supportExtension.save();
-
-            return this._modelToEntity(supportExtension);
-        } catch (e) {
-            return e;
-        }
-    }
-
-    async create(data) {
         let supportExtension = new this._Model(data);
 
         supportExtension = await resolve(supportExtension.save());

@@ -15,17 +15,21 @@ module.exports = {
             let { populate = "" } = request.query;
             let relations = populate.split(",");
 
-            try {
-                let categories = await this.libs.categories.getAll({
+            let categories = await resolve(
+                this.libs.categories.getAll({
                     populate: relations
-                });
+                })
+            );
 
-                categories = categories.map(c => toClientEntity(c));
-
-                reply(categories);
-            } catch (e) {
-                reply(e);
+            if (categories.error) {
+                return reply(categories.error);
             }
+
+            categories = categories.result;
+
+            categories = categories.map(c => toClientEntity(c));
+
+            reply(categories);
         }
     }
 };

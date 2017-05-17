@@ -20,17 +20,21 @@ module.exports = {
             let { populate = "" } = request.query;
             let relations = populate.split(",");
 
-            try {
-                let category = await this.libs.categories.getById(id, {
+            let category = await resolve(
+                this.libs.categories.getById(id, {
                     populate: relations
-                });
+                })
+            );
 
-                category = toClientEntity(category);
-
-                reply(category);
-            } catch (e) {
-                reply(e);
+            if (category.error) {
+                return reply(category.error);
             }
+
+            category = category.result;
+
+            category = toClientEntity(category);
+
+            reply(category);
         }
     }
 };

@@ -7,15 +7,17 @@ module.exports = {
     config: {
         tags: ["api"],
         handler: async function(request, reply) {
-            try {
-                let vehicles = await this.libs.vehicles.getAll();
+            let vehicles = await resolve(this.libs.vehicles.getAll());
 
-                vehicles = vehicles.map(v => toClientEntity(v));
-
-                reply(vehicles);
-            } catch (e) {
-                reply(e);
+            if (vehicles.error) {
+                return reply(vehicles.error);
             }
+
+            vehicles = vehicles.result;
+
+            vehicles = vehicles.map(v => toClientEntity(v));
+
+            reply(vehicles);
         }
     }
 };

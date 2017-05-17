@@ -12,16 +12,17 @@ module.exports = {
 
             if (typeof file === "string") return reply({ key: file });
 
-            try {
-                let upload = await this.libs.uploads.create(
-                    path || uuid.v1(),
-                    file
-                );
+            let upload = await resolve(
+                this.libs.uploads.create(path || uuid.v1(), file)
+            );
 
-                reply(upload);
-            } catch (e) {
-                reply(e);
+            if (upload.error) {
+                return reply(upload.error);
             }
+
+            upload = upload.result;
+
+            reply(upload);
         }
     }
 };

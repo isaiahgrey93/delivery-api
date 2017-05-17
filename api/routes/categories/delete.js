@@ -14,15 +14,17 @@ module.exports = {
         handler: async function(request, reply) {
             let id = request.params.category_id;
 
-            try {
-                let category = await this.libs.categories.delete(id);
+            let category = await resolve(this.libs.categories.delete(id));
 
-                category = toClientEntity(category);
-
-                reply(category);
-            } catch (e) {
-                reply(e);
+            if (category.error) {
+                return reply(category.error);
             }
+
+            category = category.result;
+
+            category = toClientEntity(category);
+
+            reply(category);
         }
     }
 };

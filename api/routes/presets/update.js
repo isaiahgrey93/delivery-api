@@ -33,15 +33,17 @@ module.exports = {
 
             let params = toServerEntity(data);
 
-            try {
-                let preset = await this.libs.presets.update(params);
+            let preset = await resolve(this.libs.presets.update(params));
 
-                preset = toClientEntity(preset);
-
-                reply(preset);
-            } catch (e) {
-                reply(e);
+            if (preset.error) {
+                return reply(preset.error);
             }
+
+            preset = preset.result;
+
+            preset = toClientEntity(preset);
+
+            reply(preset);
         }
     }
 };
