@@ -39,51 +39,140 @@ class RethinkDbSupportExtensionStoreAdapter extends SupportExtensionStorePort {
         }
     }
 
-    async update() {
+    async create(data) {
         let supportExtension = new this._Model(data);
 
-        try {
-            supportExtension = await this._Model.get(data.id);
-            supportExtension = await supportExtension.merge(data);
-            supportExtension = await this._Model.save(supportExtension, {
-                conflict: "update"
-            });
+        supportExtension = await resolve(supportExtension.save());
 
-            return this._modelToEntity(supportExtension);
-        } catch (e) {
-            return e;
+        if (supportExtension.error) {
+            return {
+                error: supportExtension.error
+            };
         }
+
+        supportExtension = supportExtension.result;
+
+        return {
+            result: this._modelToEntity(supportExtension)
+        };
     }
 
-    async delete() {
-        try {
-            let supportExtension = await this._Model.get(id);
-            supportExtension = supportExtension.delete();
+    async update(data) {
+        let supportExtension = new this._Model(data);
 
-            return this._modelToEntity(supportExtension);
-        } catch (e) {
-            return new Error("No supportExtension with id.");
+        supportExtension = await resolve(this._Model.get(data.id));
+
+        if (supportExtension.error) {
+            return {
+                error: new Error("No support extension with id.")
+            };
         }
+
+        supportExtension = supportExtension.result;
+
+        supportExtension = await resolve(supportExtension.merge(data));
+
+        if (supportExtension.error) {
+            return {
+                error: supportExtension.error
+            };
+        }
+
+        supportExtension = supportExtension.result;
+
+        supportExtension = await resolve(
+            this._Model.save(supportExtension, { conflict: "update" })
+        );
+
+        if (supportExtension.error) {
+            return {
+                error: supportExtension.error
+            };
+        }
+
+        supportExtension = supportExtension.result;
+
+        return {
+            result: this._modelToEntity(supportExtension)
+        };
     }
 
-    async getById() {
-        try {
-            let supportExtension = await this._Model.get(id);
+    async delete(id) {
+        let supportExtension = await resolve(this._Model.get(id));
 
-            return this._modelToEntity(supportExtension);
-        } catch (e) {
-            return new Error("No supportExtension with id.");
+        if (supportExtension.error) {
+            return {
+                error: new Error("No support extension with id.")
+            };
         }
+
+        supportExtension = supportExtension.result;
+
+        supportExtension = await resolve(supportExtension.delete());
+
+        if (supportExtension.error) {
+            return {
+                error: supportExtension.error
+            };
+        }
+
+        supportExtension = supportExtension.result;
+
+        return {
+            result: this._modelToEntity(supportExtension)
+        };
+    }
+
+    async getById(id) {
+        let supportExtension = await resolve(this._Model.get(id));
+
+        if (supportExtension.error) {
+            return {
+                error: new Error("No support extension with id.")
+            };
+        }
+
+        supportExtension = supportExtension.result;
+
+        return {
+            result: this._modelToEntity(supportExtension)
+        };
     }
 
     async getAll() {
-        try {
-            let supportExtensions = await new this._Query(this._Model).run();
+        let supportExtensions = await resolve(
+            new this._Query(this._Model).run()
+        );
 
-            return supportExtensions.map(s => this._modelToEntity(s));
-        } catch (e) {
-            return e;
+        if (supportExtensions.error) {
+            return {
+                error: supportExtensions.error
+            };
         }
+
+        supportExtensions = supportExtensions.result;
+
+        return {
+            result: supportExtensions.map(s => this._modelToEntity(s))
+        };
+    }
+
+    async filterBy(query) {
+        let supportExtensions = await resolve(
+            new this._Query(this._Model).filter(query)
+        );
+
+        if (supportExtensions.error) {
+            return {
+                error: supportExtensions.error
+            };
+        }
+
+        supportExtensions = supportExtensions.result;
+
+        return {
+            result: supportExtensions.map(s => this._modelToEntity(s))
+        };
     }
 }
 

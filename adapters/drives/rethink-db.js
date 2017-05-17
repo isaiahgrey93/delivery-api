@@ -125,68 +125,126 @@ class RethinkDbDriveStoreAdapter extends DriveStorePort {
 
     async create(data) {
         let drive = new this._Model(data);
-        try {
-            drive = await drive.save();
 
-            return this._modelToEntity(drive);
-        } catch (e) {
-            return e;
+        drive = await resolve(drive.save());
+
+        if (drive.error) {
+            return {
+                error: drive.error
+            };
         }
+
+        return {
+            result: this._modelToEntity(drive)
+        };
     }
 
     async update(data) {
         let drive = new this._Model(data);
 
-        try {
-            drive = await this._Model.get(data.id);
-            drive = await drive.merge(data);
-            drive = await this._Model.save(drive, { conflict: "update" });
+        drive = await resolve(this._Model.get(data.id));
 
-            return this._modelToEntity(drive);
-        } catch (e) {
-            return e;
+        if (drive.error) {
+            return {
+                error: new Error("No drive with id.")
+            };
         }
+
+        drive = drive.result;
+
+        drive = await resolve(drive.merge(data));
+
+        if (drive.error) {
+            return {
+                error: drive.error
+            };
+        }
+
+        drive = drive.result;
+
+        drive = await resolve(this._Model.save(drive, { conflict: "update" }));
+
+        if (drive.error) {
+            return {
+                error: drive.error
+            };
+        }
+
+        drive = drive.result;
+
+        return {
+            result: this._modelToEntity(drive)
+        };
     }
 
     async delete() {
-        try {
-            let drive = await this._Model.get(id);
-            drive = drive.delete();
+        let drive = await resolve(this._Model.get(id));
 
-            return this._modelToEntity(drive);
-        } catch (e) {
-            return new Error("No drive with id.");
+        if (drive.error) {
+            return {
+                error: new Error("No drive with id.")
+            };
         }
+
+        drive = drive.result;
+
+        drive = await resolve(drive.delete());
+
+        if (drive.error) {
+            return {
+                error: drive.error
+            };
+        }
+
+        return {
+            result: this._modelToEntity(drive)
+        };
     }
 
     async getById(id) {
-        try {
-            let drive = await this._Model.get(id);
+        let drive = await resolve(this._Model.get(id));
 
-            return this._modelToEntity(drive);
-        } catch (e) {
-            return new Error("No drive with id.");
+        if (drive.error) {
+            return {
+                error: new Error("No drive with id.")
+            };
         }
+
+        return {
+            result: this._modelToEntity(drive)
+        };
     }
 
     async getAll() {
-        try {
-            let drives = await new this._Query(this._Model).run();
+        let drives = await resolve(new this._Query(this._Model).run());
 
-            return drives.map(d => this._modelToEntity(d));
-        } catch (e) {
-            return e;
+        if (drives.error) {
+            return {
+                error: drives.error
+            };
         }
+
+        drives = drives.result;
+
+        return {
+            result: drives.map(d => this._modelToEntity(d))
+        };
     }
 
     async filterBy(query) {
-        try {
-            let drives = await new this._Query(this._Model).filter(query);
+        let drives = await resolve(new this._Query(this._Model).filter(query));
 
-            return drives.map(d => this._modelToEntity(d));
-        } catch (e) {
-            return e;
+        if (drives.error) {
+            return {
+                error: drives.error
+            };
         }
+
+        drives = drives.result;
+
+        return {
+            result: drives.map(d => this._modelToEntity(d))
+        };
     }
 }
 

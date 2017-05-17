@@ -19,17 +19,19 @@ module.exports = {
             let { populate = "" } = request.query;
             let relations = populate.split(",");
 
-            try {
-                let users = await this.libs.users.filterBy(query, {
-                    populate: relations
-                });
+            let users = await this.libs.users.filterBy(query, {
+                populate: relations
+            });
 
-                users = users.map(u => toClientEntity(u));
-
-                reply(users);
-            } catch (e) {
-                reply(e);
+            if (users.error) {
+                return reply(users.error);
             }
+
+            users = users.result;
+
+            users = users.map(u => toClientEntity(u));
+
+            reply(users);
         }
     }
 };

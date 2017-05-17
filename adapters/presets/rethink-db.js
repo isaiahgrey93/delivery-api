@@ -39,68 +39,134 @@ class RethinkDbPresetStoreAdapter extends PresetStorePort {
 
     async create(data) {
         let preset = new this._Model(data);
-        try {
-            preset = await preset.save();
 
-            return this._modelToEntity(preset);
-        } catch (e) {
-            return e;
+        preset = await resolve(preset.save());
+
+        if (preset.error) {
+            return {
+                error: preset.error
+            };
         }
+
+        preset = preset.result;
+
+        return {
+            result: this._modelToEntity(preset)
+        };
     }
 
     async update(data) {
         let preset = new this._Model(data);
 
-        try {
-            preset = await this._Model.get(data.id);
-            preset = await preset.merge(data);
-            preset = await this._Model.save(preset, { conflict: "update" });
+        preset = await resolve(this._Model.get(data.id));
 
-            return this._modelToEntity(preset);
-        } catch (e) {
-            return e;
+        if (preset.error) {
+            return {
+                error: new Error("No preset with id.")
+            };
         }
+
+        preset = preset.result;
+
+        preset = await resolve(preset.merge(data));
+
+        if (preset.error) {
+            return {
+                error: preset.error
+            };
+        }
+
+        preset = preset.result;
+
+        preset = await resolve(
+            this._Model.save(preset, { conflict: "update" })
+        );
+
+        if (preset.error) {
+            return {
+                error: preset.error
+            };
+        }
+
+        preset = preset.result;
+
+        return {
+            result: this._modelToEntity(preset)
+        };
     }
 
     async delete(id) {
-        try {
-            let preset = await this._Model.get(id);
-            preset = preset.delete();
+        let preset = await resolve(this._Model.get(id));
 
-            return this._modelToEntity(preset);
-        } catch (e) {
-            return new Error("No preset with id.");
+        if (preset.error) {
+            return {
+                error: new Error("No preset with id.")
+            };
         }
+
+        preset = preset.result;
+
+        preset = await resolve(preset.delete());
+
+        if (preset.error) {
+            return {
+                error: preset.error
+            };
+        }
+
+        preset = preset.result;
+
+        return {
+            result: this._modelToEntity(preset)
+        };
     }
 
     async getById(id) {
-        try {
-            let preset = await this._Model.get(id);
+        let preset = await resolve(this._Model.get(id));
 
-            return this._modelToEntity(preset);
-        } catch (e) {
-            return new Error("No preset with id.");
+        if (preset.error) {
+            return {
+                error: new Error("No preset with id.")
+            };
         }
+
+        preset = preset.result;
+
+        return {
+            result: this._modelToEntity(preset)
+        };
     }
 
     async getAll() {
-        try {
-            let presets = await new this._Query(this._Model).run();
+        let presets = await resolve(new this._Query(this._Model).run());
 
-            return presets.map(p => this._modelToEntity(p));
-        } catch (e) {
-            return e;
+        if (presets.error) {
+            return {
+                error: presets.error
+            };
         }
+
+        presets = presets.result;
+
+        return {
+            result: presets.map(p => this._modelToEntity(p))
+        };
     }
 
     async filterBy(query) {
-        try {
-            let presets = await new this._Query(this._Model).filter(query);
+        let presets = await resolve(new this._Query(this._Model).filter(query));
 
-            return presets.map(p => this._modelToEntity(p));
-        } catch (e) {
-            return e;
+        if (presets.error) {
+            return {
+                error: presets.error
+            };
         }
+
+        presets = presets.result;
+
+        return {
+            result: presets.map(p => this._modelToEntity(p))
+        };
     }
 }
 

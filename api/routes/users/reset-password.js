@@ -1,5 +1,4 @@
 const Joi = require("joi");
-const Boom = require("boom");
 const { toClientEntity } = require("./helpers");
 
 module.exports = {
@@ -22,18 +21,19 @@ module.exports = {
             let email = request.params.email;
             let newPassword = request.payload.password;
 
-            try {
-                let user = await this.libs.users.resetPassword(
-                    email,
-                    newPassword
-                );
+            let user = await resolve(
+                this.libs.users.resetPassword(email, newPassword)
+            );
 
-                user = toClientEntity(user);
-
-                reply(user);
-            } catch (e) {
-                reply(e);
+            if (user.error) {
+                return reply(user.error);
             }
+
+            user = user.result;
+
+            user = toClientEntity(user);
+
+            reply(user);
         }
     }
 };

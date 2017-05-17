@@ -1,7 +1,7 @@
 const { User } = require("../../common-entities");
 const UserStorePort = require("./store-port");
+
 const { omit } = require("lodash");
-const Bcrypt = require("bcrypt-as-promised");
 
 class RethinkDbUserStoreAdapter extends UserStorePort {
     constructor(thinky) {
@@ -77,80 +77,155 @@ class RethinkDbUserStoreAdapter extends UserStorePort {
     async create(data) {
         let user = new this._Model(data);
 
-        try {
-            user = await user.save();
+        user = await resolve(user.save());
 
-            return this._modelToEntity(user);
-        } catch (e) {
-            return e;
+        if (user.error) {
+            return {
+                error: user.error
+            };
         }
+
+        user = user.result;
+
+        return {
+            result: this._modelToEntity(user)
+        };
     }
 
     async findByEmail(email) {
-        try {
-            let [user] = await this._Model.filter({ email: email }).limit(1);
+        let users = await resolve(
+            this._Model.filter({ email: email }).limit(1)
+        );
 
-            if (!user) return false;
-
-            return this._modelToEntity(user);
-        } catch (e) {
-            return e;
+        if (users.error) {
+            return {
+                error: users.error
+            };
         }
+
+        let [user] = users.result;
+
+        if (!user) {
+            return {
+                result: false
+            };
+        }
+
+        return {
+            result: this._modelToEntity(user)
+        };
     }
 
     async update(data) {
         let user = new this._Model(data);
 
-        try {
-            user = await this._Model.get(data.id);
-            user = await user.merge(data);
-            user = await this._Model.save(user, { conflict: "update" });
+        user = await resolve(this._Model.get(data.id));
 
-            return this._modelToEntity(user);
-        } catch (e) {
-            return e;
+        if (user.error) {
+            return {
+                error: new Error("No user with id.")
+            };
         }
+
+        user = user.result;
+
+        user = await resolve(user.merge(data));
+
+        if (user.error) {
+            return {
+                error: user.error
+            };
+        }
+
+        user = user.result;
+
+        user = await resolve(this._Model.save(user, { conflict: "update" }));
+
+        if (user.error) {
+            return {
+                error: user.error
+            };
+        }
+
+        user = user.result;
+
+        return {
+            result: this._modelToEntity(user)
+        };
     }
 
     async getById(id) {
-        try {
-            let user = await this._Model.get(id);
+        let user = await resolve(this._Model.get(id));
 
-            return this._modelToEntity(user);
-        } catch (e) {
-            return new Error("No user with id.");
+        if (user.error) {
+            return {
+                error: new Error("No user with id.")
+            };
         }
+
+        user = user.result;
+
+        return {
+            result: this._modelToEntity(user)
+        };
     }
 
     async delete(id) {
-        try {
-            let user = await this._Model.get(id);
-            user = user.delete();
+        let user = await resolve(this._Model.get(id));
 
-            return this._modelToEntity(user);
-        } catch (e) {
-            return new Error("No user with id.");
+        if (user.error) {
+            return {
+                error: new Error("No user with id.")
+            };
         }
+
+        user = user.result;
+
+        user = await resolve(user.delete());
+
+        if (user.error) {
+            return {
+                error: user.error
+            };
+        }
+
+        user = user.result;
+
+        return {
+            result: this._modelToEntity(user)
+        };
     }
 
     async getAll() {
-        try {
-            let users = await new this._Query(this._Model).run();
+        let users = await resolve(new this._Query(this._Model).run());
 
-            return users.map(u => this._modelToEntity(u));
-        } catch (e) {
-            return e;
+        if (users.error) {
+            return {
+                error: users.error
+            };
         }
+
+        users = users.result;
+
+        return {
+            result: users.map(u => this._modelToEntity(u))
+        };
     }
 
     async filterBy(query) {
-        try {
-            let users = await new this._Query(this._Model).filter(query);
+        let users = await resolve(new this._Query(this._Model).filter(query));
 
-            return users.map(u => this._modelToEntity(u));
-        } catch (e) {
-            return e;
+        if (users.error) {
+            return {
+                error: users.error
+            };
         }
+
+        users = users.result;
+
+        return {
+            result: users.map(u => this._modelToEntity(u))
+        };
     }
 }
 

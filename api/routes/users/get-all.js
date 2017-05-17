@@ -16,17 +16,21 @@ module.exports = {
             let { populate = "" } = request.query;
             let relations = populate.split(",");
 
-            try {
-                let users = await this.libs.users.getAll({
+            let users = await resolve(
+                this.libs.users.getAll({
                     populate: relations
-                });
+                })
+            );
 
-                users = users.map(u => toClientEntity(u));
-
-                reply(users);
-            } catch (e) {
-                reply(e);
+            if (users.error) {
+                return reply(users.error);
             }
+
+            users = users.result;
+
+            users = users.map(u => toClientEntity(u));
+
+            reply(users);
         }
     }
 };

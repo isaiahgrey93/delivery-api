@@ -37,68 +37,129 @@ class RethinkDbCategoryStoreAdapter extends CategoryStorePort {
     async create(data) {
         let category = new this._Model(data);
 
-        try {
-            category = await category.save();
+        category = await resolve(category.save());
 
-            return this._modelToEntity(category);
-        } catch (e) {
-            return e;
+        if (category.error) {
+            return {
+                error: category.error
+            };
         }
+
+        category = category.result;
+
+        return {
+            result: this._modelToEntity(category)
+        };
     }
 
     async update(data) {
         let category = new this._Model(data);
 
-        try {
-            category = await this._Model.get(data.id);
-            category = await category.merge(data);
-            category = await this._Model.save(category, { conflict: "update" });
+        category = await resolve(this._Model.get(data.id));
 
-            return this._modelToEntity(category);
-        } catch (e) {
-            return e;
+        if (category.error) {
+            return {
+                error: new Error("No category with id.")
+            };
         }
+
+        category = category.result;
+
+        category = await resolve(category.merge(data));
+
+        if (category.error) {
+            return {
+                error: category.error
+            };
+        }
+
+        category = category.result;
+
+        category = await resolve(
+            this._Model.save(category, { conflict: "update" })
+        );
+
+        if (category.error) {
+            return {
+                error: category.error
+            };
+        }
+
+        category = category.result;
+
+        return {
+            result: this._modelToEntity(category)
+        };
     }
 
     async delete(id) {
-        try {
-            let category = await this._Model.get(id);
-            category = category.delete();
+        let category = await resolve(this._Model.get(id));
 
-            return this._modelToEntity(category);
-        } catch (e) {
-            return new Error("No category with id.");
+        if (category.error) {
+            return {
+                error: new Error("No category with id.")
+            };
         }
+
+        category = await resolve(category.delete());
+
+        if (category.error) {
+            return {
+                error: category.error
+            };
+        }
+
+        return {
+            result: this._modelToEntity(category)
+        };
     }
 
     async getById(id) {
-        try {
-            let category = await this._Model.get(id);
+        let category = await resolve(this._Model.get(id));
 
-            return this._modelToEntity(category);
-        } catch (e) {
-            return new Error("No category with id.");
+        if (category.error) {
+            return {
+                error: new Error("No category with id.")
+            };
         }
+
+        return {
+            result: this._modelToEntity(category)
+        };
     }
 
     async getAll() {
-        try {
-            let categorys = await new this._Query(this._Model).run();
+        let categories = await resolve(new this._Query(this._Model).run());
 
-            return categorys.map(c => this._modelToEntity(c));
-        } catch (e) {
-            return e;
+        if (categories.error) {
+            return {
+                error: categories.error
+            };
         }
+
+        categories = categories.result;
+
+        return {
+            result: categories.map(c => this._modelToEntity(c))
+        };
     }
 
     async filterBy(query) {
-        try {
-            let categories = await new this._Query(this._Model).filter(query);
+        let categories = await resolve(
+            new this._Query(this._Model).filter(query)
+        );
 
-            return categories.map(c => this._modelToEntity(c));
-        } catch (e) {
-            return e;
+        if (categories.error) {
+            return {
+                error: categories.error
+            };
         }
+
+        categories = categories.result;
+
+        return {
+            result: categories.map(c => this._modelToEntity(c))
+        };
     }
 }
 

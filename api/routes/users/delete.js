@@ -1,4 +1,5 @@
 const Joi = require("joi");
+const { toClientEntity } = require("./helpers");
 
 module.exports = {
     path: "/api/users/{user_id}",
@@ -13,13 +14,17 @@ module.exports = {
         handler: async function(request, reply) {
             let id = request.params.user_id;
 
-            try {
-                let user = await this.libs.users.delete(id);
+            let user = await resolve(this.libs.users.delete(id));
 
-                reply(user);
-            } catch (e) {
-                reply(e);
+            if (user.error) {
+                return reply(user.error);
             }
+
+            user = user.result;
+
+            user = toClientEntity(user);
+
+            reply(user);
         }
     }
 };

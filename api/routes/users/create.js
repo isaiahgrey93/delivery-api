@@ -1,5 +1,4 @@
 const Joi = require("joi");
-const Boom = require("boom");
 const Prehandlers = require("../../../old-lib/prehandlers");
 const { toServerEntity, toClientEntity } = require("./helpers");
 
@@ -72,20 +71,20 @@ module.exports = {
 
             let params = toServerEntity(data);
 
-            try {
-                let user = await this.libs.users.create(params);
+            let user = await resolve(this.libs.users.create(params));
 
-                if (user instanceof Error) throw user;
-
-                let token = this.utils.user.grantJSONWebToken(user);
-
-                user = toClientEntity(user);
-                user.token = token;
-
-                reply(user).header("Authorization", token);
-            } catch (e) {
-                reply(e);
+            if (user.error) {
+                return reply(user.error);
             }
+
+            user = user.result;
+
+            let token = this.utils.user.grantJSONWebToken(user);
+
+            user = toClientEntity(user);
+            user.token = token;
+
+            reply(user).header("Authorization", token);
         }
     }
 };

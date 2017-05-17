@@ -7,20 +7,43 @@ class BcryptPasswordHashAdapter extends PasswordHashLibPort {
     }
 
     async generatePasswordHash(password) {
-        let salt = await this._Bcrypt.genSalt(10);
-        let hash = await this._Bcrypt.hash(password, salt);
+        let salt = await resolve(this._Bcrypt.genSalt(10));
 
-        return hash;
+        if (salt.error) {
+            return {
+                error: salt.error
+            };
+        }
+
+        salt = salt.result;
+
+        let hash = await resolve(this._Bcrypt.hash(password, salt));
+
+        if (hash.error) {
+            return {
+                error: hash.error
+            };
+        }
+
+        hash = hash.result;
+
+        return {
+            result: hash
+        };
     }
 
     async doesPasswordMatchHash(password, hash) {
-        try {
-            await this._Bcrypt.compare(password, hash);
+        let { error } = await resolve(this._Bcrypt.compare(password, hash));
 
-            return true;
-        } catch (e) {
-            return false;
+        if (error) {
+            return {
+                result: false
+            };
         }
+
+        return {
+            result: true
+        };
     }
 }
 

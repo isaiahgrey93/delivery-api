@@ -8,6 +8,8 @@ module.exports = data => {
         id: data.id,
         email: data.email,
         scope: data.scope,
+        created_at: data.createdAt,
+        updated_at: data.updatedAt,
         connect_id: driver.paymentAccountId,
         firstname: data.firstname,
         middle_initial: data.middleInitial,

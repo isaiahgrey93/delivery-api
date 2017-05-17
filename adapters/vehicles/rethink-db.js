@@ -43,68 +43,140 @@ class RethinkDbVehicleStoreAdapter extends VehicleStorePort {
 
     async create(data) {
         let vehicle = new this._Model(data);
-        try {
-            vehicle = await vehicle.save();
 
-            return this._modelToEntity(vehicle);
-        } catch (e) {
-            return e;
+        vehicle = await resolve(vehicle.save());
+
+        if (vehicle.error) {
+            return {
+                error: vehicle.error
+            };
         }
+
+        vehicle = vehicle.result;
+
+        return {
+            result: this._modelToEntity(vehicle)
+        };
     }
 
     async update(data) {
         let vehicle = new this._Model(data);
 
         try {
-            vehicle = await this._Model.get(data.id);
-            vehicle = await vehicle.merge(data);
-            vehicle = await this._Model.save(vehicle, { conflict: "update" });
+            vehicle = await resolve(this._Model.get(data.id));
 
-            return this._modelToEntity(vehicle);
+            if (vehicle.error) {
+                return {
+                    error: new Error("No vehicle with id.")
+                };
+            }
+
+            vehicle = vehicle.result;
+
+            vehicle = await resolve(vehicle.merge(data));
+
+            if (vehicle.error) {
+                return {
+                    error: vehicle.error
+                };
+            }
+
+            vehicle = vehicle.result;
+
+            vehicle = await resolve(
+                this._Model.save(vehicle, { conflict: "update" })
+            );
+
+            if (vehicle.error) {
+                return {
+                    error: vehicle.error
+                };
+            }
+
+            vehicle = vehicle.result;
+
+            return {
+                result: this._modelToEntity(vehicle)
+            };
         } catch (e) {
             return e;
         }
     }
 
     async delete(id) {
-        try {
-            let vehicle = await this._Model.get(id);
-            vehicle = vehicle.delete();
+        let vehicle = await resolve(this._Model.get(id));
 
-            return this._modelToEntity(vehicle);
-        } catch (e) {
-            return new Error("No vehicle with id.");
+        if (vehicle.error) {
+            return {
+                error: new Error("No vehicle with id.")
+            };
         }
+
+        vehicle = vehicle.result;
+
+        vehicle = await resolve(vehicle.delete());
+
+        if (vehicle.error) {
+            return {
+                error: vehicle.error
+            };
+        }
+
+        vehicle = vehicle.result;
+
+        return {
+            result: this._modelToEntity(vehicle)
+        };
     }
 
     async getById(id) {
-        try {
-            let vehicle = await this._Model.get(id);
+        let vehicle = await resolve(this._Model.get(id));
 
-            return this._modelToEntity(vehicle);
-        } catch (e) {
-            return new Error("No vehicle with id.");
+        if (vehicle.error) {
+            return {
+                error: new Error("No vehicle with id.")
+            };
         }
+
+        vehicle = vehicle.result;
+
+        return {
+            result: this._modelToEntity(vehicle)
+        };
     }
 
     async getAll() {
-        try {
-            let vehicles = await new this._Query(this._Model).run();
+        let vehicles = await resolve(new this._Query(this._Model).run());
 
-            return vehicles.map(v => this._modelToEntity(v));
-        } catch (e) {
-            return e;
+        if (vehicles.error) {
+            return {
+                error: vehicles.error
+            };
         }
+
+        vehicles = vehicles.result;
+
+        return {
+            result: vehicles.map(v => this._modelToEntity(v))
+        };
     }
 
     async filterBy(query) {
-        try {
-            let vehicles = await new this._Query(this._Model).filter(query);
+        let vehicles = await resolve(
+            new this._Query(this._Model).filter(query)
+        );
 
-            return vehicles.map(v => this._modelToEntity(v));
-        } catch (e) {
-            return e;
+        if (vehicles.error) {
+            return {
+                error: vehicles.error
+            };
         }
+
+        vehicles = vehicles.result;
+
+        return {
+            result: vehicles.map(v => this._modelToEntity(v))
+        };
     }
 }
 

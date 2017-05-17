@@ -20,17 +20,21 @@ module.exports = {
             let { populate = "" } = request.query;
             let relations = populate.split(",");
 
-            try {
-                let user = await this.libs.users.getById(id, {
+            let user = await resolve(
+                this.libs.users.getById(id, {
                     populate: relations
-                });
+                })
+            );
 
-                user = toClientEntity(user);
-
-                reply(user);
-            } catch (e) {
-                reply(e);
+            if (user.error) {
+                return reply(user.error);
             }
+
+            user = user.result;
+
+            user = toClientEntity(user);
+
+            reply(user);
         }
     }
 };

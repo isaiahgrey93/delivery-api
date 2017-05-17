@@ -30,27 +30,89 @@ class StripePaymentGatewayAdapter extends PaymentGatewayPort {
     }
 
     async createAccount(data) {
-        return await this._Stripe.accounts.create(
-            merge(defaults.account, data)
+        let account = resolve(
+            await this._Stripe.accounts.create(merge(defaults.account, data))
         );
+
+        if (account.error) {
+            return {
+                error: account.error
+            };
+        }
+
+        account = account.result;
+
+        return {
+            result: account
+        };
     }
 
     async updateAccount(id, data) {
-        return await this._Stripe.accounts.update(id, data);
+        let account = await resolve(this._Stripe.accounts.update(id, data));
+
+        if (account.error) {
+            return {
+                error: account.error
+            };
+        }
+
+        account = account.result;
+
+        return {
+            result: account
+        };
     }
 
     async deleteAccount(id) {
-        return await this._Stripe.accounts.del(id);
+        let account = await resolve(this._Stripe.accounts.del(id));
+
+        if (account.error) {
+            return {
+                error: account.error
+            };
+        }
+
+        account = account.result;
+
+        return {
+            result: account
+        };
     }
 
     async getAccountById(id) {
-        return await this._Stripe.accounts.retrieve(id);
+        let account = await resolve(this._Stripe.accounts.retrieve(id));
+
+        if (account.error) {
+            return {
+                error: account.error
+            };
+        }
+
+        account = account.result;
+
+        return {
+            result: account
+        };
     }
 
     async getAllAccounts(limit) {
-        return await this._Stripe.accounts.list({
-            limit: limit
-        });
+        let accounts = await resolve(
+            this._Stripe.accounts.list({
+                limit: limit
+            })
+        );
+
+        if (accounts.error) {
+            return {
+                error: accounts.error
+            };
+        }
+
+        accounts = accounts.result;
+
+        return {
+            result: accounts
+        };
     }
 
     async createCharge(drive, payment) {
@@ -62,7 +124,19 @@ class StripePaymentGatewayAdapter extends PaymentGatewayPort {
             }
         });
 
-        return await this._Stripe.charges.create(charge);
+        let charge = await resolve(this._Stripe.charges.create(charge));
+
+        if (charge.error) {
+            return {
+                error: charge.error
+            };
+        }
+
+        charge = charge.result;
+
+        return {
+            result: charge
+        };
     }
 
     async createTransfer(drive) {
@@ -74,12 +148,38 @@ class StripePaymentGatewayAdapter extends PaymentGatewayPort {
             description: `Driver <${drive.driver.id}> payment share for drive <${drive.id}>`
         });
 
-        return await this._Stripe.transfers.create(driver);
+        let transfer = await resolve(this._Stripe.transfers.create(driver));
+
+        if (transfer.error) {
+            return {
+                error: transfer.error
+            };
+        }
+
+        transfer = transfer.result;
+
+        return {
+            result: transfer
+        };
     }
 
     async createRefund(drive) {
-        return await this._Stripe.refunds.create({
-            charge: drive.payment.charge_id
-        });
+        let refund = await resolve(
+            this._Stripe.refunds.create({
+                charge: drive.payment.charge_id
+            })
+        );
+
+        if (refund.error) {
+            return {
+                error: refund.error
+            };
+        }
+
+        refund = refund.result;
+
+        return {
+            result: refund
+        };
     }
 }

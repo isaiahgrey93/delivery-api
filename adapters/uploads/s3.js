@@ -16,7 +16,10 @@ class S3UploadGatewayAdapter extends UploadGatewayPort {
         return new Promise((resolve, reject) => {
             this._S3.upload(
                 params,
-                (err, res) => (err === null ? resolve(res) : reject(err))
+                (err, res) =>
+                    (err === null
+                        ? resolve({ result: res })
+                        : reject({ error: err }))
             );
         });
     }
@@ -29,7 +32,10 @@ class S3UploadGatewayAdapter extends UploadGatewayPort {
         return new Promise((resolve, reject) => {
             this._S3.deleteObject(
                 params,
-                (err, res) => (err === null ? resolve(res) : reject(err))
+                (err, res) =>
+                    (err === null
+                        ? resolve({ result: res })
+                        : reject({ error: err }))
             );
         });
     }
@@ -39,7 +45,9 @@ class S3UploadGatewayAdapter extends UploadGatewayPort {
             Key: path
         };
 
-        return this._S3.getObject(params).presign();
+        return {
+            result: this._S3.getObject(params).presign()
+        };
     }
 }
 

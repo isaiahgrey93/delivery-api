@@ -1,5 +1,4 @@
 const Joi = require("joi");
-const Boom = require("boom");
 const { toClientEntity } = require("./helpers");
 
 module.exports = {
@@ -23,18 +22,22 @@ module.exports = {
             let { populate = "" } = request.query;
             let relations = populate.split(",");
 
-            try {
-                let user = await this.libs.users.authenticate(credentials, {
+            let user = await resolve(
+                this.libs.users.authenticate(credentials, {
                     populate: relations
-                });
+                })
+            );
 
-                user = toClientEntity(user);
-                user.token = this.utils.user.grantJSONWebToken(user);
-
-                reply(user);
-            } catch (e) {
-                reply(e);
+            if (user.error) {
+                return reply(user.error);
             }
+
+            user = user.result;
+
+            user = toClientEntity(user);
+            user.token = this.utils.user.grantJSONWebToken(user);
+
+            reply(user);
         }
     }
 };

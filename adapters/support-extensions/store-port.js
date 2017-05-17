@@ -18,6 +18,10 @@ class SupportExtensionPort {
     getAll() {
         throw new Error("getAll is not implemented");
     }
+
+    filterBy() {
+        throw new Error("filterBy is not implemented");
+    }
 }
 
 module.exports = SupportExtensionPort;

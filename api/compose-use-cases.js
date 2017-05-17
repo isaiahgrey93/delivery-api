@@ -1,3 +1,5 @@
+require("../global");
+
 const rethinkdb = require("thinky");
 const bcrypt = require("bcrypt-as-promised");
 const aws = require("aws-sdk");
