@@ -17,12 +17,16 @@ class RethinkDbDriveStoreAdapter extends DriveStorePort {
                 updatedAt: type.date().default(() => r.now()),
                 requesterId: type.string(),
                 driverId: type.string(),
+                truckId: type.string(),
+                helpers: type.number(),
                 customer: type.object().schema({
                     phone: type.string(),
                     email: type.string()
                 }),
                 payment: type.object().schema({
                     chargeId: type.string(),
+                    driverPayout: type.number(),
+                    joeyPayout: type.number(),
                     transferIds: type.array().schema(type.string())
                 }),
                 price: type.number().min(0),

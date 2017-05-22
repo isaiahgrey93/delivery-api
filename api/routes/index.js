@@ -1,5 +1,6 @@
 module.exports = [
     ...require("./users"),
+    ...require("./trucks"),
     ...require("./vehicles"),
     ...require("./categories"),
     ...require("./presets"),

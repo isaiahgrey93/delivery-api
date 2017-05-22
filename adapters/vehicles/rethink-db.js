@@ -16,6 +16,7 @@ class RethinkDbVehicleStoreAdapter extends VehicleStorePort {
                 createdAt: type.date().default(() => r.now()),
                 updatedAt: type.date().default(() => r.now()),
                 userId: type.string(),
+                truckId: type.string(),
                 make: type.string(),
                 model: type.string(),
                 year: type.string(),

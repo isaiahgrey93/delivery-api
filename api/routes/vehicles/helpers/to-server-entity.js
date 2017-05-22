@@ -8,6 +8,8 @@ module.exports = data => {
         createdAt: data.created_at,
         updatedAt: data.updated_at,
         userId: data.user_id,
+        truckId: data.truck_id,
+        truck: data.truck,
         make: data.make,
         model: data.model,
         year: data.year,

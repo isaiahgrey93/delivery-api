@@ -19,6 +19,8 @@ module.exports = data => {
         updatedAt: data.updated_at,
         requesterId: data.requester_id,
         driverId: data.driver_id,
+        truckId: data.truck_id,
+        helpers: data.helpers,
         customer: {
             phone: customer.phone,
             email: customer.email

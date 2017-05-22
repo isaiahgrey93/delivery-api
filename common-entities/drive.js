@@ -7,6 +7,8 @@ function Drive(drive) {
         updatedAt,
         driverId,
         requesterId,
+        truckId,
+        helpers,
         startTime,
         endTime,
         price,
@@ -25,7 +27,9 @@ function Drive(drive) {
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
     this.driverId = driverId;
+    this.truckId = truckId;
     this.requesterId = requesterId;
+    this.helpers = helpers;
     this.startTime = startTime;
     this.endTime = endTime;
     this.price = price;

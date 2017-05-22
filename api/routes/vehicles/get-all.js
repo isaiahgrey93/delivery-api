@@ -6,8 +6,18 @@ module.exports = {
     method: "GET",
     config: {
         tags: ["api"],
+        validate: {
+            query: {
+                populate: Joi.string()
+            }
+        },
         handler: async function(request, reply) {
-            let vehicles = await resolve(this.libs.vehicles.getAll());
+            let { populate = "" } = request.query;
+            let relations = populate.split(",");
+
+            let vehicles = await resolve(
+                this.libs.vehicles.getAll({ populate: relations })
+            );
 
             if (vehicles.error) {
                 return reply(vehicles.error);

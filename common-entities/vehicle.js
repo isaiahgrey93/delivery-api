@@ -6,6 +6,7 @@ function Vehicle(vehicle) {
         createdAt,
         updatedAt,
         userId,
+        truckId,
         make,
         model,
         year,
@@ -19,6 +20,7 @@ function Vehicle(vehicle) {
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
     this.userId = userId;
+    this.truckId = truckId;
     this.make = make;
     this.model = model;
     this.year = year;

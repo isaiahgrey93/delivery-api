@@ -20,17 +20,21 @@ module.exports = {
             let { populate = "" } = request.query;
             let relations = populate.split(",");
 
-            try {
-                let drive = await this.libs.drives.getById(id, {
+            let drive = await resolve(
+                this.libs.drives.getById(id, {
                     populate: relations
-                });
+                })
+            );
 
-                drive = toClientEntity(drive);
-
-                reply(drive);
-            } catch (e) {
-                reply(e);
+            if (drive.error) {
+                return reply(drive.error);
             }
+
+            drive = drive.result;
+
+            drive = toClientEntity(drive);
+
+            reply(drive);
         }
     }
 };

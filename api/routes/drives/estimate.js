@@ -8,27 +8,21 @@ module.exports = {
         validate: {
             params: {
                 drive_id: Joi.string().required()
-            },
-            query: {
-                populate: Joi.string()
             }
         },
         tags: ["api"],
-        handler: function(request, reply) {
-            let id = request.params.drive_id;
-            let relations = request.query.populate;
+        handler: async function(request, reply) {
+            let driveId = request.params.drive_id;
 
-            this.core
-                .model("Drive")
-                .findById(id, {
-                    populate: this.utils.model.populate(relations)
-                })
-                .then(drive => this.core.drive.getTripDistance(drive))
-                .then(data => this.core.drive.getEstimate(data))
-                .then(estimate => reply(estimate))
-                .catch(err => {
-                    reply(err);
-                });
+            let estimate = await resolve(this.libs.drives.estimate(driveId));
+
+            if (estimate.error) {
+                return reply(estimate.error);
+            }
+
+            estimate = estimate.result;
+
+            reply(estimate);
         }
     }
 };

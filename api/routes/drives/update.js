@@ -11,6 +11,8 @@ module.exports = {
                 created_at: Joi.date().strip(),
                 requester_id: Joi.string(),
                 driver_id: Joi.string(),
+                truck_id: Joi.string(),
+                helpers: Joi.number(),
                 customer: Joi.object().keys({
                     phone: Joi.string(),
                     email: Joi.string()
@@ -98,17 +100,21 @@ module.exports = {
 
             let params = toServerEntity(data);
 
-            try {
-                let drive = await this.libs.drives.update(params, {
+            let drive = await resolve(
+                this.libs.drives.update(params, {
                     populate: relations
-                });
+                })
+            );
 
-                drive = toClientEntity(drive);
-
-                reply(drive);
-            } catch (e) {
-                reply(e);
+            if (drive.error) {
+                return reply(drive.error);
             }
+
+            drive = drive.result;
+
+            drive = toClientEntity(drive);
+
+            reply(drive);
         }
     }
 };

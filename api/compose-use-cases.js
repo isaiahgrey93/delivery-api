@@ -2,15 +2,19 @@ require("../global");
 
 const rethinkdb = require("thinky");
 const bcrypt = require("bcrypt-as-promised");
+const googleMaps = require("@google/maps");
+const stripe = require("stripe");
 const aws = require("aws-sdk");
 
 const lib = require("../lib");
 
 const {
+    Geo,
     Users,
     Drives,
     Presets,
     Uploads,
+    Payments,
     Vehicles,
     Categories,
     Recordings,
@@ -45,9 +49,19 @@ let awsS3 = new aws.S3({
     }
 });
 
+let stripeLib = stripe(process.env.STRIPE_SECRET);
+
+const googleMapsClient = googleMaps.createClient({
+    key: process.env.GOOGLEMAPS_API_KEY,
+    Promise
+});
+
 let passwordHashLib = new PasswordHash.bcrypt(bcrypt);
+let geoLib = new Geo.googleMaps(googleMapsClient);
 
 const uploadGateway = new Uploads.s3(awsS3);
+const paymentGateway = new Payments.stripe(stripeLib);
+
 const userStore = new Users.rethinkDb(thinky);
 const driveStore = new Drives.rethinkDb(thinky);
 const presetStore = new Presets.rethinkDb(thinky);
@@ -64,7 +78,8 @@ const libs = {
     }),
     drives: new lib.drives({
         Entity: Drive,
-        store: driveStore
+        store: driveStore,
+        geo: geoLib
     }),
     presets: new lib.presets({
         Entity: Preset,
@@ -77,6 +92,9 @@ const libs = {
     vehicles: new lib.vehicles({
         Entity: Vehicle,
         store: vehicleStore
+    }),
+    payments: new lib.payments({
+        gateway: paymentGateway
     }),
     uploads: new lib.uploads({
         gateway: uploadGateway

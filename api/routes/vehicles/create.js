@@ -19,7 +19,8 @@ module.exports = {
                 insurance: Joi.any(),
                 registration: Joi.any(),
                 images: Joi.array().items(Joi.any()).max(4).single(),
-                user_id: Joi.string()
+                user_id: Joi.string(),
+                truck_id: Joi.string()
             }
         },
         tags: ["api"],

@@ -1,5 +1,5 @@
 const Joi = require("joi");
-const Boom = require("boom");
+const { toClientEntity } = require("./helpers");
 
 module.exports = {
     path: "/api/drives/{drive_id}",
@@ -14,14 +14,20 @@ module.exports = {
             }
         },
         tags: ["api"],
-        handler: function(request, reply) {
+        handler: async function(request, reply) {
             let id = request.params.drive_id;
 
-            this.core
-                .model("Drive")
-                .remove(id)
-                .then(res => reply(res))
-                .catch(err => reply(err));
+            let drive = await resolve(this.libs.drives.delete(id));
+
+            if (drive.error) {
+                return reply(drive.error);
+            }
+
+            drive = drive.result;
+
+            drive = toClientEntity(drive);
+
+            reply(drive);
         }
     }
 };

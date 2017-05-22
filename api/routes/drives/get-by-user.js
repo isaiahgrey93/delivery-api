@@ -29,20 +29,24 @@ module.exports = {
             let { populate = "" } = request.query;
             let relations = populate.split(",");
 
-            try {
-                let drives = await this.libs.drives.filterBy(
+            let drives = await resolve(
+                this.libs.drives.filterBy(
                     { [roleId]: userId },
                     {
                         populate: relations
                     }
-                );
+                )
+            );
 
-                drives = drives.map(d => toClientEntity(d));
-
-                reply(drives);
-            } catch (e) {
-                reply(e);
+            if (drives.error) {
+                return reply(drives.error);
             }
+
+            drives = drives.result;
+
+            drives = drives.map(d => toClientEntity(d));
+
+            reply(drives);
         }
     }
 };

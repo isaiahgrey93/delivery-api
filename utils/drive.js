@@ -1,7 +1,7 @@
 "use strict";
 
 const ORM = require("thinky-loader");
-const Model = require("../core/model");
+// const Model = require("../core/model");
 
 module.exports = {
     getGeometry: (coordinates = false, distance = 50, user = false) => {

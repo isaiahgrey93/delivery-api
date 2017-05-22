@@ -115,16 +115,16 @@ class StripePaymentGatewayAdapter extends PaymentGatewayPort {
         };
     }
 
-    async createCharge(drive, payment) {
-        let charge = merge(defaults.charge, {
-            amount: (drive.price * 100).toFixed(0),
-            source: payment,
+    async createCharge(source, amount, desc) {
+        let options = merge(defaults.charge, {
+            amount: (amount * 100).toFixed(0),
+            source: source,
             metadata: {
-                description: `Payment for Joey drive <${drive.id}>`
+                description: desc
             }
         });
 
-        let charge = await resolve(this._Stripe.charges.create(charge));
+        let charge = await resolve(this._Stripe.charges.create(option));
 
         if (charge.error) {
             return {
@@ -183,3 +183,5 @@ class StripePaymentGatewayAdapter extends PaymentGatewayPort {
         };
     }
 }
+
+module.exports = StripePaymentGatewayAdapter;

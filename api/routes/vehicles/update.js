@@ -19,10 +19,14 @@ module.exports = {
                 insurance: Joi.any(),
                 registration: Joi.any(),
                 images: Joi.array().items(Joi.any()).max(4).single(),
-                user_id: Joi.string()
+                user_id: Joi.string(),
+                truck_id: Joi.string()
             },
             params: {
                 vehicle_id: Joi.string().required()
+            },
+            query: {
+                populate: Joi.string()
             }
         },
         tags: ["api"],
@@ -53,12 +57,17 @@ module.exports = {
             }
         ],
         handler: async function(request, reply) {
-            let vehicle = request.payload;
-            vehicle.id = request.params.vehicle_id;
+            let data = request.payload;
+            data.id = request.params.vehicle_id;
+
+            let { populate = "" } = request.query;
+            let relations = populate.split(",");
 
             let params = toServerEntity(data);
 
-            let vehicle = await resolve(this.libs.vehicles.update(params));
+            let vehicle = await resolve(
+                this.libs.vehicles.update(params, { populate: relations })
+            );
 
             if (vehicle.error) {
                 return reply(vehicle.error);

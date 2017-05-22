@@ -11,48 +11,34 @@ module.exports = {
             },
             params: {
                 drive_id: Joi.string().required()
+            },
+            query: {
+                populate: Joi.string()
             }
         },
         tags: ["api"],
-        handler: function(request, reply) {
-            let id = request.params.drive_id;
+        handler: async function(request, reply) {
+            let driveId = request.params.drive_id;
             let source = request.payload.source;
 
-            this.core
-                .model("Drive")
-                .findById(id, {
-                    populate: {
-                        requester: true,
-                        driver: true
-                    }
-                })
-                .then(drive => this.core.stripe.charges.create(drive, source))
-                .then(charge => {
-                    if (!charge.paid)
-                        return Boom.badRequest(
-                            `<Unable to process payment for drive <${id}>.`
-                        );
+            let { populate = "" } = request.query;
+            let relations = populate.split(",");
 
-                    let drive = {
-                        id: id,
-                        status: "available",
-                        payment: {
-                            driver_payout: this.utils.stripe.getPayout(
-                                "driver",
-                                charge.amount
-                            ),
-                            joey_payout: this.utils.stripe.getPayout(
-                                "joey",
-                                charge.amount
-                            ),
-                            charge_id: charge.id
-                        }
-                    };
-
-                    return this.core.model("Drive").update(drive);
+            let drive = await resolve(
+                this.libs.drives.charge(driveId, source, {
+                    populate: relations
                 })
-                .then(drive => reply(drive))
-                .catch(err => reply(err));
+            );
+
+            if (drive.error) {
+                return reply(drive.error);
+            }
+
+            drive = drive.result;
+
+            drive = toClientEntity(drive);
+
+            reply(drive);
         }
     }
 };
