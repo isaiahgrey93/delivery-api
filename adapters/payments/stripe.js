@@ -115,13 +115,11 @@ class StripePaymentGatewayAdapter extends PaymentGatewayPort {
         };
     }
 
-    async createCharge(source, amount, desc) {
+    async authorizeCharge(source, amount, meta) {
         let options = merge(defaults.charge, {
             amount: (amount * 100).toFixed(0),
             source: source,
-            metadata: {
-                description: desc
-            }
+            metadata: meta
         });
 
         let charge = await resolve(this._Stripe.charges.create(option));
@@ -139,16 +137,32 @@ class StripePaymentGatewayAdapter extends PaymentGatewayPort {
         };
     }
 
-    async createTransfer(drive) {
-        let driver = merge(defaults.transfer, {
-            amount: Utils.stripe.getPayout("driver", drive.price),
-            application_fee: Utils.stripe.getPayout("joey", drive.price),
-            source_transaction: drive.payment.chargeId,
-            destination: drive.driver.driver.connectId,
-            description: `Driver <${drive.driver.id}> payment share for drive <${drive.id}>`
+    async captureCharge(chargeId) {
+        let charge = await resolve(this._Stripe.charges.capture(chargeId));
+
+        if (charge.error) {
+            return {
+                error: charge.error
+            };
+        }
+
+        charge = charge.result;
+
+        return {
+            result: charge
+        };
+    }
+
+    async createTransfer(amount, charge, destination, meta) {
+        let params = merge(defaults.transfer, {
+            metadata: meta,
+            destination: destination,
+            source_transaction: charge,
+            amount: Utils.stripe.getPayout("driver", amount),
+            application_fee: Utils.stripe.getPayout("joey", amount)
         });
 
-        let transfer = await resolve(this._Stripe.transfers.create(driver));
+        let transfer = await resolve(this._Stripe.transfers.create(params));
 
         if (transfer.error) {
             return {
@@ -160,26 +174,6 @@ class StripePaymentGatewayAdapter extends PaymentGatewayPort {
 
         return {
             result: transfer
-        };
-    }
-
-    async createRefund(drive) {
-        let refund = await resolve(
-            this._Stripe.refunds.create({
-                charge: drive.payment.charge_id
-            })
-        );
-
-        if (refund.error) {
-            return {
-                error: refund.error
-            };
-        }
-
-        refund = refund.result;
-
-        return {
-            result: refund
         };
     }
 }

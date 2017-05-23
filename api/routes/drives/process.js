@@ -1,5 +1,5 @@
 const Joi = require("joi");
-const Boom = require("boom");
+const { toClientEntity } = require("./helpers");
 
 module.exports = {
     path: "/api/drives/{drive_id}/process",
@@ -14,42 +14,25 @@ module.exports = {
             }
         },
         tags: ["api"],
-        handler: function(request, reply) {
-            let id = request.params.drive_id;
-            let relations = request.query.populate;
+        handler: async function(request, reply) {
+            let driveId = request.params.drive_id;
 
-            this.core
-                .model("Drive")
-                .findById(id, {
-                    populate: {
-                        requester: true,
-                        driver: true
-                    }
-                })
-                .then(drive => this.core.stripe.transfers.create(drive))
-                .then(transfers => {
-                    let ids = [];
+            let { populate = "" } = request.query;
+            let relations = populate.split(",");
 
-                    if (!transfers.length) return Boom.badRequest(transfers);
+            let drive = await resolve(
+                this.libs.drives.complete(driveId, { populate: relations })
+            );
 
-                    transfers.map(transfer => ids.push(transfer.id));
+            if (drive.error) {
+                return reply(drive.error);
+            }
 
-                    return this.core.model("Drive").update({
-                        id: id,
-                        status: "delivered",
-                        payment: {
-                            transfer_ids: ids
-                        }
-                    });
-                })
-                // .then((drive) => this.core.support.extensions.releaseExtensions(drive))
-                .then(drive => {
-                    return this.core.model("Drive").findById(drive.id, {
-                        populate: this.utils.model.populate(relations)
-                    });
-                })
-                .then(drive => reply(drive))
-                .catch(err => reply(err));
+            drive = drive.result;
+
+            drive = toClientEntity(drive);
+
+            reply(drive);
         }
     }
 };
