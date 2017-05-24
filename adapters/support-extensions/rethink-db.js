@@ -146,10 +146,11 @@ class RethinkDbSupportExtensionStoreAdapter extends SupportExtensionStorePort {
         };
     }
 
-    async filterBy(query) {
-        let supportExtensions = await resolve(
-            new this._Query(this._Model).filter(query)
-        );
+    async filterBy(query, limit) {
+        let _Query = new this._Query(this._Model);
+        _Query = this._amount(_Query, limit);
+
+        let supportExtensions = await resolve(_Query.filter(query));
 
         if (supportExtensions.error) {
             return {
@@ -162,6 +163,36 @@ class RethinkDbSupportExtensionStoreAdapter extends SupportExtensionStorePort {
         return {
             result: supportExtensions.map(s => this._modelToEntity(s))
         };
+    }
+
+    async getByExtension(extension) {
+        let _Query = new this._Query(this._Model);
+
+        let supportExtensions = await resolve(_Query.filter({ extension }));
+
+        if (supportExtensions.error) {
+            return {
+                error: supportExtensions.error
+            };
+        }
+
+        let [supportExtension] = supportExtensions.result;
+
+        if (!supportExtension) {
+            return {
+                error: new Error("No support extension with extension.")
+            };
+        }
+
+        return {
+            result: this._modelToEntity(supportExtension)
+        };
+    }
+
+    _amount(query, number) {
+        if (!number) return query;
+
+        return query.limit(number);
     }
 }
 

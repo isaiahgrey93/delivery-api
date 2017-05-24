@@ -1,17 +1,15 @@
 const Joi = require("joi");
 const { toClientEntity, toServerEntity } = require("./helpers");
 
-// TODO(isaiah) add geo queries to filter endpoint
-// // // geometry: Joi.array(),
-// // // distance: Joi.number().positive()
-
 module.exports = {
     path: "/api/drives/filter",
     method: "POST",
     config: {
         validate: {
             query: {
-                populate: Joi.string()
+                geometry: Joi.array(),
+                populate: Joi.string(),
+                distance: Joi.number().positive()
             }
         },
         tags: ["api"],
@@ -19,13 +17,20 @@ module.exports = {
             let data = request.payload;
             let query = toServerEntity(data);
 
-            let { populate = "" } = request.query;
+            let { populate = "", geometry, distance } = request.query;
             let relations = populate.split(",");
 
             let drives = await resolve(
-                this.libs.drives.filterBy(query, {
-                    populate: relations
-                })
+                this.libs.drives.filterBy(
+                    query,
+                    {
+                        populate: relations
+                    },
+                    {
+                        distance: distance,
+                        coordinates: geometry
+                    }
+                )
             );
 
             if (drives.error) {

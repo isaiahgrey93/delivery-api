@@ -1,5 +1,4 @@
 const Joi = require("joi");
-const Boom = require("boom");
 
 // units in milliseconds
 const second = 1000;
@@ -22,39 +21,42 @@ module.exports = {
             }
         },
         tags: ["api"],
-        handler: function(request, reply) {
+        handler: async function(request, reply) {
             let id = request.params.user_id;
-            let start = request.query.start;
-            let end = request.query.end;
+            let { start, end } = request.query;
 
-            if (start && end) {
-                this.core.drive
-                    .getUserDriveStats(id, start, end)
-                    .then(drive => reply(drive))
-                    .catch(err => reply(err));
-            } else {
-                // Hardcoded ranges, if a custom range is needed, use the query paramters to specify.
-                let stats = {
-                    today: {},
-                    week: {}
-                };
+            let weekStats = await resolve(
+                this.libs.drives.driverStats(driveId, {
+                    start: (start = ts() - day * 7),
+                    end: (end = ts() + day)
+                })
+            );
 
-                this.core.drive
-                    .getUserDriveStats(id, ts() - day, ts() + day)
-                    .then(today => {
-                        stats.today = today;
-                        return this.core.drive.getUserDriveStats(
-                            id,
-                            ts() - day * 7,
-                            ts() + day
-                        );
-                    })
-                    .then(week => {
-                        stats.week = week;
-                        reply(stats);
-                    })
-                    .catch(err => reply(err));
+            if (weekStats.error) {
+                return reply(weekStats.error);
             }
+
+            weekStats = weekStats.result;
+
+            let dayStats = await resolve(
+                this.libs.drives.driverStats(driveId, {
+                    start: (start = ts() - day),
+                    end: (end = ts() + day)
+                })
+            );
+
+            if (dayStats.error) {
+                return reply(weekStats.error);
+            }
+
+            dayStats = dayStats.result;
+
+            let stats = {
+                today: dayStats,
+                week: weekStats
+            };
+
+            reply(stats);
         }
     }
 };

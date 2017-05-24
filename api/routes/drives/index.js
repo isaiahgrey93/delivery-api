@@ -10,6 +10,5 @@ module.exports = [
     require("./get-by-user"),
     require("./get-stats"),
     require("./process"),
-    require("./refund"),
     require("./update")
 ];

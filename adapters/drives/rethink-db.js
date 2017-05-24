@@ -200,6 +200,8 @@ class RethinkDbDriveStoreAdapter extends DriveStorePort {
             };
         }
 
+        drive = drive.result;
+
         return {
             result: this._modelToEntity(drive)
         };
@@ -213,6 +215,8 @@ class RethinkDbDriveStoreAdapter extends DriveStorePort {
                 error: new Error("No drive with id.")
             };
         }
+
+        drive = drive.result;
 
         return {
             result: this._modelToEntity(drive)
@@ -235,8 +239,12 @@ class RethinkDbDriveStoreAdapter extends DriveStorePort {
         };
     }
 
-    async filterBy(query) {
-        let drives = await resolve(new this._Query(this._Model).filter(query));
+    async filterBy(query, geometry, dates) {
+        let _Query = new this._Query(this._Model);
+        _Query = this._inRadius(_Query, geometry);
+        _Query = this._inDateRange(_Query, dates);
+
+        let drives = await resolve(_Query.filter(query));
 
         if (drives.error) {
             return {
@@ -249,6 +257,51 @@ class RethinkDbDriveStoreAdapter extends DriveStorePort {
         return {
             result: drives.map(d => this._modelToEntity(d))
         };
+    }
+
+    _inRadius(query, geometry = {}) {
+        let { coordinates, distance } = geometry;
+
+        if (!distance || !coordinates) return query;
+
+        let radius = this._ReQL.circle(coordinates, distance, {
+            unit: "mi"
+        });
+
+        return query.getIntersecting(radius, { index: "origin" });
+    }
+
+    _inDateRange(query, dates = {}) {
+        let { start, end, index } = dates;
+
+        if (!start || !end) return query;
+        if (!index) index = "startTime";
+
+        end = new Date(end);
+        start = new Date(start);
+
+        let range = this._ReQL
+            .row(index)
+            .during(
+                this._ReQL.time(
+                    start.getFullYear(),
+                    start.getMonth() + 1,
+                    start.getDate(),
+                    "Z"
+                ),
+                this._ReQL.time(
+                    end.getFullYear(),
+                    end.getMonth() + 1,
+                    end.getDate(),
+                    "Z"
+                ),
+                {
+                    leftBound: "open",
+                    rightBound: "open"
+                }
+            );
+
+        return query.filter(range);
     }
 }
 
