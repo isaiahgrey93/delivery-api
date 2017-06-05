@@ -15,6 +15,7 @@ const {
     Presets,
     Uploads,
     Payments,
+    Trucks,
     Vehicles,
     Categories,
     Recordings,
@@ -26,6 +27,7 @@ const {
     User,
     Drive,
     Preset,
+    Truck,
     Vehicle,
     Category,
     Recording,
@@ -64,6 +66,7 @@ const paymentGateway = new Payments.stripe(stripeLib);
 
 const userStore = new Users.rethinkDb(thinky);
 const driveStore = new Drives.rethinkDb(thinky);
+const truckStore = new Trucks.rethinkDb(thinky);
 const presetStore = new Presets.rethinkDb(thinky);
 const vehicleStore = new Vehicles.rethinkDb(thinky);
 const categoryStore = new Categories.rethinkDb(thinky);
@@ -92,6 +95,10 @@ const libs = {
     vehicles: new lib.vehicles({
         Entity: Vehicle,
         store: vehicleStore
+    }),
+    trucks: new lib.trucks({
+        Entity: Truck,
+        store: truckStore
     }),
     payments: new lib.payments({
         gateway: paymentGateway

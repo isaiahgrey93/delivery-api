@@ -1,6 +1,5 @@
 const Joi = require("joi");
 const Prehandlers = require("../../../old-lib/prehandlers");
-const { toServerEntity, toClientEntity } = require("./helpers");
 
 module.exports = {
     path: "/api/categories",
@@ -27,7 +26,7 @@ module.exports = {
 
             data.user_id = data.user_id ? data.user_id : auth.id;
 
-            let params = toServerEntity(data);
+            let params = this.helpers.toServerEntity.Category(data);
 
             let category = await resolve(this.libs.categories.create(params));
 
@@ -37,7 +36,7 @@ module.exports = {
 
             category = category.result;
 
-            category = toClientEntity(category);
+            category = this.helpers.toClientEntity.Category(category);
 
             reply(category);
         }

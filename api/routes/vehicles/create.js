@@ -9,16 +9,18 @@ module.exports = {
         validate: {
             payload: {
                 nickname: Joi.string(),
-                make: Joi.string(),
-                model: Joi.string(),
-                year: Joi.string(),
-                license_plate: Joi.object().keys({
-                    number: Joi.string(),
-                    state: Joi.string()
-                }),
-                insurance: Joi.any(),
-                registration: Joi.any(),
-                images: Joi.array().items(Joi.any()).max(4).single(),
+                make: Joi.string().required(),
+                model: Joi.string().required(),
+                year: Joi.string().required(),
+                license_plate: Joi.object()
+                    .keys({
+                        number: Joi.string(),
+                        state: Joi.string()
+                    })
+                    .required(),
+                insurance: Joi.any().required(),
+                registration: Joi.any().required(),
+                images: Joi.array().items(Joi.any()).max(4).single().required(),
                 user_id: Joi.string(),
                 truck_id: Joi.string()
             }

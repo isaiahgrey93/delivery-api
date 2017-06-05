@@ -1,5 +1,6 @@
 module.exports = {
     Geo: require("./geo"),
+    Email: require("./email"),
     Users: require("./users"),
     Trucks: require("./trucks"),
     Drives: require("./Drives"),
@@ -7,6 +8,7 @@ module.exports = {
     Uploads: require("./uploads"),
     Vehicles: require("./vehicles"),
     Payments: require("./payments"),
+    Telephony: require("./telephony"),
     Categories: require("./categories"),
     Recordings: require("./recordings"),
     PasswordHash: require("./password-hash"),

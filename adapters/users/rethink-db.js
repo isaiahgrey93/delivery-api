@@ -21,8 +21,7 @@ class RethinkDbUserStoreAdapter extends UserStorePort {
                     .schema(
                         type
                             .string()
-                            .enum(["requester", "driver", "admin"])
-                            .default("requester")
+                            .enum(["business", "consumer", "driver", "admin"])
                             .required()
                     ),
                 email: type.string(),

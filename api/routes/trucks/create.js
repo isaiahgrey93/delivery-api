@@ -14,6 +14,7 @@ module.exports = {
                         mile: Joi.number().required()
                     })
                     .required(),
+                type: Joi.string().required(),
                 length: Joi.number().required(),
                 width: Joi.number().required(),
                 height: Joi.number().required(),
