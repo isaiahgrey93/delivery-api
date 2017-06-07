@@ -19,7 +19,7 @@ module.exports = {
                     .items(
                         Joi.string()
                             .required()
-                            .valid(["driver", "requester", "admin"])
+                            .valid(["driver", "consumer", "business", "admin"])
                     ),
                 connect_id: Joi.string(),
                 firstname: Joi.string(),

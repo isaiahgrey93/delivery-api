@@ -38,7 +38,7 @@ module.exports = {
                 ),
                 scope: Joi.array().items(
                     Joi.string()
-                        .valid(["driver", "requester", "admin"])
+                        .valid(["driver", "consumer", "business", "admin"])
                         .required()
                 ),
                 social_security_number: Joi.string(),
