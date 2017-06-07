@@ -24,8 +24,7 @@ module.exports = data => {
                 state: drivers_license.state,
                 photo: drivers_license.photo,
                 number: drivers_license.number,
-                expiryYear: drivers_license.expiry_year,
-                expiryMonth: drivers_license.expiry_month
+                expiration: drivers_license.expiration
             }
         },
         address: data.address

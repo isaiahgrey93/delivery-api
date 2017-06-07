@@ -49,8 +49,7 @@ class RethinkDbUserStoreAdapter extends UserStorePort {
                         })
                     ),
                     license: type.object().schema({
-                        expiryMonth: type.string(),
-                        expiryYear: type.string(),
+                        expiration: type.string(),
                         number: type.string(),
                         photo: type.string(),
                         state: type.string()

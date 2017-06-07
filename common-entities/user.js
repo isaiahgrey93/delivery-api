@@ -54,14 +54,13 @@ function User(user = {}) {
         this.driver.paymentAccountId = paymentAccountId;
 
         if (license) {
-            const { expiryMonth, expiryYear, number, photo, state } = license;
+            const { expiration, number, photo, state } = license;
 
             this.driver.license = {};
             this.driver.license.state = state;
             this.driver.license.photo = photo;
             this.driver.license.number = number;
-            this.driver.license.expiryYear = expiryYear;
-            this.driver.license.expiryMonth = expiryMonth;
+            this.driver.license.expiration = expiration;
         }
     }
 

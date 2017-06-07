@@ -4,15 +4,16 @@ module.exports = {
     path: "/api/uploads/{path*}",
     method: "GET",
     config: {
-        auth: {
-            mode: "optional"
-        },
         tags: ["api"],
         handler: async function(request, reply) {
             const path = request.params.path;
-            const auth = request.headers.authorization;
+            const auth = request.auth;
 
-            const file = this.libs.uploads.getByPath(path);
+            const file = await this.libs.uploads.getByPath(path);
+
+            if (auth) {
+                return reply.redirect(file);
+            }
 
             reply(file);
         }

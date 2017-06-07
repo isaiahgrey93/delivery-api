@@ -19,8 +19,7 @@ module.exports = {
                 dob: Joi.string(),
                 rating: Joi.number(),
                 drivers_license: Joi.object().keys({
-                    expiry_month: Joi.string(),
-                    expiry_year: Joi.string(),
+                    expiration: Joi.string(),
                     number: Joi.string(),
                     photo: Joi.any(),
                     state: Joi.string()

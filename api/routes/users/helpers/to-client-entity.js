@@ -22,8 +22,7 @@ module.exports = data => {
         categories: data.categories,
         vehicle: data.vehicle,
         drivers_license: {
-            expiry_month: license.expiryMonth,
-            expiry_year: license.expiryYear,
+            expiration: license.expiration,
             number: license.number,
             photo: license.photo,
             state: license.state
