@@ -8,6 +8,7 @@ const Routes = require("./routes");
 const Domain = require("domain");
 
 const libs = require("./compose-use-cases")();
+const helpers = require("./helpers");
 
 module.exports.register = (server, options, next) => {
     server.auth.strategy("jwt", "jwt", {
@@ -25,6 +26,7 @@ module.exports.register = (server, options, next) => {
 
     server.bind({
         libs,
+        helpers,
         db: {
             orm: DbClient.thinky,
             models: DbClient.thinky.models

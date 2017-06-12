@@ -20,7 +20,7 @@ module.exports = {
                 return reply(truck.error);
             }
 
-            truck = trucks.result;
+            truck = truck.result;
 
             truck = toClientEntity(truck);
 

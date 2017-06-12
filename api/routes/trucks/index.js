@@ -3,5 +3,6 @@ module.exports = [
     require("./update"),
     require("./delete"),
     require("./get-by-id"),
-    require("./get-all")
+    require("./get-all"),
+    require("./filter")
 ];

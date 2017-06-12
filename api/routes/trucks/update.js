@@ -9,6 +9,7 @@ module.exports = {
         tags: ["api"],
         validate: {
             payload: {
+                type: Joi.string(),
                 price: Joi.object().keys({
                     base: Joi.number(),
                     mile: Joi.number()

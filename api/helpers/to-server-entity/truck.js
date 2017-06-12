@@ -13,7 +13,7 @@ module.exports = data => {
         width: data.width,
         height: data.height,
         image: data.image,
-        image: data.image,
+        type: data.type,
         name: data.name
     });
 };

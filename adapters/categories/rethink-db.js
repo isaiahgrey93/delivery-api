@@ -101,7 +101,7 @@ class RethinkDbCategoryStoreAdapter extends CategoryStorePort {
             };
         }
 
-        category = await resolve(category.delete());
+        category = await resolve(this._Model.get(id).delete());
 
         if (category.error) {
             return {
@@ -122,6 +122,8 @@ class RethinkDbCategoryStoreAdapter extends CategoryStorePort {
                 error: new Error("No category with id.")
             };
         }
+
+        category = category.result;
 
         return {
             result: this._modelToEntity(category)

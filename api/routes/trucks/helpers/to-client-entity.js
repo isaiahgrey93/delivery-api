@@ -12,7 +12,7 @@ module.exports = data => {
         length: data.length,
         width: data.width,
         height: data.height,
-        image: data.image,
+        type: data.type,
         image: data.image,
         name: data.name
     });

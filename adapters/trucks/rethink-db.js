@@ -13,7 +13,7 @@ class RethinkDbTruckStoreAdapter extends TruckStorePort {
             "Truck",
             {
                 id: type.string().required().default(() => r.uuid()),
-                type: type.string().enum(["open", "closed"]),
+                type: type.string().enum(["open", "closed"]).required(),
                 price: type
                     .object()
                     .schema({
