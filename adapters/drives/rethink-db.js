@@ -21,7 +21,8 @@ class RethinkDbDriveStoreAdapter extends DriveStorePort {
                 helpers: type.number(),
                 customer: type.object().schema({
                     phone: type.string(),
-                    email: type.string()
+                    email: type.string(),
+                    name: type.string()
                 }),
                 payment: type.object().schema({
                     chargeId: type.string(),
@@ -36,6 +37,7 @@ class RethinkDbDriveStoreAdapter extends DriveStorePort {
                         "unpaid",
                         "available",
                         "accepted",
+                        "started",
                         "loading",
                         "driving",
                         "delivered",
@@ -44,7 +46,7 @@ class RethinkDbDriveStoreAdapter extends DriveStorePort {
                     .default(() => "unpaid"),
                 startTime: type.date(),
                 endTime: type.date(),
-                driveType: type.string().enum(["consumer", "commercial"]),
+                driveType: type.string().enum(["consumer", "business"]),
                 driveProgressConfirmation: type.object().schema({
                     pickupArrival: type.string(),
                     pickupLoaded: type.string(),
@@ -53,7 +55,8 @@ class RethinkDbDriveStoreAdapter extends DriveStorePort {
                 consumerCargo: {
                     value: type.number(),
                     weight: type.number(),
-                    description: type.number()
+                    description: type.number(),
+                    images: type.array(type.string())
                 },
                 commercialCargoItems: [
                     type.object().schema({
@@ -137,6 +140,8 @@ class RethinkDbDriveStoreAdapter extends DriveStorePort {
                 error: drive.error
             };
         }
+
+        drive = drive.result;
 
         return {
             result: this._modelToEntity(drive)

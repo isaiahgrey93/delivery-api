@@ -15,7 +15,8 @@ module.exports = {
                 helpers: Joi.number(),
                 customer: Joi.object().keys({
                     phone: Joi.string(),
-                    email: Joi.string()
+                    email: Joi.string(),
+                    name: Joi.string()
                 }),
                 status: Joi.string().valid(
                     "unpaid",
@@ -74,7 +75,8 @@ module.exports = {
                 consumer_cargo: Joi.object().keys({
                     value: Joi.string(),
                     weight: Joi.string(),
-                    description: Joi.string()
+                    description: Joi.string(),
+                    images: Joi.array(Joi.string())
                 }),
                 support: Joi.object().keys({
                     driver_ext: Joi.string(),

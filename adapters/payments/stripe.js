@@ -153,6 +153,22 @@ class StripePaymentGatewayAdapter extends PaymentGatewayPort {
         };
     }
 
+    async fetchCharge(chargeId) {
+        let charge = await resolve(this._Stripe.charges.retrieve(chargeId));
+
+        if (charge.error) {
+            return {
+                error: charge.error
+            };
+        }
+
+        charge = charge.result;
+
+        return {
+            result: charge
+        };
+    }
+
     async createTransfer(amount, charge, destination, meta) {
         let params = merge(defaults.transfer, {
             metadata: meta,

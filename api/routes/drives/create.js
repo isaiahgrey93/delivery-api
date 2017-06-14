@@ -14,6 +14,7 @@ module.exports = {
                 truck_id: Joi.string(),
                 helpers: Joi.number(),
                 customer: Joi.object().keys({
+                    name: Joi.string(),
                     phone: Joi.string(),
                     email: Joi.string()
                 }),
@@ -38,26 +39,32 @@ module.exports = {
                     pickup_loaded: Joi.string(),
                     dropoff: Joi.string()
                 }),
-                route: Joi.object().keys({
-                    distance: Joi.number(),
-                    origin: Joi.object().keys({
-                        name: Joi.string(),
-                        street: Joi.string(),
-                        city: Joi.string(),
-                        state: Joi.string(),
-                        zip: Joi.string(),
-                        geo: Joi.object().strip()
-                    }),
-                    destination: Joi.object().keys({
-                        name: Joi.string(),
-                        street: Joi.string(),
-                        city: Joi.string(),
-                        state: Joi.string(),
-                        zip: Joi.string(),
-                        geo: Joi.object().strip()
+                route: Joi.object()
+                    .keys({
+                        distance: Joi.number(),
+                        origin: Joi.object()
+                            .keys({
+                                name: Joi.string(),
+                                street: Joi.string().required(),
+                                city: Joi.string().required(),
+                                state: Joi.string().required(),
+                                zip: Joi.string().required(),
+                                geo: Joi.object().strip()
+                            })
+                            .required(),
+                        destination: Joi.object()
+                            .keys({
+                                name: Joi.string(),
+                                street: Joi.string().required(),
+                                city: Joi.string().required(),
+                                state: Joi.string().required(),
+                                zip: Joi.string().required(),
+                                geo: Joi.object().strip()
+                            })
+                            .required()
                     })
-                }),
-                drive_type: Joi.string(),
+                    .required(),
+                drive_type: Joi.string().required(),
                 commercial_cargo_items: Joi.array().items(
                     Joi.object().keys({
                         name: Joi.string(),
@@ -74,7 +81,8 @@ module.exports = {
                 consumer_cargo: Joi.object().keys({
                     value: Joi.string(),
                     weight: Joi.string(),
-                    description: Joi.string()
+                    description: Joi.string(),
+                    images: Joi.array(Joi.string())
                 }),
                 support: Joi.object().keys({
                     driver_ext: Joi.string(),

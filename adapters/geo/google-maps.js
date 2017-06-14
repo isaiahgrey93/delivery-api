@@ -21,6 +21,12 @@ class GoogleMapsGeoAdapter extends GeoLibPort {
             };
         }
 
+        if (point.result.json.results.length === 0) {
+            return {
+                error: new Error(`Invalid address entered. ${address}`)
+            };
+        }
+
         point = point.result.json.results[0].geometry.location;
 
         return {

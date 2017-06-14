@@ -25,6 +25,7 @@ module.exports = data => {
         truck: data.truck,
         helpers: data.helpers,
         customer: {
+            name: customer.name,
             phone: customer.phone,
             email: customer.email
         },
@@ -45,6 +46,7 @@ module.exports = data => {
         consumer_cargo: {
             value: consumerCargo.value,
             weight: consumerCargo.weight,
+            images: consumerCargo.images,
             description: consumerCargo.description
         },
         commercial_cargo_items: commercialCargoItems.map(item => ({

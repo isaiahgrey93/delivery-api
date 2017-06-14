@@ -37,9 +37,10 @@ function Drive(drive) {
     this.driveType = driveType;
 
     if (customer) {
-        let { phone, email } = customer;
+        let { name, phone, email } = customer;
 
         this.customer = {};
+        this.customer.name = name;
         this.customer.phone = phone;
         this.customer.email = email;
     }
@@ -59,7 +60,7 @@ function Drive(drive) {
         let { origin, destination, distance } = route;
 
         this.route = {};
-        this.distance = distance;
+        this.route.distance = distance;
 
         if (origin) {
             this.route.origin = {};
@@ -104,11 +105,12 @@ function Drive(drive) {
     }
 
     if (consumerCargo) {
-        let { value, weight, description } = consumerCargo;
+        let { value, images, weight, description } = consumerCargo;
 
         this.consumerCargo = {};
         this.consumerCargo.value = value;
         this.consumerCargo.weight = weight;
+        this.consumerCargo.images = images;
         this.consumerCargo.description = description;
     }
 

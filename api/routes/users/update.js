@@ -24,6 +24,12 @@ module.exports = {
                     photo: Joi.any(),
                     state: Joi.string()
                 }),
+                notes: Joi.array().items(
+                    Joi.object().keys({
+                        createdAt: Joi.date(),
+                        body: Joi.string()
+                    })
+                ),
                 address: {
                     street: Joi.string(),
                     city: Joi.string(),
