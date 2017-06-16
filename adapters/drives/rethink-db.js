@@ -55,7 +55,7 @@ class RethinkDbDriveStoreAdapter extends DriveStorePort {
                 consumerCargo: {
                     value: type.number(),
                     weight: type.number(),
-                    description: type.number(),
+                    description: type.string(),
                     images: type.array(type.string())
                 },
                 commercialCargoItems: [
