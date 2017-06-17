@@ -16,7 +16,7 @@ class RethinkDbDriveStoreAdapter extends DriveStorePort {
                 createdAt: type.date().default(() => r.now()),
                 updatedAt: type.date().default(() => r.now()),
                 requesterId: type.string(),
-                driverId: type.string(),
+                driverId: type.any(),
                 truckId: type.string(),
                 helpers: type.number(),
                 customer: type.object().schema({

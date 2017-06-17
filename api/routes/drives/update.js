@@ -10,7 +10,7 @@ module.exports = {
                 id: Joi.string().strip(),
                 created_at: Joi.date().strip(),
                 requester_id: Joi.string(),
-                driver_id: Joi.string(),
+                driver_id: Joi.any(),
                 truck_id: Joi.string(),
                 helpers: Joi.number(),
                 customer: Joi.object().keys({
