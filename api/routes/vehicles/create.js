@@ -1,5 +1,4 @@
 const Joi = require("joi");
-const Prehandlers = require("../../../old-lib/prehandlers");
 const { toServerEntity, toClientEntity } = require("./helpers");
 
 module.exports = {
@@ -26,32 +25,6 @@ module.exports = {
             }
         },
         tags: ["api"],
-        pre: [
-            {
-                assign: "insurance",
-                method: Prehandlers.upload("insurance")
-            },
-            {
-                assign: "registration",
-                method: Prehandlers.upload("registration")
-            },
-            {
-                assign: "images[0]",
-                method: Prehandlers.upload("images[0]")
-            },
-            {
-                assign: "images[1]",
-                method: Prehandlers.upload("images[1]")
-            },
-            {
-                assign: "images[2]",
-                method: Prehandlers.upload("images[2]")
-            },
-            {
-                assign: "images[3]",
-                method: Prehandlers.upload("images[3]")
-            }
-        ],
         handler: async function(request, reply) {
             let data = request.payload;
             data.user_id = request.payload.user_id

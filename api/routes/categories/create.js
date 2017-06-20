@@ -1,5 +1,4 @@
 const Joi = require("joi");
-const Prehandlers = require("../../../old-lib/prehandlers");
 
 module.exports = {
     path: "/api/categories",
@@ -14,12 +13,6 @@ module.exports = {
                 user_id: Joi.string()
             }
         },
-        pre: [
-            {
-                assign: "image",
-                method: Prehandlers.upload("image")
-            }
-        ],
         handler: async function(request, reply) {
             let data = request.payload;
             let auth = request.auth.credentials;

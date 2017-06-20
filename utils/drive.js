@@ -1,6 +1,6 @@
 "use strict";
 
-const ORM = require("thinky-loader");
+// const ORM = require("thinky-loader");
 // const Model = require("../core/model");
 
 module.exports = {

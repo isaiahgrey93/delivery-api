@@ -1,5 +1,4 @@
 const Joi = require("joi");
-const Prehandlers = require("../../../old-lib/prehandlers");
 const { toServerEntity, toClientEntity } = require("./helpers");
 
 module.exports = {
@@ -18,12 +17,6 @@ module.exports = {
             }
         },
         tags: ["api"],
-        pre: [
-            {
-                assign: "image",
-                method: Prehandlers.upload("image")
-            }
-        ],
         handler: async function(request, reply) {
             let data = request.payload;
 

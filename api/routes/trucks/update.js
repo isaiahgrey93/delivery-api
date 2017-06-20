@@ -1,5 +1,4 @@
 const Joi = require("joi");
-const Prehandlers = require("../../../old-lib/prehandlers");
 const { toServerEntity, toClientEntity } = require("./helpers");
 
 module.exports = {
@@ -24,12 +23,6 @@ module.exports = {
                 truck_id: Joi.string().required()
             }
         },
-        pre: [
-            {
-                assign: "image",
-                method: Prehandlers.upload("image")
-            }
-        ],
         handler: async function(request, reply) {
             let data = request.payload;
             data.id = request.params.truck_id;

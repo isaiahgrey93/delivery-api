@@ -1,5 +1,4 @@
 const Joi = require("joi");
-const Prehandlers = require("../../../old-lib/prehandlers");
 const { toClientEntity, toServerEntity } = require("./helpers");
 
 module.exports = {

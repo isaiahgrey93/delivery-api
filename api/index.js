@@ -1,8 +1,7 @@
 "use strict";
 
-const DbClient = require("thinky-loader");
-const Core = require("../old-lib/core");
-const Utils = require("../old-lib/utils");
+// const Core = require("../old-lib/core");
+// const Utils = require("../old-lib/utils");
 const Node_utils = require("util");
 const Routes = require("./routes");
 const Domain = require("domain");
@@ -26,13 +25,7 @@ module.exports.register = (server, options, next) => {
 
     server.bind({
         libs,
-        helpers,
-        db: {
-            orm: DbClient.thinky,
-            models: DbClient.thinky.models
-        },
-        core: Core,
-        utils: Utils
+        helpers
     });
 
     server.ext("onPreResponse", function(request, reply) {

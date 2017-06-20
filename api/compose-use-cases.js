@@ -35,8 +35,8 @@ const {
 } = require("../common-entities");
 
 const thinky = rethinkdb({
-    db: process.env.RETHINKDB_DB_NAME,
-    host: process.env.RETHINKDB_DB_HOST,
+    db: process.env.RETHINKDB_NAME,
+    host: process.env.RETHINKDB_HOST,
     port: process.env.RETHINKDB_PORT
 });
 

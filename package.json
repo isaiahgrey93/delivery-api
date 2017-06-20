@@ -7,10 +7,10 @@
   "scripts": {
     "start": "NODE_ENV=development gulp start",
     "dev": "NODE_ENV=development gulp dev",
-    "now-start": "node server.js"
+    "now-start": "NODE_ENV=production node server.js"
   },
   "engines": {
-    "node": "6.x"
+    "node": "7.5"
   },
   "now": {
     "env": {
@@ -28,7 +28,7 @@
       "DB_PORT": "16554",
       "DB_USER": "admin",
       "DB_PASSWORD": "nD2SZFc4E4GLTtlQ4orBMwPYmSfdijZ9Um_eo_FWupQ",
-      "DB_NAME": "joey",
+      "DB_NAME": "joey_new",
       "AWS_ACCESS_KEY_ID": "AKIAJG7WCN3WNXQTBIJQ",
       "AWS_SECRET_ACCESS_KEY": "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",
       "AWS_BUCKET": "joey-dev"

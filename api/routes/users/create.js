@@ -1,5 +1,4 @@
 const Joi = require("joi");
-const Prehandlers = require("../../../old-lib/prehandlers");
 const { toServerEntity, toClientEntity } = require("./helpers");
 
 module.exports = {
@@ -55,16 +54,6 @@ module.exports = {
                 social_security_number: Joi.string()
             }
         },
-        pre: [
-            {
-                assign: "profile_photo",
-                method: Prehandlers.upload("profile_photo")
-            },
-            {
-                assign: "drivers_license.photo",
-                method: Prehandlers.upload("drivers_license.photo")
-            }
-        ],
         handler: async function(request, reply) {
             let data = request.payload;
 

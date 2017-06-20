@@ -3,7 +3,7 @@ module.exports = {
     Email: require("./email"),
     Users: require("./users"),
     Trucks: require("./trucks"),
-    Drives: require("./Drives"),
+    Drives: require("./drives"),
     Presets: require("./presets"),
     Uploads: require("./uploads"),
     Vehicles: require("./vehicles"),
