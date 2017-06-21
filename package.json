@@ -24,14 +24,15 @@
       "STRIPE_SECRET": "sk_test_0zZyQDNvlEPRsmMMeyYxErf2",
       "COMPANY_EMAIL_ADDRESS": "user@gmail.com",
       "COMPANY_EMAIL_PASSWORD": "123123",
-      "DB_HOST": "aws-us-east-1-portal.9.dblayer.com",
-      "DB_PORT": "16554",
-      "DB_USER": "admin",
-      "DB_PASSWORD": "nD2SZFc4E4GLTtlQ4orBMwPYmSfdijZ9Um_eo_FWupQ",
-      "DB_NAME": "joey_new",
+      "RETHINKDB_HOST": "aws-us-east-1-portal.9.dblayer.com",
+      "RETHINKDB_PORT": "16554",
+      "RETHINKDB_USER": "admin",
+      "RETHINKDB_PASSWORD": "nD2SZFc4E4GLTtlQ4orBMwPYmSfdijZ9Um_eo_FWupQ",
+      "RETHINKDB_NAME": "joey_new",
       "AWS_ACCESS_KEY_ID": "AKIAJG7WCN3WNXQTBIJQ",
       "AWS_SECRET_ACCESS_KEY": "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",
-      "AWS_BUCKET": "joey-dev"
+      "AWS_BUCKET": "joey-dev",
+      "GOOGLEMAPS_API_KEY":"AIzaSyCw9dMNxCnU5t7C_Rn6JNCHGgoZF1zU59I"
     }
   },
   "dependencies": {

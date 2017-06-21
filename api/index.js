@@ -1,10 +1,10 @@
 "use strict";
 
-// const Core = require("../old-lib/core");
-// const Utils = require("../old-lib/utils");
 const Node_utils = require("util");
 const Routes = require("./routes");
 const Domain = require("domain");
+
+const utils = require("../utils");
 
 const libs = require("./compose-use-cases")();
 const helpers = require("./helpers");
@@ -25,7 +25,8 @@ module.exports.register = (server, options, next) => {
 
     server.bind({
         libs,
-        helpers
+        helpers,
+        utils
     });
 
     server.ext("onPreResponse", function(request, reply) {

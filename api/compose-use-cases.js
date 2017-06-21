@@ -5,6 +5,7 @@ const bcrypt = require("bcrypt-as-promised");
 const googleMaps = require("@google/maps");
 const stripe = require("stripe");
 const aws = require("aws-sdk");
+const fs = require("fs");
 
 const lib = require("../lib");
 
@@ -35,9 +36,25 @@ const {
 } = require("../common-entities");
 
 const thinky = rethinkdb({
-    db: process.env.RETHINKDB_NAME,
-    host: process.env.RETHINKDB_HOST,
-    port: process.env.RETHINKDB_PORT
+    servers: [
+        {
+            buffer: 5,
+            timeout: 60,
+            db: process.env.RETHINKDB_NAME,
+            host: process.env.RETHINKDB_HOST,
+            port: process.env.RETHINKDB_PORT,
+            user: process.env.RETHINKDB_USER,
+            password: process.env.RETHINKDB_PASSWORD,
+            ssl: {
+                ca: [
+                    fs
+                        .readFileSync(__dirname + "/../rethink.cert")
+                        .toString()
+                        .trim()
+                ]
+            }
+        }
+    ]
 });
 
 let awsS3 = new aws.S3({
