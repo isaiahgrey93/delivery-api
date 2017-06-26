@@ -1,0 +1,32 @@
+const Joi = require("joi");
+const { toClientEntity } = require("./helpers");
+
+module.exports = {
+    path: "/api/users/magic",
+    method: "POST",
+    config: {
+        auth: false,
+        validate: {
+            payload: {
+                email: Joi.string().optional(),
+                phone: Joi.string().optional()
+            }
+        },
+        tags: ["api"],
+        handler: async function(request, reply) {
+            let data = request.payload;
+
+            let response = await resolve(
+                this.libs.users.generateMagicLink(data)
+            );
+
+            if (response.error) {
+                return reply(response.error);
+            }
+
+            response = response.result;
+
+            reply(response);
+        }
+    }
+};

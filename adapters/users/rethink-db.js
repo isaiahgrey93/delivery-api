@@ -40,6 +40,7 @@ class RethinkDbUserStoreAdapter extends UserStorePort {
                 ssn: type.string(),
                 phone: type.string(),
                 avatar: type.string(),
+                magicLinkCode: type.any(),
                 driver: type.object().schema({
                     paymentAccountId: type.any(),
                     notes: type.array().schema(

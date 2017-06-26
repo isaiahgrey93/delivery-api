@@ -1,4 +1,5 @@
 module.exports = [
+    require("./start"),
     require("./accept"),
     require("./charge"),
     require("./create"),

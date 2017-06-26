@@ -1,42 +1,55 @@
 const EmailGatewayPort = require("./gateway-port");
 
 class NodeMailerEmailGatewayAdapter extends EmailGatewayPort {
-    constructor(nodemailer, templates) {
+    constructor(nodemailer) {
         super();
-        this._NodeMailer = nodemailer;
-        this._Templates = templates;
+        this._transporter = nodemailer;
     }
 
-    async sendPasswordResetEmail(to, from, data) {
-        let { email, firstname, lastname } = data;
+    async sendMagicLink(data) {
+        let {
+            email = "",
+            firstname = "",
+            lastname = "",
+            magicLinkCode = ""
+        } = data;
 
         let response = await resolve(
             new Promise((resolve, reject) => {
-                let template = this._Templates.render(
-                    "./templates/reset-password.html",
+                let sendMagicLink = this._transporter.templateSender(
                     {
-                        id,
-                        email,
-                        firstname,
-                        lastname
+                        subject: "Magic link for {{email}}!",
+                        text: "Hello, {{name}}, here is your magic login link {{link}}.",
+                        html: '<p>Hello <strong>{{name}}</strong>, <br />Here is your <a href="{{link}}">magic login link</a>.</p>'
                     },
-                    (err, res) => {
-                        this._NodeMailer.sendMail(
-                            {
-                                from: process.env.COMPANY_EMAIL_ADDRESS,
-                                to: user.email,
-                                subject: `Password reset request for ${user.name || user.email}.`,
-                                html: html
-                            },
-                            (err, info) => {
-                                if (err) reject(err);
-                                else resolve(info);
-                            }
-                        );
+                    {
+                        from: process.env.COMPANY_EMAIL_ADDRESS
                     }
+                );
+
+                sendMagicLink(
+                    {
+                        to: email
+                    },
+                    {
+                        email,
+                        name: `${firstname} ${lastname}`,
+                        link: `${process.env.CLIENT_HOST}/magic/${magicLinkCode}`
+                    },
+                    (error, result) => (error ? reject(error) : resolve(result))
                 );
             })
         );
+
+        if (response.error) {
+            return {
+                error: response.error
+            };
+        }
+
+        return {
+            result: response.result
+        };
     }
 }
 

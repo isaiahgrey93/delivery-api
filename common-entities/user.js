@@ -12,6 +12,7 @@ function User(user = {}) {
         lastname,
         firstname,
         middleInitial,
+        magicLinkCode,
         dob,
         ssn,
         phone,
@@ -34,6 +35,7 @@ function User(user = {}) {
     this.ssn = ssn;
     this.phone = phone;
     this.avatar = avatar;
+    this.magicLinkCode = magicLinkCode;
 
     if (address) {
         const { street, city, state, zip } = address;

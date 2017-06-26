@@ -3,7 +3,9 @@ require("../global");
 const rethinkdb = require("thinky");
 const bcrypt = require("bcrypt-as-promised");
 const googleMaps = require("@google/maps");
+const nodemailer = require("nodemailer");
 const stripe = require("stripe");
+const twilio = require("twilio");
 const aws = require("aws-sdk");
 const fs = require("fs");
 
@@ -17,7 +19,9 @@ const {
     Uploads,
     Payments,
     Trucks,
+    Email,
     Vehicles,
+    Telephony,
     Categories,
     Recordings,
     PasswordHash,
@@ -75,6 +79,24 @@ const googleMapsClient = googleMaps.createClient({
     Promise
 });
 
+var emailClient = nodemailer.createTransport({
+    host: "smtp.gmail.com",
+    secure: true,
+    port: 465,
+    auth: {
+        user: process.env.COMPANY_EMAIL_ADDRESS,
+        pass: process.env.COMPANY_EMAIL_PASSWORD
+    }
+});
+
+const telephonyClient = require("twilio")(
+    process.env.TWILIO_SID,
+    process.env.TWILIO_TOKEN
+);
+
+let emailGateway = new Email.nodemailer(emailClient);
+let telephonyGateway = new Telephony.twilio(telephonyClient);
+
 let passwordHashLib = new PasswordHash.bcrypt(bcrypt);
 let geoLib = new Geo.googleMaps(googleMapsClient);
 
@@ -94,6 +116,8 @@ const libs = {
     users: new lib.users({
         Entity: User,
         store: userStore,
+        emailLib: emailGateway,
+        telephonyLib: telephonyGateway,
         passwordHash: passwordHashLib
     }),
     drives: new lib.drives({

@@ -79,8 +79,8 @@ module.exports = {
                     })
                 ),
                 consumer_cargo: Joi.object().keys({
-                    value: Joi.string(),
-                    weight: Joi.string(),
+                    value: Joi.number(),
+                    weight: Joi.number(),
                     description: Joi.string(),
                     images: Joi.array(Joi.string())
                 }),

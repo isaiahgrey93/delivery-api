@@ -2,7 +2,7 @@ const Joi = require("joi");
 const { toClientEntity, toServerEntity } = require("./helpers");
 
 module.exports = {
-    path: "/api/drives/{drive_id}/accept",
+    path: "/api/drives/{drive_id}/start",
     method: "POST",
     config: {
         validate: {
@@ -16,7 +16,6 @@ module.exports = {
         tags: ["api"],
         handler: async function(request, reply) {
             let driveId = request.params.drive_id;
-            let driverId = drive.driver_id || request.auth.credentials.id;
 
             let { populate = "" } = request.query;
             let relations = populate.split(",");
@@ -24,7 +23,7 @@ module.exports = {
             let params = toServerEntity(data);
 
             let drive = await resolve(
-                this.libs.drives.accept(driveId, driverId, {
+                this.libs.drives.start(driveId, {
                     populate: relations
                 })
             );
