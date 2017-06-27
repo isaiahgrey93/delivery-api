@@ -19,7 +19,7 @@ module.exports = data => {
         driver: {
             notes: data.notes,
             status: data.status,
-            paymentAccountId: data.connect_id,
+            payeeAccountId: data.payee_account_id,
             license: {
                 state: drivers_license.state,
                 photo: drivers_license.photo,

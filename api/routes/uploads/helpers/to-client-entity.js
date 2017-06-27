@@ -9,7 +9,7 @@ module.exports = data => {
         email: data.email,
         password: data.password,
         scope: data.scope,
-        connect_id: driver.paymentAccountId,
+        payee_account_id: driver.payeeAccountId,
         firstname: data.firstname,
         middle_initial: data.middleInitial,
         lastname: data.lastname,

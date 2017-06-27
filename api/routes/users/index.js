@@ -1,4 +1,5 @@
 module.exports = [
+    require("./guest"),
     require("./create"),
     require("./login"),
     require("./update"),

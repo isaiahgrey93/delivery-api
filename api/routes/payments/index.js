@@ -1,7 +1,5 @@
 module.exports = [
-    require("./create"),
-    require("./update"),
-    require("./delete"),
-    require("./find-by-id"),
-    require("./get-all")
+    require("./create-account"),
+    require("./update-account"),
+    require("./get-account-by-id")
 ];

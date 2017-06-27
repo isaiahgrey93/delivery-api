@@ -35,7 +35,7 @@ module.exports = {
                     state: Joi.string(),
                     zip: Joi.string()
                 },
-                connect_id: Joi.any(),
+                payee_account_id: Joi.any(),
                 status: Joi.string().valid(
                     "unverified",
                     "verified",

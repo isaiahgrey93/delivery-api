@@ -48,12 +48,12 @@ function User(user = {}) {
     }
 
     if (driver) {
-        const { license = false, notes, status, paymentAccountId } = driver;
+        const { license = false, notes, status, payeeAccountId } = driver;
 
         this.driver = {};
         this.driver.notes = notes;
         this.driver.status = status;
-        this.driver.paymentAccountId = paymentAccountId;
+        this.driver.payeeAccountId = payeeAccountId;
 
         if (license) {
             const { expiration, number, photo, state } = license;

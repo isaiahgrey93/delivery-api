@@ -20,7 +20,7 @@ module.exports = {
                             .required()
                             .valid(["driver", "consumer", "business", "admin"])
                     ),
-                connect_id: Joi.string(),
+                payee_account_id: Joi.string(),
                 firstname: Joi.string(),
                 middle_initial: Joi.string(),
                 lastname: Joi.string(),

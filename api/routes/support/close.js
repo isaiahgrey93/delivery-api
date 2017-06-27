@@ -6,22 +6,25 @@ module.exports = {
     config: {
         auth: false,
         tags: ["api"],
-        handler: function(request, reply) {
-            let id = request.params.drive_id;
+        handler: async function(request, reply) {
+            let driveId = request.params.drive_id;
             let incoming = request.payload;
 
             if (incoming.RecordingUrl) {
-                let recording = new this.db.models.Recording({
-                    drive_id: id,
-                    url: incoming.RecordingUrl,
-                    duration: incoming.RecordingDuration
-                });
+                let recording = await resolve(
+                    this.libs.recordings.create({
+                        driveId,
+                        url: incoming.RecordingUrl,
+                        duration: incoming.RecordingDuration
+                    })
+                );
 
-                this.core
-                    .model("Recording")
-                    .create(recording)
-                    .then(() => reply().code(204))
-                    .catch(err => reply(err));
+                if (recording.error) {
+                    return reply(recording.error);
+                }
+                recording = recording.result;
+
+                reply(recording);
             } else {
                 reply().code(204);
             }

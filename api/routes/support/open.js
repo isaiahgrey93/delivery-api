@@ -7,6 +7,8 @@ const drive_progress = [
     "driving"
 ];
 
+// TODO refactor to new arch
+
 module.exports = {
     path: "/api/support-call/open",
     method: "POST",

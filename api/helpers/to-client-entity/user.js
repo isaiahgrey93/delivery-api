@@ -10,7 +10,7 @@ module.exports = data => {
         scope: data.scope,
         created_at: data.createdAt,
         updated_at: data.updatedAt,
-        connect_id: driver.paymentAccountId,
+        payee_account_id: driver.payeeAccountId,
         firstname: data.firstname,
         middle_initial: data.middleInitial,
         lastname: data.lastname,

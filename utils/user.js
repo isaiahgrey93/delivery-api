@@ -18,7 +18,7 @@ module.exports = {
         }
     },
     hasAccount: user => {
-        if (!user.connect_id)
+        if (!user.payee_account_id)
             throw new Error(
                 `No connect account found for user with id: <${user.id}>`
             );

@@ -21,7 +21,13 @@ class RethinkDbUserStoreAdapter extends UserStorePort {
                     .schema(
                         type
                             .string()
-                            .enum(["business", "consumer", "driver", "admin"])
+                            .enum([
+                                "guest",
+                                "business",
+                                "consumer",
+                                "driver",
+                                "admin"
+                            ])
                             .required()
                     ),
                 email: type.string(),
@@ -41,8 +47,9 @@ class RethinkDbUserStoreAdapter extends UserStorePort {
                 phone: type.string(),
                 avatar: type.string(),
                 magicLinkCode: type.any(),
+                payerAccountId: type.string(),
                 driver: type.object().schema({
-                    paymentAccountId: type.any(),
+                    payeeAccountId: type.any(),
                     notes: type.array().schema(
                         type.object().schema({
                             createdAt: type.date(),

@@ -15,6 +15,13 @@ const defaults = {
             interval: "monthly"
         }
     },
+    bank: {
+        type: "bank_account",
+        currency: "usd"
+    },
+    card: {
+        type: "card"
+    },
     transfer: {
         currency: "usd"
     },
@@ -29,9 +36,75 @@ class StripePaymentGatewayAdapter extends PaymentGatewayPort {
         this._Stripe = stripe;
     }
 
+    async createCustomer(data) {
+        let customer = await resolve(this._Stripe.customers.create(data));
+
+        if (customer.error) {
+            return {
+                error: customer.error
+            };
+        }
+
+        customer = customer.result;
+    }
+
+    async fetchCustomer(customerId) {
+        let customer = await resolve(
+            this._Stripe.customers.retrieve(customerId)
+        );
+
+        if (customer.error) {
+            return {
+                error: customer.error
+            };
+        }
+
+        customer = customer.result;
+    }
+
+    async addCardSource(customerId, cardDetails) {
+        let cardSource = await resolve(
+            this._Stripe.customers.createSource(customerId, {
+                source: merge(defaults.card, cardDetails)
+            })
+        );
+
+        if (cardSource.error) {
+            return {
+                error: cardSource.error
+            };
+        }
+
+        cardSource = cardSource.result;
+
+        return {
+            result: cardSource
+        };
+    }
+
+    async addBankSource(customerId, bankDetails) {
+        let bankSource = await resolve(
+            this._Stripe.customers.createSource(customerId, {
+                source: merge(defaults.bank, bankDetails)
+            })
+        );
+
+        if (bankSource.error) {
+            return {
+                error: bankSource.error
+            };
+        }
+
+        bankSource = bankSource.result;
+
+        return {
+            result: bankSource
+        };
+    }
+
     async createAccount(data) {
-        let account = resolve(
-            await this._Stripe.accounts.create(merge(defaults.account, data))
+        let account = await resolve(
+            this._Stripe.accounts.create(merge(defaults.account, data))
         );
 
         if (account.error) {
@@ -47,8 +120,10 @@ class StripePaymentGatewayAdapter extends PaymentGatewayPort {
         };
     }
 
-    async updateAccount(id, data) {
-        let account = await resolve(this._Stripe.accounts.update(id, data));
+    async updateAccount(accountId, data) {
+        let account = await resolve(
+            this._Stripe.accounts.update(accountId, data)
+        );
 
         if (account.error) {
             return {
@@ -63,8 +138,8 @@ class StripePaymentGatewayAdapter extends PaymentGatewayPort {
         };
     }
 
-    async deleteAccount(id) {
-        let account = await resolve(this._Stripe.accounts.del(id));
+    async deleteAccount(accountId) {
+        let account = await resolve(this._Stripe.accounts.del(accountId));
 
         if (account.error) {
             return {
@@ -79,8 +154,8 @@ class StripePaymentGatewayAdapter extends PaymentGatewayPort {
         };
     }
 
-    async getAccountById(id) {
-        let account = await resolve(this._Stripe.accounts.retrieve(id));
+    async getAccountById(accountId) {
+        let account = await resolve(this._Stripe.accounts.retrieve(accountId));
 
         if (account.error) {
             return {
