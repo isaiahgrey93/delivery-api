@@ -39,26 +39,33 @@ const {
     SupportExtension
 } = require("../common-entities");
 
+const dbServerOptions = Object.assign(
+    {},
+    {
+        buffer: 5,
+        timeout: 60,
+        db: process.env.RETHINKDB_NAME,
+        host: process.env.RETHINKDB_HOST,
+        port: process.env.RETHINKDB_PORT
+    },
+    process.env.NODE_ENV === "production"
+        ? {
+              user: process.env.RETHINKDB_USER,
+              password: process.env.RETHINKDB_PASSWORD,
+              ssl: {
+                  ca: [
+                      fs
+                          .readFileSync(__dirname + "/../rethink.cert")
+                          .toString()
+                          .trim()
+                  ]
+              }
+          }
+        : {}
+);
+
 const thinky = rethinkdb({
-    servers: [
-        {
-            buffer: 5,
-            timeout: 60,
-            db: process.env.RETHINKDB_NAME,
-            host: process.env.RETHINKDB_HOST,
-            port: process.env.RETHINKDB_PORT,
-            user: process.env.RETHINKDB_USER,
-            password: process.env.RETHINKDB_PASSWORD,
-            ssl: {
-                ca: [
-                    fs
-                        .readFileSync(__dirname + "/../rethink.cert")
-                        .toString()
-                        .trim()
-                ]
-            }
-        }
-    ]
+    servers: [dbServerOptions]
 });
 
 let awsS3 = new aws.S3({

@@ -1,31 +1,31 @@
 const Joi = require("joi");
 
 module.exports = {
-    path: "/api/accounts/{account_id}",
+    path: "/api/accounts/{user_id}",
     method: ["PUT", "PATCH"],
     config: {
         validate: {
             payload: true,
             params: {
-                account_id: Joi.string().required()
+                user_id: Joi.string().required()
             }
         },
         tags: ["api"],
         handler: async function(request, reply) {
-            let accountId = request.params.account_id;
+            let userId = request.params.user_id;
             let data = request.payload;
 
-            let account = await resolve(
-                this.libs.payments.updateAccount(accountId, data)
+            let user = await resolve(
+                this.libs.payments.updateAccount(userId, data)
             );
 
-            if (account.error) {
-                return reply(account.error);
+            if (user.error) {
+                return reply(user.error);
             }
 
-            account = account.result;
+            user = user.result;
 
-            reply(account);
+            reply(user);
         }
     }
 };

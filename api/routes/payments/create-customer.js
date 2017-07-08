@@ -1,7 +1,7 @@
 const Joi = require("joi");
 
 module.exports = {
-    path: "/api/accounts/{user_id}",
+    path: "/api/customers/{user_id}",
     method: "POST",
     config: {
         validate: {
@@ -15,7 +15,7 @@ module.exports = {
             let userId = request.params.user_id;
             let data = request.payload;
 
-            let user = await resolve(this.libs.payments.createAccount(userId));
+            let user = await resolve(this.libs.payments.createCustomer(userId));
 
             if (user.error) {
                 return reply(user.error);

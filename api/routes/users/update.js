@@ -36,6 +36,7 @@ module.exports = {
                     zip: Joi.string()
                 },
                 payee_account_id: Joi.any(),
+                connect_id: Joi.string(),
                 status: Joi.string().valid(
                     "unverified",
                     "verified",
@@ -47,8 +48,8 @@ module.exports = {
                         .required()
                 ),
                 social_security_number: Joi.string(),
-                isOnline: Joi.boolean(),
-                geo: Joi.object()
+                geo: Joi.object(),
+                isOnline: Joi.boolean()
             },
             params: {
                 user_id: Joi.string().required()

@@ -46,10 +46,12 @@ function Drive(drive) {
     }
 
     if (payment) {
-        let { chargeId, transferIds } = payment;
+        let { chargeId, transferIds, joeyPayout, driverPayout } = payment;
 
         this.payment = {};
-        this.payment.chargeId = {};
+        this.payment.chargeId = chargeId;
+        this.payment.joeyPayout = joeyPayout;
+        this.payment.driverPayout = driverPayout;
 
         if (transferIds) {
             this.payment.transferIds = transferIds;

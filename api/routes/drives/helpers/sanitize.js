@@ -8,6 +8,8 @@ function sanitize(data) {
             delete data[key];
         }
 
+        if (val instanceof Date) return;
+
         if (val && typeof val === "object") {
             let result = sanitize(data[key]);
 

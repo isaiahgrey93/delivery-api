@@ -16,12 +16,19 @@ module.exports = {
         handler: async function(request, reply) {
             let query = toServerEntity(request.payload);
 
-            let { populate = "" } = request.query;
+            let { populate = "", geometry, distance } = request.query;
             let relations = populate.split(",");
 
-            let users = await this.libs.users.filterBy(query, {
-                populate: relations
-            });
+            let users = await this.libs.users.filterBy(
+                query,
+                {
+                    populate: relations
+                },
+                {
+                    distance,
+                    coordinates: geometry
+                }
+            );
 
             if (users.error) {
                 return reply(users.error);

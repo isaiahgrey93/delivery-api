@@ -8,6 +8,7 @@ class RethinkDbUserStoreAdapter extends UserStorePort {
         super();
         const { type, r, Query } = thinky;
 
+        this._ReQL = r;
         this._Query = Query;
         this._Entity = User;
         this._Model = thinky.createModel(
@@ -48,6 +49,8 @@ class RethinkDbUserStoreAdapter extends UserStorePort {
                 avatar: type.string(),
                 magicLinkCode: type.any(),
                 payerAccountId: type.string(),
+                isOnline: type.boolean().default(false),
+                geo: type.object(),
                 driver: type.object().schema({
                     payeeAccountId: type.any(),
                     notes: type.array().schema(
@@ -74,6 +77,10 @@ class RethinkDbUserStoreAdapter extends UserStorePort {
                 }
             }
         );
+
+        this._Model.ensureIndex("location", this._ReQL.row("geo"), {
+            geo: true
+        });
     }
 
     _modelToEntity(resource) {
@@ -218,8 +225,11 @@ class RethinkDbUserStoreAdapter extends UserStorePort {
         };
     }
 
-    async filterBy(query) {
-        let users = await resolve(new this._Query(this._Model).filter(query));
+    async filterBy(query, geometry) {
+        let _Query = new this._Query(this._Model);
+        _Query = this._inRadius(_Query, geometry);
+
+        let users = await resolve(_Query.filter(query));
 
         if (users.error) {
             return {
@@ -232,6 +242,18 @@ class RethinkDbUserStoreAdapter extends UserStorePort {
         return {
             result: users.map(u => this._modelToEntity(u))
         };
+    }
+
+    _inRadius(query, geometry = {}) {
+        let { coordinates, distance } = geometry;
+
+        if (!distance || !coordinates) return query;
+
+        let radius = this._ReQL.circle(coordinates, distance, {
+            unit: "mi"
+        });
+
+        return query.getIntersecting(radius, { index: "location" });
     }
 }
 

@@ -1,5 +1,5 @@
 const Joi = require("joi");
-const Boom = require("boom");
+const { toClientEntity } = require("./helpers");
 
 module.exports = {
     path: "/api/drives/{drive_id}/charge",
@@ -7,7 +7,8 @@ module.exports = {
     config: {
         validate: {
             payload: {
-                source: Joi.any().required()
+                source: Joi.any().required(),
+                customer: Joi.any().required()
             },
             params: {
                 drive_id: Joi.string().required()
@@ -19,13 +20,13 @@ module.exports = {
         tags: ["api"],
         handler: async function(request, reply) {
             let driveId = request.params.drive_id;
-            let source = request.payload.source;
+            let { source, customer } = request.payload;
 
             let { populate = "" } = request.query;
             let relations = populate.split(",");
 
             let drive = await resolve(
-                this.libs.drives.charge(driveId, source, {
+                this.libs.drives.charge(driveId, source, customer, {
                     populate: relations
                 })
             );

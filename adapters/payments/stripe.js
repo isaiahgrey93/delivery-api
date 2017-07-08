@@ -46,9 +46,29 @@ class StripePaymentGatewayAdapter extends PaymentGatewayPort {
         }
 
         customer = customer.result;
+
+        return {
+            result: customer
+        };
     }
 
-    async fetchCustomer(customerId) {
+    async updateCustomer(id, data) {
+        let customer = await resolve(this._Stripe.customers.update(id, data));
+
+        if (customer.error) {
+            return {
+                error: customer.error
+            };
+        }
+
+        customer = customer.result;
+
+        return {
+            result: customer
+        };
+    }
+
+    async getCustomerById(customerId) {
         let customer = await resolve(
             this._Stripe.customers.retrieve(customerId)
         );
@@ -60,45 +80,27 @@ class StripePaymentGatewayAdapter extends PaymentGatewayPort {
         }
 
         customer = customer.result;
-    }
-
-    async addCardSource(customerId, cardDetails) {
-        let cardSource = await resolve(
-            this._Stripe.customers.createSource(customerId, {
-                source: merge(defaults.card, cardDetails)
-            })
-        );
-
-        if (cardSource.error) {
-            return {
-                error: cardSource.error
-            };
-        }
-
-        cardSource = cardSource.result;
 
         return {
-            result: cardSource
+            result: customer
         };
     }
 
-    async addBankSource(customerId, bankDetails) {
-        let bankSource = await resolve(
-            this._Stripe.customers.createSource(customerId, {
-                source: merge(defaults.bank, bankDetails)
-            })
+    async addCustomerSource(customerId, sourceDetails) {
+        let source = await resolve(
+            this._Stripe.customers.createSource(customerId, sourceDetails)
         );
 
-        if (bankSource.error) {
+        if (source.error) {
             return {
-                error: bankSource.error
+                error: source.error
             };
         }
 
-        bankSource = bankSource.result;
+        source = source.result;
 
         return {
-            result: bankSource
+            result: source
         };
     }
 
@@ -190,14 +192,18 @@ class StripePaymentGatewayAdapter extends PaymentGatewayPort {
         };
     }
 
-    async authorizeCharge(source, amount, meta) {
+    async authorizeCharge(source, amount, customer, meta) {
         let options = merge(defaults.charge, {
             amount: (amount * 100).toFixed(0),
             source: source,
             metadata: meta
         });
 
-        let charge = await resolve(this._Stripe.charges.create(option));
+        if (typeof source === "string") {
+            options.customer = customer;
+        }
+
+        let charge = await resolve(this._Stripe.charges.create(options));
 
         if (charge.error) {
             return {

@@ -16,10 +16,13 @@ module.exports = data => {
         ssn: data.social_security_number,
         phone: data.phone,
         avatar: data.profile_photo,
+        geo: data.geo,
+        isOnline: data.isOnline,
+        payerAccountId: data.payer_account_id,
         driver: {
             notes: data.notes,
             status: data.status,
-            payeeAccountId: data.payee_account_id,
+            payeeAccountId: data.connect_id,
             license: {
                 state: drivers_license.state,
                 photo: drivers_license.photo,

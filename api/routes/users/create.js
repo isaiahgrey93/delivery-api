@@ -21,6 +21,7 @@ module.exports = {
                             .valid(["driver", "consumer", "business", "admin"])
                     ),
                 payee_account_id: Joi.string(),
+                connect_id: Joi.string(),
                 firstname: Joi.string(),
                 middle_initial: Joi.string(),
                 lastname: Joi.string(),
@@ -46,6 +47,8 @@ module.exports = {
                     state: Joi.string(),
                     zip: Joi.string()
                 },
+                geo: Joi.object(),
+                isOnline: Joi.boolean(),
                 status: Joi.string().valid(
                     "unverified",
                     "verified",

@@ -9,6 +9,7 @@ module.exports = {
             payload: {
                 id: Joi.string().strip(),
                 created_at: Joi.date().strip(),
+                updated_at: Joi.date().strip(),
                 requester_id: Joi.string(),
                 driver_id: Joi.any(),
                 truck_id: Joi.string(),
@@ -69,6 +70,7 @@ module.exports = {
                         weight: Joi.number(),
                         value: Joi.number(),
                         notes: Joi.any(),
+                        categoryId: Joi.strip(),
                         images: Joi.array().items(Joi.string())
                     })
                 ),

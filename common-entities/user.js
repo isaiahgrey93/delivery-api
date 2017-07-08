@@ -5,6 +5,8 @@ function User(user = {}) {
         id,
         createdAt,
         updatedAt,
+        isOnline,
+        geo,
         scope,
         email,
         password,
@@ -13,6 +15,7 @@ function User(user = {}) {
         firstname,
         middleInitial,
         magicLinkCode,
+        payerAccountId,
         dob,
         ssn,
         phone,
@@ -22,6 +25,8 @@ function User(user = {}) {
     } = user;
 
     this.id = id;
+    this.isOnline = isOnline;
+    this.geo = geo;
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
     this.scope = scope;
@@ -36,6 +41,7 @@ function User(user = {}) {
     this.phone = phone;
     this.avatar = avatar;
     this.magicLinkCode = magicLinkCode;
+    this.payerAccountId = payerAccountId;
 
     if (address) {
         const { street, city, state, zip } = address;
