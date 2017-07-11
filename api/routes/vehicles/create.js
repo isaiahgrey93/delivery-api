@@ -17,9 +17,9 @@ module.exports = {
                         state: Joi.string()
                     })
                     .required(),
-                insurance: Joi.any().required(),
-                registration: Joi.any().required(),
-                images: Joi.array().items(Joi.any()).max(4).single().required(),
+                insurance: Joi.any(),
+                registration: Joi.any(),
+                images: Joi.array().items(Joi.any()).max(4).single(),
                 user_id: Joi.string(),
                 truck_id: Joi.string()
             }

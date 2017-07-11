@@ -15,7 +15,9 @@ module.exports = {
             let userId = request.params.user_id;
             let data = request.payload;
 
-            let user = await resolve(this.libs.payments.createAccount(userId));
+            let user = await resolve(
+                this.libs.payments.createAccount(data, userId)
+            );
 
             if (user.error) {
                 return reply(user.error);

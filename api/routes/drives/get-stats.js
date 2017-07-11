@@ -22,11 +22,11 @@ module.exports = {
         },
         tags: ["api"],
         handler: async function(request, reply) {
-            let id = request.params.user_id;
+            let driverId = request.params.user_id;
             let { start, end } = request.query;
 
             let weekStats = await resolve(
-                this.libs.drives.driverStats(driveId, {
+                this.libs.drives.driverStats(driverId, {
                     start: (start = ts() - day * 7),
                     end: (end = ts() + day)
                 })
@@ -39,7 +39,7 @@ module.exports = {
             weekStats = weekStats.result;
 
             let dayStats = await resolve(
-                this.libs.drives.driverStats(driveId, {
+                this.libs.drives.driverStats(driverId, {
                     start: (start = ts() - day),
                     end: (end = ts() + day)
                 })

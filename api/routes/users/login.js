@@ -1,5 +1,6 @@
 const Joi = require("joi");
 const { toClientEntity } = require("./helpers");
+const helpers = require("../vehicles/helpers");
 
 module.exports = {
     path: "/api/users/login",
@@ -34,6 +35,7 @@ module.exports = {
 
             user = user.result;
 
+            user.vehicle = helpers.toClientEntity(user.vehicle);
             user = toClientEntity(user);
             user.token = this.utils.user.grantJSONWebToken(user);
 
