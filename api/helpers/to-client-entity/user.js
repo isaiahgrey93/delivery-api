@@ -1,7 +1,9 @@
 const sanitize = require("../sanitize");
+const Category = require("./category");
+const Vehicle = require("./vehicle");
 
 module.exports = data => {
-    let { driver = {}, address = {} } = data;
+    let { driver = {}, address = {}, vehicle = {}, categories = [] } = data;
     let { license = {} } = driver;
 
     return sanitize({
@@ -20,8 +22,8 @@ module.exports = data => {
         phone: data.phone,
         dob: data.dob,
         notes: driver.notes,
-        categories: data.categories,
-        vehicle: data.vehicle,
+        categories: categories.map(c => Category(c)),
+        vehicle: Vehicle(vehicle),
         geo: data.geo,
         isOnline: data.isOnline,
         drivers_license: {

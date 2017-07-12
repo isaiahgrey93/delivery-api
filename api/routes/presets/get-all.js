@@ -12,7 +12,7 @@ module.exports = {
                 return reply(presets.error);
             }
 
-            presets = presets.results;
+            presets = presets.result;
 
             presets = presets.map(p => this.helpers.toClientEntity.Preset(p));
 

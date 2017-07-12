@@ -1,7 +1,8 @@
 const sanitize = require("../sanitize");
+const Truck = require("./truck");
 
 module.exports = data => {
-    let { licensePlate = {} } = data;
+    let { licensePlate = {}, truck = {} } = data;
 
     return sanitize({
         id: data.id,
@@ -9,7 +10,7 @@ module.exports = data => {
         updated_at: data.updatedAt,
         user_id: data.userId,
         truck_id: data.truckId,
-        truck: data.truck,
+        truck: Truck(truck),
         make: data.make,
         model: data.model,
         year: data.year,

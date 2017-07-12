@@ -1,8 +1,13 @@
 const sanitize = require("../sanitize");
+const User = require("./user");
+const Truck = require("./truck");
 
 module.exports = data => {
     let {
         route = {},
+        truck = {},
+        driver = {},
+        requester = {},
         support = {},
         payment = {},
         customer = {},
@@ -20,9 +25,9 @@ module.exports = data => {
         requester_id: data.requesterId,
         driver_id: data.driverId,
         truck_id: data.truckId,
-        requester: data.requester,
-        driver: data.driver,
-        truck: data.truck,
+        requester: User(requester),
+        driver: User(driver),
+        truck: Truck(truck),
         helpers: data.helpers,
         customer: {
             name: customer.name,

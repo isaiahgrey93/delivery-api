@@ -25,8 +25,8 @@ module.exports.register = (server, options, next) => {
 
     server.bind({
         libs,
-        helpers,
-        utils
+        utils,
+        helpers
     });
 
     server.ext("onPreResponse", function(request, reply) {
