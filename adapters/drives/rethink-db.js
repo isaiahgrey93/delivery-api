@@ -31,6 +31,7 @@ class RethinkDbDriveStoreAdapter extends DriveStorePort {
                     transferIds: type.array().schema(type.string())
                 }),
                 price: type.number().min(0),
+                rating: type.any().enum([-1, null, 1]),
                 status: type
                     .string()
                     .enum([
@@ -41,6 +42,7 @@ class RethinkDbDriveStoreAdapter extends DriveStorePort {
                         "loading",
                         "driving",
                         "delivered",
+                        "canceled",
                         "refunded"
                     ])
                     .default(() => "unpaid"),

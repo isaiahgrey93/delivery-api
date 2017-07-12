@@ -19,6 +19,7 @@ module.exports = {
                     email: Joi.string(),
                     name: Joi.string()
                 }),
+                rating: Joi.any().allow(-1, null, 1),
                 status: Joi.string().valid(
                     "unpaid",
                     "available",
@@ -26,6 +27,7 @@ module.exports = {
                     "loading",
                     "driving",
                     "delivered",
+                    "canceled",
                     "refunded"
                 ),
                 start_time: Joi.date(),

@@ -33,6 +33,7 @@ module.exports = data => {
             charge_id: payment.chargeId,
             transfer_ids: payment.transferIds
         },
+        rating: data.rating,
         price: data.price,
         status: data.status,
         start_time: data.startTime,

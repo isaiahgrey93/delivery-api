@@ -18,6 +18,7 @@ function Drive(drive) {
         consumerCargo,
         route,
         support,
+        rating,
         payment,
         customer,
         driveProgressConfirmation
@@ -33,6 +34,7 @@ function Drive(drive) {
     this.startTime = startTime;
     this.endTime = endTime;
     this.price = price;
+    this.rating = rating;
     this.status = status;
     this.driveType = driveType;
 
