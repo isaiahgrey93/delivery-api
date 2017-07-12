@@ -1,5 +1,4 @@
 const Joi = require("joi");
-const { toServerEntity, toClientEntity } = require("./helpers");
 
 module.exports = {
     path: "/api/categories/{category_id}",
@@ -32,7 +31,7 @@ module.exports = {
 
             category = category.result;
 
-            category = toClientEntity(category);
+            category = this.helpers.toClientEntity.Category(category);
 
             reply(category);
         }

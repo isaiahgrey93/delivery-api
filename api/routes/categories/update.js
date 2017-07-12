@@ -1,5 +1,4 @@
 const Joi = require("joi");
-const { toServerEntity, toClientEntity } = require("./helpers");
 
 module.exports = {
     path: "/api/categories/{category_id}",
@@ -27,7 +26,7 @@ module.exports = {
             let { populate = "" } = request.query;
             let relations = populate.split(",");
 
-            let params = toServerEntity(data);
+            let params = this.helpers.toServerEntity.Category(data);
 
             let category = await resolve(
                 this.libs.categories.update(params, {
@@ -41,7 +40,7 @@ module.exports = {
 
             category = category.result;
 
-            category = toClientEntity(category);
+            category = this.helpers.toClientEntity.Category(category);
 
             reply(category);
         }
