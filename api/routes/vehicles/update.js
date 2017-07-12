@@ -1,7 +1,5 @@
 const Joi = require("joi");
 
-const { toServerEntity, toClientEntity } = require("./helpers");
-
 module.exports = {
     path: "/api/vehicles/{vehicle_id}",
     method: ["PUT", "PATCH"],
@@ -37,7 +35,7 @@ module.exports = {
             let { populate = "" } = request.query;
             let relations = populate.split(",");
 
-            let params = toServerEntity(data);
+            let params = this.helpers.toServerEntity.Vehicle(data);
 
             let vehicle = await resolve(
                 this.libs.vehicles.update(params, { populate: relations })
@@ -49,7 +47,7 @@ module.exports = {
 
             vehicle = vehicle.result;
 
-            vehicle = toClientEntity(vehicle);
+            vehicle = this.helpers.toClientEntity.Vehicle(vehicle);
 
             reply(vehicle);
         }

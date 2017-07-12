@@ -16,6 +16,8 @@ module.exports = data => {
         ssn: data.social_security_number,
         phone: data.phone,
         avatar: data.profile_photo,
+        geo: data.geo,
+        isOnline: data.isOnline,
         payerAccountId: data.payer_account_id,
         driver: {
             notes: data.notes,

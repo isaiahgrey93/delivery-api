@@ -1,5 +1,4 @@
 const Joi = require("joi");
-const { toClientEntity } = require("./helpers");
 
 module.exports = {
     path: "/api/drives",
@@ -28,7 +27,7 @@ module.exports = {
 
             drives = drives.result;
 
-            drives = drives.map(d => toClientEntity(d));
+            drives = drives.map(d => this.helpers.toClientEntity.Drive(d));
 
             reply(drives);
         }

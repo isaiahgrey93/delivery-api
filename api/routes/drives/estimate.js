@@ -1,5 +1,4 @@
 const Joi = require("joi");
-const Boom = require("boom");
 
 module.exports = {
     path: "/api/drives/{drive_id}/estimate",

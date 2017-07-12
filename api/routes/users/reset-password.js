@@ -1,5 +1,4 @@
 const Joi = require("joi");
-const { toClientEntity } = require("./helpers");
 
 module.exports = {
     path: "/api/users/{email}/password",
@@ -31,7 +30,7 @@ module.exports = {
 
             user = user.result;
 
-            user = toClientEntity(user);
+            user = this.helpers.toClientEntity.User(user);
 
             reply(user);
         }

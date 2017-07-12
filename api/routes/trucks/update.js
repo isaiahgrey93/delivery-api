@@ -1,5 +1,4 @@
 const Joi = require("joi");
-const { toServerEntity, toClientEntity } = require("./helpers");
 
 module.exports = {
     path: "/api/trucks/{truck_id}",
@@ -27,7 +26,7 @@ module.exports = {
             let data = request.payload;
             data.id = request.params.truck_id;
 
-            let params = toServerEntity(data);
+            let params = this.helpers.toServerEntity.Truck(data);
 
             let truck = await resolve(this.libs.trucks.update(params));
 
@@ -37,7 +36,7 @@ module.exports = {
 
             truck = truck.result;
 
-            truck = toClientEntity(truck);
+            truck = this.helpers.toClientEntity.Truck(truck);
 
             reply(truck);
         }

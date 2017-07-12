@@ -1,5 +1,3 @@
-const Twiml = require("twilio");
-
 module.exports = {
     path: "/api/support-call/{drive_id}/close",
     method: "POST",

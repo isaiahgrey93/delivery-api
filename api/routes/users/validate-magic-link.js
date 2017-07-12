@@ -1,5 +1,4 @@
 const Joi = require("joi");
-const { toClientEntity } = require("./helpers");
 
 module.exports = {
     path: "/api/users/magic/{code}",
@@ -23,7 +22,7 @@ module.exports = {
 
             user = user.result;
 
-            user = toClientEntity(user);
+            user = this.helpers.toClientEntity.User(user);
             user.token = this.utils.user.grantJSONWebToken(user);
 
             reply(user);

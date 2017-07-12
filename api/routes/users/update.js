@@ -1,6 +1,4 @@
 const Joi = require("joi");
-const { toClientEntity, toServerEntity } = require("./helpers");
-const helpers = require("../vehicles/helpers");
 
 module.exports = {
     path: "/api/users/{user_id}",
@@ -67,7 +65,7 @@ module.exports = {
             let { populate = "" } = request.query;
             let relations = populate.split(",");
 
-            let params = toServerEntity(data);
+            let params = this.helpers.toServerEntity.User(data);
 
             user = await resolve(
                 this.libs.users.update(params, {
@@ -81,8 +79,7 @@ module.exports = {
 
             user = user.result;
 
-            user.vehicle = helpers.toClientEntity(user.vehicle);
-            user = toClientEntity(user);
+            user = this.helpers.toClientEntity.User(user);
 
             reply(user);
         }

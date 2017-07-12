@@ -1,5 +1,4 @@
 const Joi = require("joi");
-const { toServerEntity, toClientEntity } = require("./helpers");
 
 module.exports = {
     path: "/api/recordings",
@@ -16,7 +15,7 @@ module.exports = {
         handler: async function(request, reply) {
             let data = request.payload;
 
-            let params = toServerEntity(data);
+            let params = this.helpers.toServerEntity.Recording(data);
 
             let recording = await resolve(this.libs.recordings.create(params));
 
@@ -26,7 +25,7 @@ module.exports = {
 
             recording = recording.result;
 
-            recording = toClientEntity(recording);
+            recording = this.helpers.toClientEntity.Recording(recording);
 
             reply(recording);
         }

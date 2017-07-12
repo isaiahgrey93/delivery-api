@@ -1,5 +1,4 @@
 const Joi = require("joi");
-const { toServerEntity, toClientEntity } = require("./helpers");
 
 module.exports = {
     path: "/api/users/guest",
@@ -21,7 +20,7 @@ module.exports = {
 
             let token = this.utils.user.grantJSONWebToken(user);
 
-            user = toClientEntity(user);
+            user = this.helpers.toClientEntity.User(user);
             user.token = token;
 
             reply(user).header("Authorization", token);

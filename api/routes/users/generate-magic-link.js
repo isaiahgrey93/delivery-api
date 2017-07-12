@@ -1,5 +1,4 @@
 const Joi = require("joi");
-const { toClientEntity } = require("./helpers");
 
 module.exports = {
     path: "/api/users/magic",

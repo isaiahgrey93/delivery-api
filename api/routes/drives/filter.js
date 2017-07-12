@@ -1,5 +1,4 @@
 const Joi = require("joi");
-const { toClientEntity, toServerEntity } = require("./helpers");
 
 module.exports = {
     path: "/api/drives/filter",
@@ -15,7 +14,7 @@ module.exports = {
         tags: ["api"],
         handler: async function(request, reply) {
             let data = request.payload;
-            let query = toServerEntity(data);
+            let query = this.helpers.toServerEntity.Drive(data);
 
             let { populate = "", geometry, distance } = request.query;
             let relations = populate.split(",");
@@ -39,7 +38,7 @@ module.exports = {
 
             drives = drives.result;
 
-            drives = drives.map(d => toClientEntity(d));
+            drives = drives.map(d => this.helpers.toClientEntity.Drive(d));
 
             reply(drives);
         }

@@ -1,5 +1,4 @@
 const Joi = require("joi");
-const { toServerEntity, toClientEntity } = require("./helpers");
 
 module.exports = {
     path: "/api/recordings",
@@ -15,7 +14,9 @@ module.exports = {
 
             recordings = recordings.result;
 
-            recordings = recordings.map(r => toClientEntity(r));
+            recordings = recordings.map(r =>
+                this.helpers.toClientEntity.Recording(r)
+            );
 
             reply(recordings);
         }

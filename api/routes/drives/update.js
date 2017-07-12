@@ -1,5 +1,4 @@
 const Joi = require("joi");
-const { toClientEntity, toServerEntity } = require("./helpers");
 
 module.exports = {
     path: "/api/drives/{drive_id}",
@@ -104,7 +103,7 @@ module.exports = {
             let { populate = "" } = request.query;
             let relations = populate.split(",");
 
-            let params = toServerEntity(data);
+            let params = this.helpers.toServerEntity.Drive(data);
 
             let drive = await resolve(
                 this.libs.drives.update(params, {
@@ -118,7 +117,7 @@ module.exports = {
 
             drive = drive.result;
 
-            drive = toClientEntity(drive);
+            drive = this.helpers.toClientEntity.Drive(drive);
 
             reply(drive);
         }

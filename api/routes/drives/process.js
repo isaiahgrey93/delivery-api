@@ -1,5 +1,4 @@
 const Joi = require("joi");
-const { toClientEntity } = require("./helpers");
 
 module.exports = {
     path: "/api/drives/{drive_id}/process",
@@ -30,7 +29,7 @@ module.exports = {
 
             drive = drive.result;
 
-            drive = toClientEntity(drive);
+            drive = this.helpers.toClientEntity.Drive(drive);
 
             reply(drive);
         }

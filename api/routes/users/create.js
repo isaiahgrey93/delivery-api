@@ -1,5 +1,4 @@
 const Joi = require("joi");
-const { toServerEntity, toClientEntity } = require("./helpers");
 
 module.exports = {
     path: "/api/users",
@@ -60,7 +59,7 @@ module.exports = {
         handler: async function(request, reply) {
             let data = request.payload;
 
-            let params = toServerEntity(data);
+            let params = this.helpers.toServerEntity.User(data);
 
             let user = await resolve(this.libs.users.create(params));
 
@@ -72,7 +71,7 @@ module.exports = {
 
             let token = this.utils.user.grantJSONWebToken(user);
 
-            user = toClientEntity(user);
+            user = this.helpers.toClientEntity.User(user);
             user.token = token;
 
             reply(user).header("Authorization", token);

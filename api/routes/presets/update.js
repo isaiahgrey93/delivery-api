@@ -1,5 +1,4 @@
 const Joi = require("joi");
-const { toServerEntity, toClientEntity } = require("./helpers");
 
 module.exports = {
     path: "/api/presets/{preset_id}",
@@ -24,7 +23,7 @@ module.exports = {
             let data = request.payload;
             data.id = request.params.preset_id;
 
-            let params = toServerEntity(data);
+            let params = this.helpers.toServerEntity.Preset(data);
 
             let preset = await resolve(this.libs.presets.update(params));
 
@@ -34,7 +33,7 @@ module.exports = {
 
             preset = preset.result;
 
-            preset = toClientEntity(preset);
+            preset = this.helpers.toClientEntity.Preset(preset);
 
             reply(preset);
         }

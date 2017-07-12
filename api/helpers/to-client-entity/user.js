@@ -10,8 +10,8 @@ module.exports = data => {
         scope: data.scope,
         created_at: data.createdAt,
         updated_at: data.updatedAt,
-        connect_id: driver.payeeAccountId,
         payer_account_id: data.payerAccountId,
+        connect_id: driver.payeeAccountId,
         firstname: data.firstname,
         middle_initial: data.middleInitial,
         lastname: data.lastname,
@@ -22,6 +22,8 @@ module.exports = data => {
         notes: driver.notes,
         categories: data.categories,
         vehicle: data.vehicle,
+        geo: data.geo,
+        isOnline: data.isOnline,
         drivers_license: {
             expiration: license.expiration,
             number: license.number,

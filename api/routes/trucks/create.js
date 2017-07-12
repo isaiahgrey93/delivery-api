@@ -1,5 +1,4 @@
 const Joi = require("joi");
-const { toServerEntity, toClientEntity } = require("./helpers");
 
 module.exports = {
     path: "/api/trucks",
@@ -25,7 +24,7 @@ module.exports = {
         handler: async function(request, reply) {
             let data = request.payload;
 
-            let params = toServerEntity(data);
+            let params = this.helpers.toServerEntity.Truck(data);
 
             let truck = await resolve(this.libs.trucks.create(params));
 
@@ -35,7 +34,7 @@ module.exports = {
 
             truck = truck.result;
 
-            truck = toClientEntity(truck);
+            truck = this.helpers.toClientEntity.Truck(truck);
 
             reply(truck);
         }
