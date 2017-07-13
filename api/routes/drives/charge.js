@@ -7,7 +7,7 @@ module.exports = {
         validate: {
             payload: {
                 source: Joi.any().required(),
-                customer: Joi.any().required()
+                customer: Joi.any()
             },
             params: {
                 drive_id: Joi.string().required()

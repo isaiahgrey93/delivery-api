@@ -1,5 +1,5 @@
 const sanitize = require("../sanitize");
-const Preset = require("./Preset");
+const Preset = require("./preset");
 
 module.exports = data => {
     const { presets = [] } = data;
