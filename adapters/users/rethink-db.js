@@ -15,8 +15,8 @@ class RethinkDbUserStoreAdapter extends UserStorePort {
             "User",
             {
                 id: type.string().required().default(() => r.uuid()),
-                createdAt: type.date().default(r.now()),
-                updatedAt: type.date().default(() => r.now()),
+                createdAt: type.date(),
+                updatedAt: type.date(),
                 scope: type
                     .array()
                     .schema(
@@ -81,6 +81,9 @@ class RethinkDbUserStoreAdapter extends UserStorePort {
         this._Model.ensureIndex("location", this._ReQL.row("geo"), {
             geo: true
         });
+
+        this._Model.ensureIndex("createdAt", this._ReQL.row("createdAt"));
+        this._Model.ensureIndex("updatedAt", this._ReQL.row("updatedAt"));
     }
 
     _modelToEntity(resource) {
@@ -88,7 +91,9 @@ class RethinkDbUserStoreAdapter extends UserStorePort {
     }
 
     async create(data) {
-        let user = new this._Model(data);
+        let user = new this._Model(
+            Object.assign({}, data, { createdAt: this._ReQL.now() })
+        );
 
         user = await resolve(user.save());
 
@@ -106,8 +111,13 @@ class RethinkDbUserStoreAdapter extends UserStorePort {
     }
 
     async findByEmail(email) {
+        let _Query = new this._Query(this._Model);
+
         let users = await resolve(
-            this._Model.filter({ email: email }).limit(1)
+            _Query
+                .filter({ email: email })
+                .orderBy(this._ReQL.desc("createdAt"))
+                .limit(1)
         );
 
         if (users.error) {
@@ -152,7 +162,12 @@ class RethinkDbUserStoreAdapter extends UserStorePort {
 
         user = user.result;
 
-        user = await resolve(this._Model.save(user, { conflict: "update" }));
+        user = await resolve(
+            this._Model.save(
+                Object.assign({}, user, { updatedAt: this._ReQL.now() }),
+                { conflict: "update" }
+            )
+        );
 
         if (user.error) {
             return {
@@ -210,7 +225,9 @@ class RethinkDbUserStoreAdapter extends UserStorePort {
     }
 
     async getAll() {
-        let users = await resolve(new this._Query(this._Model).run());
+        let users = await resolve(
+            new this._Query(this._Model).orderBy("createdAt")
+        );
 
         if (users.error) {
             return {
@@ -229,7 +246,7 @@ class RethinkDbUserStoreAdapter extends UserStorePort {
         let _Query = new this._Query(this._Model);
         _Query = this._inRadius(_Query, geometry);
 
-        let users = await resolve(_Query.filter(query));
+        let users = await resolve(_Query.filter(query).orderBy("createdAt"));
 
         if (users.error) {
             return {

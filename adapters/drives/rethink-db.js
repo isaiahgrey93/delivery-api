@@ -31,11 +31,7 @@ class RethinkDbDriveStoreAdapter extends DriveStorePort {
                     transferIds: type.array().schema(type.string())
                 }),
                 price: type.number().min(0),
-                // rating: type.number().allowNull(true).validator(function() {
-                //     console.log("hello", this);
-
-                //     return true;
-                // }),
+                rating: type.number().allowNull(true),
                 status: type
                     .string()
                     .enum([

@@ -18,7 +18,7 @@ module.exports = {
                     email: Joi.string(),
                     name: Joi.string()
                 }),
-                rating: Joi.any().allow(-1, null, 1),
+                rating: Joi.any().valid(-1, null, 1),
                 status: Joi.string().valid(
                     "unpaid",
                     "available",
