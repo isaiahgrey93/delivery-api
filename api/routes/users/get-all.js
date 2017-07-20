@@ -4,7 +4,6 @@ module.exports = {
     path: "/api/users",
     method: "GET",
     config: {
-        auth: false,
         validate: {
             query: {
                 populate: Joi.string()

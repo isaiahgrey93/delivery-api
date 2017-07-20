@@ -8,7 +8,8 @@ module.exports = {
         validate: {
             payload: {
                 email: Joi.string().optional(),
-                phone: Joi.string().optional()
+                phone: Joi.string().optional(),
+                url: Joi.string().required()
             }
         },
         tags: ["api"],

@@ -6,7 +6,7 @@ class NodeMailerEmailGatewayAdapter extends EmailGatewayPort {
         this._transporter = nodemailer;
     }
 
-    async sendMagicLink(data) {
+    async sendMagicLink(url, data) {
         let {
             email = "",
             firstname = "",
@@ -34,7 +34,7 @@ class NodeMailerEmailGatewayAdapter extends EmailGatewayPort {
                     {
                         email,
                         name: `${firstname} ${lastname}`,
-                        link: `${process.env.CLIENT_HOST}/magic/${magicLinkCode}`
+                        link: `${url}?code=${magicLinkCode}`
                     },
                     (error, result) => (error ? reject(error) : resolve(result))
                 );
