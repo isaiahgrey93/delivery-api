@@ -14,6 +14,7 @@ module.exports = data => {
         height: data.height,
         image: data.image,
         type: data.type,
-        name: data.name
+        name: data.name,
+        illustration: data.illustration
     });
 };
