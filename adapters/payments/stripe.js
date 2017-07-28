@@ -196,6 +196,7 @@ class StripePaymentGatewayAdapter extends PaymentGatewayPort {
         let options = merge(defaults.charge, {
             amount: (amount * 100).toFixed(0),
             source: source,
+            capture: false,
             metadata: meta
         });
 

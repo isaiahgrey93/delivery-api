@@ -42,10 +42,16 @@ module.exports.register = (server, options, next) => {
 
             if (process.env.NODE_ENV === "production") {
                 console.error(error);
+                console.error(res);
             } else {
                 console.error(
                     `\n`,
                     Node_utils.inspect(error, { colors: true }),
+                    "\n"
+                );
+                console.error(
+                    `\n`,
+                    Node_utils.inspect(res, { colors: true }),
                     "\n"
                 );
             }

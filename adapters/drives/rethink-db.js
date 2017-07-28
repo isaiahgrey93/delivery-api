@@ -44,8 +44,7 @@ class RethinkDbDriveStoreAdapter extends DriveStorePort {
                         "delivered",
                         "canceled",
                         "refunded"
-                    ])
-                    .default(() => "unpaid"),
+                    ]),
                 startTime: type.date(),
                 endTime: type.date(),
                 driveType: type.string().enum(["consumer", "business"]),

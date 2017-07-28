@@ -20,8 +20,6 @@ module.exports = {
             let { populate = "" } = request.query;
             let relations = populate.split(",");
 
-            let params = this.helpers.toServerEntity.Drive(data);
-
             let drive = await resolve(
                 this.libs.drives.accept(driveId, driverId, {
                     populate: relations

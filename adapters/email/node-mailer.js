@@ -34,7 +34,7 @@ class NodeMailerEmailGatewayAdapter extends EmailGatewayPort {
                     {
                         email,
                         name: `${firstname} ${lastname}`,
-                        link: `${url}?code=${magicLinkCode}`
+                        link: `${url}/${magicLinkCode}`
                     },
                     (error, result) => (error ? reject(error) : resolve(result))
                 );
