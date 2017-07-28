@@ -17,7 +17,8 @@ module.exports = {
                 width: Joi.number().required(),
                 height: Joi.number().required(),
                 name: Joi.string().required(),
-                image: Joi.any().required()
+                image: Joi.any().required(),
+                illustration: Joi.any().required()
             }
         },
         tags: ["api"],

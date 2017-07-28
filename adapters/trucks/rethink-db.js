@@ -25,7 +25,8 @@ class RethinkDbTruckStoreAdapter extends TruckStorePort {
                 width: type.number().required(),
                 height: type.number().required(),
                 name: type.string().required(),
-                image: type.any().required()
+                image: type.any().required(),
+                illustration: type.any().required()
             },
             {
                 table: {

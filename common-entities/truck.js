@@ -1,7 +1,7 @@
 const sanitize = require("./helpers/sanitize");
 
 function Truck(truck) {
-    const { id, type, price = {}, length, width, height, name, image } = truck;
+    const { id, type, price = {}, length, width, height, name, image, illustration } = truck;
 
     this.id = id;
     this.type = type;
@@ -11,6 +11,7 @@ function Truck(truck) {
     this.width = width;
     this.name = name;
     this.image = image;
+    this.illustration = illustration;
 
     return sanitize(this);
 }

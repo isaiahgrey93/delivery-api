@@ -16,7 +16,8 @@ module.exports = {
                 width: Joi.number(),
                 height: Joi.number(),
                 name: Joi.string(),
-                image: Joi.any()
+                image: Joi.any(),
+                illustration: Joi.any()
             },
             params: {
                 truck_id: Joi.string().required()
